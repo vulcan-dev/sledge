@@ -5,9 +5,11 @@ string (REPLACE "/D_WINDOWS" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 string (REPLACE "/DWIN32" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 # ---------------------------
-# fmt
+# submodules that already have cmakelists
 # ---------------------------
 add_subdirectory(fmt)
+add_subdirectory(glew-cmake)
+add_subdirectory(glm)
 
 # ---------------------------
 # detours
