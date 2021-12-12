@@ -102,7 +102,7 @@ function(group_files sources)
 		source_group("${GROUP}" FILES "${FILE}")
 	endforeach()
 endfunction()
-group_files("${sledge_sources};${sledge_loader_sources};${sledge_sources};${sledge_headers};${sledge_loader_headers};${shared_headers}")
+group_files("${sledge_sources};${sledge_loader_sources};${shared_sources};${sledge_headers};${sledge_loader_headers};${shared_headers}")
 
 # ------------------------------------------------------
 # install sledge and loader
