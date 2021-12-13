@@ -9,15 +9,29 @@ string (REPLACE "/DWIN32" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 # ---------------------------
 add_subdirectory(fmt)
 add_subdirectory(glew-cmake)
+add_subdirectory(glfw)
 
 # ---------------------------
 # detours
 # ---------------------------
 file(GLOB_RECURSE DETOURS_SOURCES CONFIGURE_DEPENDS "detours/src/*.h" "detours/src/*.cpp")
 
-add_library(lib_detours STATIC ${DETOURS_SOURCES})
+add_library(detours STATIC ${DETOURS_SOURCES})
 set_property(
 	SOURCE detours/src/uimports.cpp
 	APPEND PROPERTY HEADER_FILE_ONLY true)
-target_compile_options(lib_detours PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
-target_include_directories(lib_detours PUBLIC detours/src)
+target_compile_options(detours PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
+target_include_directories(detours PUBLIC detours/src)
+
+# ---------------------------
+# imgui
+# ---------------------------
+file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS "imgui/*.h" "imgui/*.cpp")
+add_library(imgui STATIC
+${IMGUI_SOURCES}
+imgui/backends/imgui_impl_dx9.cpp
+imgui/backends/imgui_impl_dx9.h
+imgui/backends/imgui_impl_win32.cpp
+imgui/backends/imgui_impl_win32.h)
+target_compile_options(imgui PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
+target_include_directories(imgui PUBLIC imgui)
