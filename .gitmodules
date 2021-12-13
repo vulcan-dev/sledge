@@ -16,3 +16,6 @@
 [submodule "submodules/libspng"]
 	path = submodules/libspng
 	url = https://github.com/randy408/libspng
+[submodule "submodules/miniz"]
+	path = submodules/miniz
+	url = https://github.com/richgel999/miniz
