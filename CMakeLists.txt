@@ -25,6 +25,7 @@ add_library(sledge_shared_dependencies INTERFACE)
 target_link_libraries(sledge_shared_dependencies INTERFACE
 	detours
 	fmt::fmt
+	libglew_static
 	imgui)
 
 # globs for shared files
