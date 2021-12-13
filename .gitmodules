@@ -13,3 +13,6 @@
 [submodule "submodules/glfw"]
 	path = submodules/glfw
 	url = https://github.com/glfw/glfw
+[submodule "submodules/libspng"]
+	path = submodules/libspng
+	url = https://github.com/randy408/libspng

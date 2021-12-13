@@ -73,7 +73,7 @@ target_link_libraries(sledge_loader PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
 	glfw
-)
+	spng_static)
 set_target_properties(sledge_loader PROPERTIES
 	VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:sledge_loader>
 	OUTPUT_NAME "sledge"

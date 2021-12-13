@@ -11,6 +11,9 @@ add_subdirectory(fmt)
 add_subdirectory(glew-cmake)
 add_subdirectory(glfw)
 
+set(SPNG_STATIC OFF CACHE BOOL "")
+add_subdirectory(libspng)
+
 # ---------------------------
 # detours
 # ---------------------------
