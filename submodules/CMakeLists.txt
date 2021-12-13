@@ -11,8 +11,8 @@ add_subdirectory(fmt)
 add_subdirectory(glew-cmake)
 add_subdirectory(glfw)
 
-set(SPNG_STATIC OFF CACHE BOOL "")
-add_subdirectory(libspng)
+set(BUILD_EXAMPLES FALSE CACHE BOOL "" FORCE)
+add_subdirectory(miniz)
 
 # ---------------------------
 # detours
@@ -25,6 +25,14 @@ set_property(
 	APPEND PROPERTY HEADER_FILE_ONLY true)
 target_compile_options(detours PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
 target_include_directories(detours PUBLIC detours/src)
+
+# ---------------------------
+# spng (already has a cmakelists but it can't be made so it uses miniz rather than zlib)
+# ---------------------------
+add_library(spng_static STATIC "libspng/spng/spng.c")
+target_compile_options(spng_static PUBLIC -DSPNG_STATIC=1 -DSPNG_USE_MINIZ=1)
+target_include_directories(spng_static PUBLIC libspng/spng)
+target_link_libraries(spng_static PRIVATE miniz)
 
 # ---------------------------
 # imgui
