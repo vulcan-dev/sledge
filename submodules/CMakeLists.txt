@@ -29,9 +29,11 @@ target_include_directories(detours PUBLIC detours/src)
 file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS "imgui/*.h" "imgui/*.cpp")
 add_library(imgui STATIC
 ${IMGUI_SOURCES}
-imgui/backends/imgui_impl_dx9.cpp
-imgui/backends/imgui_impl_dx9.h
+imgui/backends/imgui_impl_glfw.cpp
+imgui/backends/imgui_impl_glfw.h
+imgui/backends/imgui_impl_opengl3.cpp
+imgui/backends/imgui_impl_opengl3.h
 imgui/backends/imgui_impl_win32.cpp
 imgui/backends/imgui_impl_win32.h)
 target_compile_options(imgui PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
-target_include_directories(imgui PUBLIC imgui)
+target_include_directories(imgui PUBLIC imgui imgui/backends)
