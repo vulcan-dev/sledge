@@ -37,3 +37,4 @@ imgui/backends/imgui_impl_win32.cpp
 imgui/backends/imgui_impl_win32.h)
 target_compile_options(imgui PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
 target_include_directories(imgui PUBLIC imgui imgui/backends)
+target_link_libraries(imgui PRIVATE glfw)
