@@ -23,8 +23,9 @@ target_compile_options(sledge_warnings INTERFACE /W4 /WX) # /W4 /WX later
 # shared dependencies
 add_library(sledge_shared_dependencies INTERFACE)
 target_link_libraries(sledge_shared_dependencies INTERFACE
-	lib_detours
-	fmt::fmt)
+	detours
+	fmt::fmt
+	imgui)
 
 # globs for shared files
 file(GLOB_RECURSE shared_sources CONFIGURE_DEPENDS "source/shared/*.cpp")
@@ -70,6 +71,7 @@ add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${
 target_link_libraries(sledge_loader PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
+	glfw
 )
 set_target_properties(sledge_loader PROPERTIES
 	VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:sledge_loader>
