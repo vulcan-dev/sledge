@@ -26,7 +26,8 @@ target_link_libraries(sledge_shared_dependencies INTERFACE
 	detours
 	fmt::fmt
 	libglew_static
-	imgui)
+	imgui
+	spng_static)
 
 # globs for shared files
 file(GLOB_RECURSE shared_sources CONFIGURE_DEPENDS "source/shared/*.cpp")
@@ -72,8 +73,7 @@ add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${
 target_link_libraries(sledge_loader PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
-	glfw
-	spng_static)
+	glfw)
 set_target_properties(sledge_loader PROPERTIES
 	VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:sledge_loader>
 	OUTPUT_NAME "sledge"
