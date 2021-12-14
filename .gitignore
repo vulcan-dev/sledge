@@ -1,3 +1,7 @@
 proj/*
 
 *.aps
+
+source/sledgelib/.vs
+source/sledgelib/obj
+source/sledgelib/bin
