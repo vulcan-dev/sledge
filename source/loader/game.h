@@ -2,4 +2,5 @@
 
 namespace Game {
 	bool GetTeardownPath();
+	bool Launch();
 }
