@@ -17,9 +17,9 @@ add_subdirectory(miniz)
 # ---------------------------
 # detours
 # ---------------------------
-file(GLOB_RECURSE DETOURS_SOURCES CONFIGURE_DEPENDS "detours/src/*.h" "detours/src/*.cpp")
+file(GLOB_RECURSE detours_sources CONFIGURE_DEPENDS "detours/src/*.h" "detours/src/*.cpp")
 
-add_library(detours STATIC ${DETOURS_SOURCES})
+add_library(detours STATIC ${detours_sources})
 set_property(
 	SOURCE detours/src/uimports.cpp
 	APPEND PROPERTY HEADER_FILE_ONLY true)
@@ -37,9 +37,9 @@ target_link_libraries(spng_static PRIVATE miniz)
 # ---------------------------
 # imgui
 # ---------------------------
-file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS "imgui/*.h" "imgui/*.cpp")
+file(GLOB imgui_sources CONFIGURE_DEPENDS "imgui/*.h" "imgui/*.cpp")
 add_library(imgui STATIC
-${IMGUI_SOURCES}
+${imgui_sources}
 imgui/backends/imgui_impl_glfw.cpp
 imgui/backends/imgui_impl_glfw.h
 imgui/backends/imgui_impl_opengl3.cpp
