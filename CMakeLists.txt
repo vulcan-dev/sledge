@@ -68,7 +68,7 @@ target_precompile_headers(sledge PRIVATE
 file(GLOB_RECURSE sledge_loader_sources CONFIGURE_DEPENDS "source/loader/*.cpp")
 file(GLOB_RECURSE sledge_loader_headers CONFIGURE_DEPENDS "source/loader/*.h")
 
-add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${sledge_loader_headers} ${shared_headers})
+add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${sledge_loader_headers} ${shared_headers} "resources/launcher_resources.rc")
 target_link_libraries(sledge_loader PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
