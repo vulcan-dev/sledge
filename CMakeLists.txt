@@ -11,8 +11,8 @@ add_subdirectory(submodules)
 # ------------------------------------------------------
 # remove unnecessary windows stuff
 # ------------------------------------------------------
-string (REPLACE "/D_WINDOWS" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-string (REPLACE "/DWIN32" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+string(REPLACE "/D_WINDOWS" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+string(REPLACE "/DWIN32" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 # ------------------------------------------------------
 # libraries
@@ -37,7 +37,6 @@ file(GLOB_RECURSE shared_headers CONFIGURE_DEPENDS "source/shared/*.h")
 file(GLOB_RECURSE sledge_sources CONFIGURE_DEPENDS "source/sledge/*.cpp")
 file(GLOB_RECURSE sledge_headers CONFIGURE_DEPENDS "source/sledge/*.h")
 
-
 # ------------------------------------------------------
 # dll
 # ------------------------------------------------------
@@ -45,8 +44,9 @@ add_library(sledge SHARED ${sledge_sources} ${shared_sources} ${sledge_headers} 
 target_link_libraries(sledge PRIVATE
     sledge_shared_dependencies
 	sledge_warnings)
-target_include_directories(sledge PRIVATE "source/sledge" "source/sledge")
-target_compile_definitions(sledge PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS CLIENT_DLL)
+target_include_directories(sledge PRIVATE "source/sledge" "source/shared")
+target_compile_definitions(sledge PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
+add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib/sledgelib.dll\" \"$(OutDir)sledgelib.dll\")
 
 # ------------------------------------------------------
 # precompiled libs for dll
