@@ -6,6 +6,7 @@
 
 #include "menu.h"
 #include "window.h"
+#include "game.h"
 #include "menustyle.h"
 #include "globals.h"
 #include "util/resources.h"
@@ -24,12 +25,11 @@ char cBuildText[18];
 
 ImVec2 vTitleSize;
 ImVec2 vBuildTextSize;
-
 ImVec2 vButtonSize;
-
 ImVec2 vIconSize;
+ImVec2 vTabSize;
 
-ImColor ImCol_White(1.f, 1.f, 1.f, 1.f);
+ImVec2 vZero2(0, 0);
 
 std::once_flag fMenuInitialized;
 
@@ -37,6 +37,7 @@ ImGuiContext* Ctx;
 
 unsigned int IconTex;
 
+int iCurrentTab = 0;
 
 void InitMenu() {
 	fPadding = Window::iSizeH / 50.f;
@@ -65,43 +66,72 @@ void InitMenu() {
 
 	vIconSize = ImVec2(fIconSize, fIconSize);
 
+	vTabSize = ImVec2(Window::iSizeW - (fPadding * 2), Window::iSizeH - (fPadding * 2) - (vButtonSize.y * 2));
+
 	ImGui::SetNextWindowSize(ImVec2(Window::iSizeW, Window::iSizeH));
 }
 
 void Menu::Draw() {
 	std::call_once(fMenuInitialized, InitMenu);
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(vZero2);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, vZero2);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+
 	ImGui::Begin("menu", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
-	
-	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(0.f, 0.f), ImVec2(Window::iSizeW, fTopbarHeight), ImColor(.1f, .1f, .75f));
-	
-	ImGui::GetWindowDrawList()->AddText(ImVec2((Window::iSizeW / 2.f) - (vTitleSize.x), fTopbarPadding), ImCol_White, "sledge");
-	ImGui::GetWindowDrawList()->AddText(ImVec2((Window::iSizeW / 2.f) - (vBuildTextSize.x), (fTopbarPadding * 2) + vTitleSize.y), ImCol_White, cBuildText);
+
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+
+	ImGui::GetWindowDrawList()->AddRectFilled(vZero2, ImVec2(Window::iSizeW, fTopbarHeight), MenuStyle::Colors::LightBlue);
+
+	ImGui::GetWindowDrawList()->AddText(ImVec2((Window::iSizeW / 2.f) - (vTitleSize.x), fTopbarPadding), MenuStyle::Colors::White, "sledge");
+	ImGui::GetWindowDrawList()->AddText(ImVec2((Window::iSizeW / 2.f) - (vBuildTextSize.x), (fTopbarPadding * 2) + vTitleSize.y), MenuStyle::Colors::White, cBuildText);
 
 	ImGui::SetCursorPosX(Window::iSizeW - fTopbarHeight);
 	if (ImGui::Button("X", ImVec2(fTopbarHeight, fTopbarHeight)))
 		Window::Close();
 
-	ImGui::SetCursorPos(ImVec2(fIconPadding, (fIconPadding / 4) + fTopbarHeight));
-	ImGui::Image((void*)(intptr_t)IconTex, vIconSize);
+	switch (iCurrentTab) {
+	case 0:
+		ImGui::SetCursorPos(ImVec2(fIconPadding, (fIconPadding / 4) + fTopbarHeight));
+		ImGui::Image((void*)(intptr_t)IconTex, vIconSize);
+		break;
+	case 1:
+		ImGui::SetCursorPos(ImVec2(fPadding, fPadding + fTopbarHeight));
+
+		ImGui::BeginChild("modlist", vTabSize);
+			ImGui::Text("hi");
+			ImGui::Button("wtf");
+		ImGui::EndChild();
+
+		break;
+	}
 
 	ImGui::SetCursorPosY(Window::iSizeH - fPadding - vButtonSize.y);
-
 	ImGui::SetCursorPosX(fPadding);
-	ImGui::Button("play", vButtonSize);
-
+	if (ImGui::Button("play", vButtonSize))
+		if (Game::Launch()) 
+			Window::Close();
+	
 	ImGui::SameLine();
 	ImGui::SetCursorPosX((fPadding * 2) + vButtonSize.x);
-	ImGui::Button("mods", vButtonSize);
+	if (ImGui::Button("mods", vButtonSize)) {
+		iCurrentTab = 1;
+	}
 
 	ImGui::SameLine();
 	ImGui::SetCursorPosX((fPadding * 3) + (vButtonSize.x * 2));
-	ImGui::Button("settings", vButtonSize);
+	if (ImGui::Button("settings", vButtonSize)) {
+		iCurrentTab = 2;
+	}
 
 	ImGui::SameLine();
 	ImGui::SetCursorPosX((fPadding * 4) + (vButtonSize.x * 3));
-	ImGui::Button("discord", vButtonSize);
+	if (ImGui::Button("discord", vButtonSize)) {
+		iCurrentTab = 3;
+	}
 
 	ImGui::End();
 
