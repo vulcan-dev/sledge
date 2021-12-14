@@ -8,6 +8,7 @@
 #include "window.h"
 #include "menustyle.h"
 #include "globals.h"
+#include "util/resources.h"
 
 #include <mutex>
 
@@ -16,6 +17,7 @@
 
 float fTopbarHeight;
 float fTopbarPadding;
+float fIconPadding;
 float fPadding;
 
 char cBuildText[18];
@@ -25,11 +27,16 @@ ImVec2 vBuildTextSize;
 
 ImVec2 vButtonSize;
 
+ImVec2 vIconSize;
+
 ImColor ImCol_White(1.f, 1.f, 1.f, 1.f);
 
 std::once_flag fMenuInitialized;
 
 ImGuiContext* Ctx;
+
+unsigned int IconTex;
+
 
 void InitMenu() {
 	fPadding = Window::iSizeH / 50.f;
@@ -51,6 +58,12 @@ void InitMenu() {
 	Ctx = ImGui::GetCurrentContext();
 	MenuStyle::Apply();
 
+	IconTex = Resources::TextureFromPNG("ICON_PNG");
+
+	fIconPadding = fPadding * 15;
+	float fIconSize = Window::iSizeW - (fIconPadding * 2);
+
+	vIconSize = ImVec2(fIconSize, fIconSize);
 
 	ImGui::SetNextWindowSize(ImVec2(Window::iSizeW, Window::iSizeH));
 }
@@ -69,6 +82,9 @@ void Menu::Draw() {
 	ImGui::SetCursorPosX(Window::iSizeW - fTopbarHeight);
 	if (ImGui::Button("X", ImVec2(fTopbarHeight, fTopbarHeight)))
 		Window::Close();
+
+	ImGui::SetCursorPos(ImVec2(fIconPadding, (fIconPadding / 4) + fTopbarHeight));
+	ImGui::Image((void*)(intptr_t)IconTex, vIconSize);
 
 	ImGui::SetCursorPosY(Window::iSizeH - fPadding - vButtonSize.y);
 
