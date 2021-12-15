@@ -1,8 +1,11 @@
 #include "sledge/loader.h"
+#include "sledge/hooks.h"
+
+#include "teardown/functions.h"
+
 #include "util/log.h"
 #include "net.h"
 #include "sledgelib.h"
-
 
 #include <string>
 
@@ -23,7 +26,6 @@ void Loader::Init(void* hModule) {
 	
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-
 	// enable escape sequences
 	DWORD dwMode = 0;
 	GetConsoleMode(hConsole, &dwMode);
@@ -42,9 +44,19 @@ void Loader::Init(void* hModule) {
 	memcpy(g_ModulePath, sModulePath.c_str(), sModulePath.length());
 	g_ModulePath[sModulePath.length()] = '\0';
 
+	LogInfo("setting up hostfxr");
 	if (!Net::Init())
 		return;
 
+	LogInfo("loading sledgelib");
 	if (!SledgeLib::Load())
 		return;
+
+	LogInfo("hooking cw");
+	if (!SledgeHooks::CW())
+		return;
+}
+
+void Loader::LateInit() {
+	Teardown::GetFunctionAddresses();
 }
