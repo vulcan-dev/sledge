@@ -20,10 +20,10 @@
 
 void Loader::Init(void* hModule) {
 	AllocConsole();
-	
+
 	// it's either we ignore the return of freopen, or we define a FILE* and get an error for not using it lol
 	freopen("CONOUT$", "w", stdout);
-	
+
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	// enable escape sequences
@@ -45,16 +45,22 @@ void Loader::Init(void* hModule) {
 	g_ModulePath[sModulePath.length()] = '\0';
 
 	LogInfo("setting up hostfxr");
-	if (!Net::Init())
+	if (!Net::Init()) {
+		LogError("failed to init hostfxr");
 		return;
+	}
 
 	LogInfo("loading sledgelib");
-	if (!SledgeLib::Load())
+	if (!SledgeLib::Load()) {
+		LogError("failed to load sledgelib");
 		return;
+	}
 
 	LogInfo("hooking cw");
-	if (!SledgeHooks::CW())
+	if (!SledgeHooks::CW()) {
+		LogError("failed to hook cw");
 		return;
+	}
 }
 
 void Loader::LateInit() {
