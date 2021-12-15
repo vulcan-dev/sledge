@@ -16,6 +16,13 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
+// from: WinUser.h
+#define SW_SHOW             5
+
+#include <windef.h>
+#include <processthreadsapi.h>
+#include <shellapi.h>
+
 float fTopbarHeight;
 float fTopbarPadding;
 float fIconPadding;
@@ -100,12 +107,12 @@ void Menu::Draw() {
 		break;
 	case 1:
 		ImGui::SetCursorPos(ImVec2(fPadding, fPadding + fTopbarHeight));
+		ImGui::Text("work in progress");
 
-		ImGui::BeginChild("modlist", vTabSize);
-			ImGui::Text("hi");
-			ImGui::Button("wtf");
-		ImGui::EndChild();
-
+		break;
+	case 2:
+		ImGui::SetCursorPos(ImVec2(fPadding, fPadding + fTopbarHeight));
+		ImGui::Text("work in progress");
 		break;
 	}
 
@@ -130,7 +137,7 @@ void Menu::Draw() {
 	ImGui::SameLine();
 	ImGui::SetCursorPosX((fPadding * 4) + (vButtonSize.x * 3));
 	if (ImGui::Button("discord", vButtonSize)) {
-		iCurrentTab = 3;
+		ShellExecuteA(0, 0, "https://www.discord.gg/SAAmJ3VSAS", 0, 0, SW_SHOW);
 	}
 
 	ImGui::End();
