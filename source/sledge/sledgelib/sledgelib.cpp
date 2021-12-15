@@ -7,8 +7,25 @@
 #include <filesystem>
 #include <string>
 
-typedef void	(*tSledgeInit) ();
+typedef void (*tSledgeInit) (void* pGetInteralPtr);
 tSledgeInit SledgeInit = nullptr;
+
+void fWriteLog(char* cMsg) {
+	LogInfo(cMsg);
+}
+
+struct CSledgeAPI_Internal {
+	void* WriteLog = fWriteLog;
+};
+
+CSledgeAPI_Internal* g_Internal;
+
+
+
+CSledgeAPI_Internal* GetInternal() {
+	LogInfo("GetInternal");
+	return g_Internal;
+}
 
 bool SledgeLib::Load() {
 	std::string sModulePath(g_ModulePath);
@@ -23,8 +40,10 @@ bool SledgeLib::Load() {
 		return false;
 	}
 
+	g_Internal = new CSledgeAPI_Internal();
+
 	LogVerbose("SledgeLib.Loader.Init: {}", reinterpret_cast<void*>(SledgeInit));
-	SledgeInit();
+	SledgeInit(GetInternal);
 
 	LogInfo("sledgelib loaded");
 
