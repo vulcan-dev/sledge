@@ -17,9 +17,9 @@ std::once_flag fInitialized;
 
 HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam) {
 	std::call_once(fInitialized, Loader::LateInit);
-	/*if (!lstrcmp(lpWindowName, "Teardown")) {
-		size_t lCharBuffSize = strlen(g_Build) + 8;
-	};*/
+	if (!lstrcmp(lpWindowName, "Teardown")) {
+		return CreateWindowExA(dwExStyle, lpClassName, "Teardown - sledge", dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+	}
 
 	return CreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 }
