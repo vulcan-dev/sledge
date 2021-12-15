@@ -6,7 +6,9 @@ enum class ELogType {
 	Verbose,
 	Info,
 	Warning,
-	Error
+	Error,
+	Net,
+	NetError
 };
 
 template <typename... Args>
@@ -27,3 +29,6 @@ inline void LogWarning(const char* cFmt, Args... Arguments) { Log(ELogType::Warn
 
 template<typename... Args>
 inline void LogError(const char* cFmt, Args... Arguments) { Log(ELogType::Error, FormatLog(cFmt, std::forward<Args>(Arguments)...)); }
+
+template<typename... Args>
+inline void LogNetError(const char* cFmt, Args... Arguments) { Log(ELogType::NetError, FormatLog(cFmt, std::forward<Args>(Arguments)...)); }

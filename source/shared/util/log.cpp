@@ -23,6 +23,14 @@
  		sLogType = "ERROR";
  		LogColor = fmt::color::red;
  		break;
+    case ELogType::Net:
+        sLogType = "C#";
+        LogColor = fmt::color::orange;
+        break;
+    case ELogType::NetError:
+        sLogType = "C# Error";
+        LogColor = fmt::color::dark_red;
+        break;
  	}
 
  	fmt::print(fg(LogColor), "[{}]", sLogType);
