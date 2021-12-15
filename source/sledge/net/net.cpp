@@ -5,6 +5,18 @@
 
 #include <libloaderapi.h>
 
+#include <string>
+
+void NetErrorWriter(const wchar_t* wcErrorMsg) {
+	size_t lMsgLen = wcslen(wcErrorMsg);
+	char* cErrorMsg = new char[lMsgLen];
+
+	wcstombs(cErrorMsg, wcErrorMsg, lMsgLen);
+	cErrorMsg[lMsgLen] = '\0';
+
+	LogNetError("{0}", cErrorMsg);
+}
+
 bool Net::Init() {
 	HMODULE HostFXR = LoadLibraryA("C:/Program Files/dotnet/host/fxr/6.0.0/hostfxr.dll");
 
@@ -16,12 +28,14 @@ bool Net::Init() {
 	hostfxr_init = reinterpret_cast<hostfxr_initialize_for_runtime_config_fn>(GetProcAddress(HostFXR, "hostfxr_initialize_for_runtime_config"));
 	hostfxr_get_delegate = reinterpret_cast<hostfxr_get_runtime_delegate_fn>(GetProcAddress(HostFXR, "hostfxr_get_runtime_delegate"));
 	hostfxr_close = reinterpret_cast<hostfxr_close_fn>(GetProcAddress(HostFXR, "hostfxr_close"));
+	hostfxr_set_error_writer = reinterpret_cast<hostfxr_set_error_writer_fn>(GetProcAddress(HostFXR, "hostfxr_set_error_writer"));
 
 	LogVerbose("hostfxr_init: {}", reinterpret_cast<void*>(hostfxr_init));
 	LogVerbose("hostfxr_get_delegate: {}", reinterpret_cast<void*>(hostfxr_get_delegate));
 	LogVerbose("hostfxr_close: {}", reinterpret_cast<void*>(hostfxr_close));
+	LogVerbose("hostfxr_set_error_writer: {}", reinterpret_cast<void*>(hostfxr_set_error_writer));
 	
-	if (!hostfxr_init || !hostfxr_get_delegate || !hostfxr_close) {
+	if (!hostfxr_init || !hostfxr_get_delegate || !hostfxr_close || !hostfxr_set_error_writer) {
 		LogError("unable to get pointer to required hostfxr function");
 		return false;
 	}
@@ -41,6 +55,8 @@ bool Net::Init() {
 		LogError("hostfxr_get_delegate failed");
 		return false;
 	}
+
+	hostfxr_set_error_writer(NetErrorWriter);
 
 	hostfxr_close(HostfxrContext);
 	
