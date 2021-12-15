@@ -19,21 +19,38 @@ public delegate void WriteLogDelegate(string cMsg, params object[] args);
 struct CSledgeInternal
 {
     public WriteLogDelegate WriteLog;
+    public WriteLogDelegate WriteError;
 }
 
 class SledgeLoader
 {
     public delegate IntPtr GetInternalAPIDelegate();
     public delegate bool InitDelegate(GetInternalAPIDelegate GetInternalAPI);
-    
+
     public static bool Init(GetInternalAPIDelegate GetInternalAPI)
     {
         IntPtr pInternal = GetInternalAPI();
 
         CSledgeInternal Internal = (CSledgeInternal)System.Runtime.InteropServices.Marshal.PtrToStructure(pInternal, typeof(CSledgeInternal));
 
-        Internal.WriteLog("sledgelib loaded");
+        SledgeLib._SetInternal(Internal);
 
+        Internal.WriteLog("sledgelib loaded");
         return true;
+    }
+}
+
+class SledgeLib
+{
+    public static CSledgeInternal _Internal;
+
+    public static void _SetInternal(CSledgeInternal Internal)
+    {
+        _Internal = Internal;
+    }
+
+    public static void WriteLog(string sLog)
+    {
+        _Internal.WriteLog(sLog);
     }
 }

@@ -10,18 +10,15 @@ typedef bool (*tSledgeLibInit) (void*);
 tSledgeLibInit SledgeLibInit;
 
 void NetWriteLog(char* cMsg) { Log(ELogType::Net, cMsg); }
+void NetWriteError(char* cMsg) { Log(ELogType::NetError, cMsg); }
 
 struct SSledgeLibInternal {
-	void* WriteLog = NetWriteLog;
+	void* _WriteLog = NetWriteLog;
+	void* _WriteError = NetWriteError;
 };
 
-SSledgeLibInternal* SledgeLibFunctions = nullptr;
-
-SSledgeLibInternal* GetFunctions() {
-	if (SledgeLibFunctions == nullptr)
-		SledgeLibFunctions = new SSledgeLibInternal();
-
-	return SledgeLibFunctions;
+SSledgeLibInternal* GetInternalFunctions() {
+	return new SSledgeLibInternal();;
 }
 
 bool SledgeLib::Load() {
@@ -38,7 +35,7 @@ bool SledgeLib::Load() {
 
 	LogVerbose("sledgelib Loader.Init: {}", reinterpret_cast<void*>(SledgeLibInit));
 	
-	if (!SledgeLibInit(GetFunctions)) {
+	if (!SledgeLibInit(GetInternalFunctions)) {
 		LogError("sledgelib failed to initialize");
 		return false;
 	}
