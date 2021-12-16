@@ -35,12 +35,8 @@ void GetModuleInfo() {
 }
 
 DWORD64 Memory::dwReadPtr(DWORD64 dwAddress, UINT iOffset) {
-	// reference:
-	// DWORD dwRelOffset = *(DWORD64*)(dwAddress + iOffset)
-	// DWORD64 dwFinalAddr = dwAddress + dwRelOffset + sizeof(dwRelOffset) + iOffset;
-
-	DWORD dwOffset = *(DWORD*)(dwAddress + iOffset);
-	return dwAddress + dwOffset + sizeof(int) + iOffset;
+	int iRelOffset = *(int*)(dwAddress + iOffset);
+	return dwAddress + iRelOffset + sizeof(int) + iOffset;
 }
 
 unsigned __int64 Memory::dwFindPattern(CSignature Sig) {
