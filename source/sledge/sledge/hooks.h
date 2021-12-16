@@ -1,5 +1,7 @@
 #pragma once
 
-namespace SledgeHooks {
-	bool CW();
+namespace Sledge {
+	namespace Hooks {
+		bool CW();
+	}
 }

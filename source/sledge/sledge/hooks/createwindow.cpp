@@ -24,7 +24,7 @@ HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, 
 	return CreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 }
 
-bool SledgeHooks::CW() {
+bool Sledge::Hooks::CW() {
 	HMODULE USER32 = GetModuleHandle("USER32.dll");
 
 	if (USER32 == NULL)
