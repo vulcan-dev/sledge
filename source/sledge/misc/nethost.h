@@ -13,7 +13,7 @@ enum hostfxr_delegate_type
 	hdt_get_function_pointer,
 };
 
-namespace Net {
+namespace NetHost {
 	namespace {
 		// from: hostfxr.h
 		typedef int (*hostfxr_initialize_for_runtime_config_fn) (const wchar_t* runtime_config_path, const struct hostfxr_initialize_parameters* parameters, hostfxr_handle* host_context_handle);

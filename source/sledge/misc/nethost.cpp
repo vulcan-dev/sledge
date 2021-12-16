@@ -1,4 +1,4 @@
-#include "net.h"
+#include "nethost.h"
 #include "globals.h"
 
 #include "util/log.h"
@@ -17,7 +17,7 @@ void NetErrorWriter(const wchar_t* wcErrorMsg) {
 	LogNetError("{0}", cErrorMsg);
 }
 
-bool Net::Init() {
+bool NetHost::Init() {
 	HMODULE HostFXR = LoadLibraryA("C:/Program Files/dotnet/host/fxr/6.0.0/hostfxr.dll");
 
 	if (!HostFXR) {
