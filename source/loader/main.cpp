@@ -1,7 +1,8 @@
 #include <minwindef.h>
-#include "loader.h"
+#include "ui/window.h"
+
 
 int __stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	Loader::Init();
+	Window::Create();
 	return 1;
 }

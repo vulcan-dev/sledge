@@ -1,11 +1,5 @@
-/*
-	to-do:
-		handle intiialization errors
-*/
-
-#include "window.h"
-#include "globals.h"
-#include "menu.h"
+#include "ui/window.h"
+#include "ui/menu.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -14,27 +8,24 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-int iWindowPosX = 0;
-int iWindowPosY = 0;
-
 GLFWwindow* GLWindow;
 
-void Window::MoveWindow(int iDeltaX, int iDeltaY) {
-	iWindowPosX = iWindowPosX + iDeltaX;
-	iWindowPosY = iWindowPosY + iDeltaY;
+void Window::MoveWindow(int iX, int iY) {
+	Window::iPosX = Window::iPosX + iX;
+	Window::iPosY = Window::iPosY + iY;
 
 	GLFWmonitor* GLMonitor = glfwGetWindowMonitor(GLWindow);
 
-	glfwSetWindowMonitor(GLWindow, GLMonitor, iWindowPosX, iWindowPosY, Window::iSizeW, Window::iSizeH, 0);
+	glfwSetWindowMonitor(GLWindow, GLMonitor, Window::iPosX, Window::iPosY, Window::iSizeW, Window::iSizeH, 0);
 }
 
 void Window::Close() {
 	glfwSetWindowShouldClose(GLWindow, 1);
 }
 
-bool Window::Create() {
+void Window::Create() {
 	if (!glfwInit())
-		return false;
+		return;
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -42,12 +33,12 @@ bool Window::Create() {
 
 	GLWindow = glfwCreateWindow(Window::iSizeW, Window::iSizeH, "sledge", NULL, NULL);
 	if (!GLWindow)
-		return false;
+		return;
 
 	glfwMakeContextCurrent(GLWindow);
 
 	if (glewInit())
-		return false;
+		return;
 
 	ImGui::CreateContext();
 	ImGui_ImplGlfw_InitForOpenGL(GLWindow, true);
@@ -78,6 +69,4 @@ bool Window::Create() {
 
 	glfwDestroyWindow(GLWindow);
 	glfwTerminate();
-
-	return true;
 }
