@@ -6,6 +6,7 @@
 #include <libloaderapi.h>
 
 #include <string>
+#include <filesystem>
 
 void NetErrorWriter(const wchar_t* wcErrorMsg) {
 	size_t lMsgLen = wcslen(wcErrorMsg);
@@ -43,6 +44,11 @@ bool NetHost::Init() {
 	std::string sModulePath(g_ModulePath);
 	std::wstring wsConfigPath(sModulePath.begin(), sModulePath.end());
 	wsConfigPath.append(L"\\sledgelib.runtimeconfig.json");
+
+	if (!std::filesystem::exists(wsConfigPath)) {
+		LogError("missing file: sledgelib.runtimeconfig.json");
+		return false;
+	}
 
 	hostfxr_handle HostfxrContext = nullptr;
 
