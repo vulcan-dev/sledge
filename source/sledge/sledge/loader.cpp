@@ -1,11 +1,11 @@
 #include "sledge/loader.h"
 #include "sledge/hooks.h"
+#include "sledge/misc/nethost.h"
 
 #include "teardown/functions.h"
 #include "teardown/hooks.h"
 
 #include "util/log.h"
-#include "misc/nethost.h"
 #include "sledgelib.h"
 
 #include <string>
@@ -70,6 +70,8 @@ void Loader::Init(void* hModule) {
 		(useful for hooking, finding sigs, etc)
 */
 void Loader::LateInit() {
+	Sledge::Hooks::Wnd();
+
 	Teardown::GetFunctionAddresses();
 	Teardown::Hooks::Game();
 }
