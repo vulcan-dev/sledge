@@ -1,7 +1,7 @@
 #include "util/log.h"
 
 #include "sledgelib.h"
-#include "misc/nethost.h"
+#include "sledge/misc/nethost.h"
 #include "globals.h"
 
 #include <string>
@@ -10,16 +10,14 @@
 typedef bool (*tSledgeLibInit) (void*, char*);
 tSledgeLibInit SledgeLibInit;
 
-void NetWriteLog(char* cMsg) { Log(ELogType::Net, cMsg); }
-void NetWriteError(char* cMsg) { Log(ELogType::NetError, cMsg); }
+void NetWriteLog(ELogType LogType, char* cMsg) { Log(LogType, cMsg); }
 
 struct SSledgeLibInternal {
 	void* _WriteLog = NetWriteLog;
-	void* _WriteError = NetWriteError;
 };
 
 SSledgeLibInternal* GetInternalFunctions() {
-	return new SSledgeLibInternal();;
+	return new SSledgeLibInternal();
 }
 
 bool SledgeLib::Load() {
