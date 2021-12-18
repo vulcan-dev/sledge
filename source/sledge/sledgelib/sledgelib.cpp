@@ -17,6 +17,8 @@ tSledgeLibInit SledgeLibInit;
 struct SSledgeLibInternal {
 	void* _WriteLog = SledgeLib::NetFuncs::WriteLog;
 	void* _CreateBind = SledgeLib::NetFuncs::CreateBind;
+	void* _CreateCallback = SledgeLib::NetFuncs::CreateCallback;
+	void* _IsPlaying = SledgeLib::NetFuncs::IsPlaying;
 };
 
 SSledgeLibInternal* GetInternalFunctions() {
