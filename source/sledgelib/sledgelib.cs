@@ -37,11 +37,6 @@
         m_Internal.Log(ELogType.General, sLog);
     }
 
-    public static void RegisterBind()
-    {
-
-    }
-
     public static void WriteError(string sLog)
     {
         m_Internal.Log(ELogType.Error, sLog);
