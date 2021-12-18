@@ -8,17 +8,14 @@
 
 #include <detours.h>
 
-#include <mutex>
-
 typedef HWND (*tCreateWindowExA)	(DWORD, LPCSTR, LPCSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
 tCreateWindowExA CreateWindowExA;
 
-std::once_flag fInitialized;
 
 HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam) {
-	std::call_once(fInitialized, Loader::LateInit);
 	if (!lstrcmp(lpWindowName, "Teardown")) {
 		g_hWnd = CreateWindowExA(dwExStyle, lpClassName, "Teardown - sledge", dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+		Loader::LateInit();
 		return reinterpret_cast<HWND>(g_hWnd);
 	}
 
@@ -27,10 +24,10 @@ HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, 
 
 bool Sledge::Hooks::CW() {
 	HMODULE USER32 = GetModuleHandle("USER32.dll");
-
+	
 	if (USER32 == NULL)
 		return false;
-
+	
 	CreateWindowExA = reinterpret_cast<tCreateWindowExA>(GetProcAddress(USER32, "CreateWindowExA"));
 
 	DetourTransactionBegin();
