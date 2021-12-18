@@ -7,21 +7,19 @@
 #define WM_KEYDOWN 0x0100
 #define WM_KEYUP 0x0101
 
-typedef void (*tCallbackFunction) (void);
-
 std::vector<CKeyBind*> vBinds;
-std::mutex Mutex;
+std::mutex BindMutex;
 
 void __RegisterBind(CKeyBind* Bind) {
-	Mutex.lock();
+	BindMutex.lock();
 	vBinds.push_back(Bind);
-	Mutex.unlock();
+	BindMutex.unlock();
 }
 
 void __UnregisterBind(CKeyBind* Bind) {
-	Mutex.lock();
+	BindMutex.lock();
 	vBinds.erase(std::remove(vBinds.begin(), vBinds.end(), Bind), vBinds.end());
-	Mutex.unlock();
+	BindMutex.unlock();
 }
 
 void Binds::OnInput(unsigned int uMsg, unsigned __int64 wParam) {
@@ -42,7 +40,7 @@ void Binds::OnInput(unsigned int uMsg, unsigned __int64 wParam) {
 	}
 }
 
-CKeyBind::CKeyBind(EBindType eType, int iKeyCode, void* pValue, bool bActive) {
+CKeyBind::CKeyBind(EBindType eType, int iKeyCode, tBindFunction pValue, bool bActive) {
 	this->m_BindType = eType;
 	this->m_KeyId = iKeyCode;
 	this->m_Active = bActive;
@@ -57,7 +55,7 @@ CKeyBind::~CKeyBind() {
 void CKeyBind::OnKeyDown() {
 	switch (this->m_BindType) {
 	case EBindType::Callback:
-		reinterpret_cast<tCallbackFunction>(this->m_Value)();
+		this->m_Value();
 		break;
 
 	case EBindType::Increase: {
