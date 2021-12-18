@@ -11,7 +11,7 @@ enum class EBindType : unsigned int {
 class CKeyBind {
 public:
 	EBindType m_BindType;
-	unsigned __int64 m_KeyId;
+	int m_KeyId;
 	bool m_Active;
 	void* m_Value;
 
