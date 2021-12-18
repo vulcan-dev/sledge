@@ -13,8 +13,9 @@ struct SScanneable {
 
 static const SScanneable aFunctions[] = {
 	// Memory
-	{ Signatures::Free, &Teardown::free, "Teardown::Free"},
-	{ Signatures::Alloc, &Teardown::alloc, "Teardown::Alloc"},
+	{ Signatures::Free, &Teardown::free, "Teardown::Free" },
+	{ Signatures::Alloc, &Teardown::alloc, "Teardown::Alloc" },
+	{ Signatures::Realloc, &Teardown::realloc, "Teardown::Realloc" },
 };
 
 void Teardown::GetFunctionAddresses() {
