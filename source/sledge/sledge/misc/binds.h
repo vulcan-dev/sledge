@@ -1,6 +1,6 @@
 #include "util/keycodes.h"
 
-enum class EBindType : unsigned char {
+enum class EBindType : unsigned int {
 	Callback,
 	Increase,
 	Decrease,
@@ -10,15 +10,18 @@ enum class EBindType : unsigned char {
 
 class CKeyBind {
 public:
-	CKeyBind(EBindType eType, int iKeyCode, void* pValue, bool bActive = true);
-	~CKeyBind();
-	void OnKeyDown();
-	void OnKeyUp();
-
 	EBindType m_BindType;
 	unsigned __int64 m_KeyId;
 	bool m_Active;
 	void* m_Value;
+
+	CKeyBind() = delete;
+	CKeyBind(EBindType eType, int iKeyCode, void* pValue, bool bActive = true);
+
+	~CKeyBind();
+	void OnKeyDown();
+	void OnKeyUp();
+
 };
 
 namespace Binds {
