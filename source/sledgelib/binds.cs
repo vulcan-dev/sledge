@@ -25,7 +25,6 @@ public class CBind
 
     public CBind(EBindType eType, EKeyCode iKeyCode, BindCallback pCallback, bool bActive = true)
     {
-        SledgeLib.WriteLog("registering bind");
         IntPtr pBindWrapper = SledgeLib.m_Internal.CreateBind(eType, iKeyCode, pCallback, bActive); ;
 
         if (pBindWrapper == IntPtr.Zero)
@@ -36,15 +35,11 @@ public class CBind
             return;
 
         m_BindWrapper = (SBindWrapper)NewBindWrapper;
-
-        SledgeLib.WriteLog("bind registered");
     }
 
     ~CBind()
     {
-        SledgeLib.WriteLog("destroying bind");
         this.m_BindWrapper.Destroy(this.m_BindWrapper);
-        SledgeLib.WriteLog("bind destroyed");
     }
 
     public void UpdateActive(bool bActive)
