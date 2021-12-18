@@ -1,18 +1,21 @@
 ﻿public class SledgeLib
 {
-    private enum ELogType
+    internal enum ELogType
     {
         General = 4,
         Error = 5
     }
 
-    private struct CSledgeInternal
+    internal struct CSledgeInternal
     {
-        public delegate void LogDelegate(ELogType LogType, string sMsg);
-        public LogDelegate Log;
+        internal delegate void LogDelegate(ELogType LogType, string sMsg);
+        internal LogDelegate Log;
+
+        internal delegate IntPtr CreateBindDelegate(EBindType eType, EKeyCode iKeyCode, BindCallback pCallback, bool bActive = true);
+        internal CreateBindDelegate CreateBind;
     }
 
-    private static CSledgeInternal _m_Internal;
+    internal static CSledgeInternal m_Internal;
 
     internal static bool _SetInternal(IntPtr pInternal)
     {
@@ -23,7 +26,7 @@
         if (InternalObj == null)
             return false;
 
-        _m_Internal = (CSledgeInternal)InternalObj;
+        m_Internal = (CSledgeInternal)InternalObj;
         WriteLog("sledgelib internal api loaded");
 
         return true;
@@ -31,11 +34,16 @@
 
     public static void WriteLog(string sLog)
     {
-        _m_Internal.Log(ELogType.General, sLog);
+        m_Internal.Log(ELogType.General, sLog);
+    }
+
+    public static void RegisterBind()
+    {
+
     }
 
     public static void WriteError(string sLog)
     {
-        _m_Internal.Log(ELogType.Error, sLog);
+        m_Internal.Log(ELogType.Error, sLog);
     }
 }
