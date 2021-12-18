@@ -74,6 +74,13 @@ internal class SledgeLoader
         catch (Exception e)
         {
             SledgeLib.WriteError("GetType failed: " + e);
+            SledgeLib.WriteLog("Available types:");
+            Type[] AssemblyTypes = vAssembly.GetTypes();
+            foreach (Type type in AssemblyTypes)
+            {
+                SledgeLib.WriteLog("--> " + type.FullName);
+            }
+
             return false;
         }
 
@@ -134,12 +141,14 @@ internal class SledgeLoader
         }
 
         SledgeLib.WriteLog("Fully loaded assembly: " + sAssemblyName);
-
         return true;
     }
 
     public static bool Init(GetInternalAPIDelegate GetInternalAPI, string sModulePath)
     {
+        if (GetInternalAPI == null || sModulePath == null)
+            return false;
+
         IntPtr pInternal = GetInternalAPI();
         if (!SledgeLib._SetInternal(pInternal))
             return false;
