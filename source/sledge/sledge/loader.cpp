@@ -51,12 +51,6 @@ void Loader::Init(void* hModule) {
 		return;
 	}
 
-	LogInfo("loading sledgelib");
-	if (!SledgeLib::Load()) {
-		LogError("failed to load sledgelib");
-		return;
-	}
-
 	LogInfo("hooking cw");
 	if (!Sledge::Hooks::CW()) {
 		LogError("failed to hook cw");
@@ -74,6 +68,7 @@ void Loader::LateInit() {
 
 	Teardown::GetFunctionAddresses();
 	Teardown::Hooks::Game();
+	Teardown::Hooks::CallbackHooks();
 }
 
 /*
@@ -81,6 +76,11 @@ void Loader::LateInit() {
 		At this point CGame has been created, and all the classes within it as well (CScene, CEditor, CPlayer, etc).
 		(useful for loading libraries / mods)
 */
-void Loader::LateLateInit() {
 
+void Loader::LateLateInit() {
+	LogInfo("loading sledgelib");
+	if (!SledgeLib::Load()) {
+		LogError("failed to load sledgelib");
+		return;
+	}
 }
