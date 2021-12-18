@@ -1,7 +1,11 @@
 #include "util/log.h"
 
 #include "sledgelib.h"
+#include "sledgelib/netfuncs.h"
+
 #include "sledge/misc/nethost.h"
+#include "sledge/misc/binds.h"
+
 #include "globals.h"
 
 #include <string>
@@ -10,10 +14,9 @@
 typedef bool (*tSledgeLibInit) (void*, char*);
 tSledgeLibInit SledgeLibInit;
 
-void NetWriteLog(ELogType LogType, char* cMsg) { Log(LogType, cMsg); }
-
 struct SSledgeLibInternal {
-	void* _WriteLog = NetWriteLog;
+	void* _WriteLog = SledgeLib::NetFuncs::WriteLog;
+	void* _CreateBind = SledgeLib::NetFuncs::CreateBind;
 };
 
 SSledgeLibInternal* GetInternalFunctions() {
@@ -22,7 +25,7 @@ SSledgeLibInternal* GetInternalFunctions() {
 
 bool SledgeLib::Load() {
 	std::string sModulePath(g_ModulePath);
-
+	
 	std::wstring wsLibPath(sModulePath.begin(), sModulePath.end());
 	wsLibPath.append(L"\\mods\\sledgelib.dll");
 
