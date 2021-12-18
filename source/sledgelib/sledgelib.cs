@@ -1,4 +1,6 @@
-﻿public class SledgeLib
+﻿public delegate void CallbackDelegate();
+
+public class SledgeLib
 {
     internal enum ELogType
     {
@@ -11,8 +13,14 @@
         internal delegate void LogDelegate(ELogType LogType, string sMsg);
         internal LogDelegate Log;
 
-        internal delegate IntPtr CreateBindDelegate(EBindType eType, EKeyCode iKeyCode, BindCallback pCallback, bool bActive = true);
+        internal delegate IntPtr CreateBindDelegate(EBindType eType, EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true);
         internal CreateBindDelegate CreateBind;
+
+        internal delegate IntPtr CreateCallbackDelegate(ECallbackType eType, CallbackDelegate pCallback, bool bActive = true);
+        internal CreateCallbackDelegate CreateCallback;
+
+        internal delegate bool IsPlayingDelegate();
+        internal IsPlayingDelegate IsPlaying;
     }
 
     internal static CSledgeInternal m_Internal;
