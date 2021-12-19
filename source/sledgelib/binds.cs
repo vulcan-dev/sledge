@@ -9,21 +9,13 @@
     internal SetActiveDelegate SetActive;
 }
 
-/*
-    to-do: port over the other bind types
- */
-public enum EBindType : uint
-{
-    Callback = 0
-}
-
 public class CBind
 {
-    private SBindWrapper m_BindWrapper;
+    internal SBindWrapper m_BindWrapper;
 
-    public CBind(EBindType eType, EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true)
+    public CBind(EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true)
     {
-        IntPtr pBindWrapper = SledgeLib.m_Internal.CreateBind(eType, iKeyCode, pCallback, bActive); ;
+        IntPtr pBindWrapper = SledgeLib.m_Internal.CreateBind(iKeyCode, pCallback, bActive); ;
 
         if (pBindWrapper == IntPtr.Zero)
             return;
