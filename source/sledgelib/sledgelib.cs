@@ -13,14 +13,17 @@ public class SledgeLib
         internal delegate void LogDelegate(ELogType LogType, string sMsg);
         internal LogDelegate Log;
 
-        internal delegate IntPtr CreateBindDelegate(EBindType eType, EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true);
+        internal delegate IntPtr CreateBindDelegate(EKeyCode iKeyCode, CallbackDelegate Value, bool bActive);
         internal CreateBindDelegate CreateBind;
 
-        internal delegate IntPtr CreateCallbackDelegate(ECallbackType eType, CallbackDelegate pCallback, bool bActive = true);
+        internal delegate IntPtr CreateCallbackDelegate(ECallbackType eType, CallbackDelegate pCallback, bool bActive);
         internal CreateCallbackDelegate CreateCallback;
 
         internal delegate bool IsPlayingDelegate();
         internal IsPlayingDelegate IsPlaying;
+
+        internal delegate IntPtr GetPlayerDelegate();
+        internal GetPlayerDelegate GetPlayer;
     }
 
     internal static CSledgeInternal m_Internal;
@@ -35,6 +38,9 @@ public class SledgeLib
             return false;
 
         m_Internal = (CSledgeInternal)InternalObj;
+
+        Player.SetWrapper(m_Internal.GetPlayer());
+
         WriteLog("sledgelib internal api loaded");
 
         return true;
