@@ -8,9 +8,9 @@ namespace SledgeLib {
 		void WriteLog(int eLogType, char* cMsg);
 
 		/*
-			internal delegate IntPtr CreateBindDelegate(EBindType eType, EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true);
+			internal delegate IntPtr CreateBindDelegate(EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true);
 		*/
-		void* CreateBind(unsigned int eType, int iKeyCode, void* pCallback, bool bActive);
+		void* CreateBind(int iKeyCode, void* pCallback, bool bActive);
 
 		/*
 			internal delegate IntPtr CreateCallbackDelegate(ECallbackType eType, CallbackDelegate pCallback, bool bActive = true);
@@ -21,5 +21,10 @@ namespace SledgeLib {
 			internal delegate bool IsPlayingDelegate();
 		*/
 		bool IsPlaying();
+
+		/*
+			internal delegate IntPtr GetPlayerDelegate();
+		*/
+		void* GetPlayer();
 	}
 }
