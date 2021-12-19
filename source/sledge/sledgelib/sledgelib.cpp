@@ -19,6 +19,7 @@ struct SSledgeLibInternal {
 	void* _CreateBind = SledgeLib::NetFuncs::CreateBind;
 	void* _CreateCallback = SledgeLib::NetFuncs::CreateCallback;
 	void* _IsPlaying = SledgeLib::NetFuncs::IsPlaying;
+	void* _GetPlayer = SledgeLib::NetFuncs::GetPlayer;
 };
 
 SSledgeLibInternal* GetInternalFunctions() {
