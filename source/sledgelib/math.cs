@@ -18,3 +18,9 @@ public struct Vector4
     public float z;
     public float w;
 }
+
+public struct Transform
+{
+    public Vector3 Position;
+    public Vector4 Rotation;
+}
