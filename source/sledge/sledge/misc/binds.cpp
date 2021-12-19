@@ -40,7 +40,7 @@ void Binds::OnInput(unsigned int uMsg, unsigned __int64 wParam) {
 	}
 }
 
-CKeyBind::CKeyBind(EBindType eType, int iKeyCode, tBindFunction pValue, bool bActive) {
+CKeyBind::CKeyBind(EBindType eType, int iKeyCode, void* pValue, bool bActive) {
 	this->m_BindType = eType;
 	this->m_KeyId = iKeyCode;
 	this->m_Active = bActive;
@@ -54,40 +54,42 @@ CKeyBind::~CKeyBind() {
 
 void CKeyBind::OnKeyDown() {
 	switch (this->m_BindType) {
-	case EBindType::Callback:
-		this->m_Value();
-		break;
+		case EBindType::Callback:
+			reinterpret_cast<tBindFunction>(this->m_Value)();
+			break;
 
-	case EBindType::Increase: {
-		int* nValue = reinterpret_cast<int*>(this->m_Value);
-		nValue++;
-		break;
-	}
-	case EBindType::Decrease: {
-		int* nValue = reinterpret_cast<int*>(this->m_Value);
-		nValue--;
-		break;
-	}
+		case EBindType::Increase: {
+			int* iValue = reinterpret_cast<int*>(this->m_Value);
+			iValue++;
+			break;
+		}
 
-	case EBindType::Bool: {
-		bool* bValue = reinterpret_cast<bool*>(this->m_Value);
-		*bValue = true;
-		break;
-	}
+		case EBindType::Decrease: {
+			int* iValue = reinterpret_cast<int*>(this->m_Value);
+			iValue--;
+			break;
+		}
 
-	case EBindType::BoolToggle: {
-		bool* bValue = reinterpret_cast<bool*>(this->m_Value);
-		*bValue = !*bValue;
-		break;
-	}
+		case EBindType::BoolToggle: {
+			bool* bValue = reinterpret_cast<bool*>(this->m_Value);
+			*bValue = !*bValue;
+			break;
+		}
+
+		case EBindType::Bool: {
+			bool* bValue = reinterpret_cast<bool*>(this->m_Value);
+			*bValue = true;
+			break;
+		}
 	}
 }
 
 void CKeyBind::OnKeyUp() {
 	switch (this->m_BindType) {
-	case EBindType::Bool:
-		bool bValue = reinterpret_cast<bool**>(this->m_Value);
-		bValue = false;
-		break;
+		case EBindType::Bool: {
+			bool* bValue = reinterpret_cast<bool*>(this->m_Value);
+			*bValue = false;
+			break;
+		}
 	}
 }
