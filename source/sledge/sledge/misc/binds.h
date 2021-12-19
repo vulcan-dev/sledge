@@ -1,7 +1,6 @@
 #include "util/keycodes.h"
 typedef void (*tBindFunction) (void);
 
-
 enum class EBindType : unsigned int {
 	Callback,
 	Increase,
@@ -15,10 +14,10 @@ public:
 	EBindType m_BindType;
 	int m_KeyId;
 	bool m_Active;
-	tBindFunction m_Value;
+	void* m_Value;
 
 	CKeyBind() = delete;
-	CKeyBind(EBindType eType, int iKeyCode, tBindFunction pValue, bool bActive = true);
+	CKeyBind(EBindType eType, int iKeyCode, void* pCallback, bool bActive = true);
 
 	~CKeyBind();
 	void OnKeyDown();
