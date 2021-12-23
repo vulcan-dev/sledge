@@ -42,6 +42,8 @@ public class SledgeLib
         m_CAPI.RegisterCallback(ECallbackType.PlayerSpawn, CCallbackManager.PlayerSpawnCallback);
         m_CAPI.RegisterCallback(ECallbackType.PreUpdate, CCallbackManager.PreUpdateCallback);
         m_CAPI.RegisterCallback(ECallbackType.PostUpdate, CCallbackManager.PostUpdateCallback);
+        m_CAPI.RegisterCallback(ECallbackType.PrePlayerUpdate, CCallbackManager.PrePlayerUpdateCallback);
+        m_CAPI.RegisterCallback(ECallbackType.PostPlayerUpdate, CCallbackManager.PostPlayerUpdateCallback);
 
         WriteLog("sledgelib loaded");
         return true;

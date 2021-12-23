@@ -32,16 +32,28 @@ void hSpawnPlayer(void* pPlayer) {
 	_Callbacks::OnPlayerSpawn();
 }
 
+typedef void (*tUpdatePlayer) (void* pPlayer, float fTimeStep);
+tUpdatePlayer UpdatePlayer;
+
+void hUpdatePlayer(void* pPlayer, float fTimeStep) {
+	_Callbacks::OnPrePlayerUpdate();
+	UpdatePlayer(pPlayer, fTimeStep);
+	_Callbacks::OnPostPlayerUpdate();
+}
+
 void Teardown::Hooks::CallbackHooks() {
 	SpawnPlayer = reinterpret_cast<tSpawnPlayer>(Memory::dwFindPattern(Signatures::SpawnPlayer));
+	UpdatePlayer = reinterpret_cast<tUpdatePlayer>(Memory::dwFindPattern(Signatures::UpdatePlayer));
 	Update = reinterpret_cast<tUpdate>(Memory::dwFindPattern(Signatures::Update));
 	
 	LogVerbose("SpawnPlayer: {}", reinterpret_cast<void*>(SpawnPlayer));
+	LogVerbose("UpdatePlayer: {}", reinterpret_cast<void*>(UpdatePlayer));
 	LogVerbose("Update: {}", reinterpret_cast<void*>(Update));
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 	DetourAttach(&SpawnPlayer, hSpawnPlayer);
+	DetourAttach(&UpdatePlayer, hUpdatePlayer);
 	DetourAttach(&Update, hUpdate);
 	DetourTransactionCommit();
 }

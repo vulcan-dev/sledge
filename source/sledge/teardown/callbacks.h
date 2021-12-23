@@ -5,7 +5,9 @@ typedef void (*tCallbackFunction) (void);
 enum class ECallbackType : unsigned int {
 	PlayerSpawn,
 	PreUpdate,
-	PostUpdate
+	PostUpdate,
+	PrePlayerUpdate,
+	PostPlayerUpdate
 };
 
 
@@ -65,6 +67,12 @@ public:
 		case ECallbackType::PostUpdate:
 			_Callbacks::PostUpdate::RegisterCallback(this);
 			break;
+		case ECallbackType::PrePlayerUpdate:
+			_Callbacks::PrePlayerUpdate::RegisterCallback(this);
+			break;
+		case ECallbackType::PostPlayerUpdate:
+			_Callbacks::PostPlayerUpdate::RegisterCallback(this);
+			break;
 		}
 	}
 
@@ -78,6 +86,12 @@ public:
 			break;
 		case ECallbackType::PostUpdate:
 			_Callbacks::PostUpdate::UnregisterCallback(this);
+			break;
+		case ECallbackType::PrePlayerUpdate:
+			_Callbacks::PrePlayerUpdate::UnregisterCallback(this);
+			break;
+		case ECallbackType::PostPlayerUpdate:
+			_Callbacks::PostPlayerUpdate::UnregisterCallback(this);
 			break;
 		}
 	}
