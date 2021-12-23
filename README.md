@@ -3,6 +3,9 @@ Sledge is an open source project that aims to bring full C# modding support to [
 
 The current goal is to port all of the already available Lua functions to C#, then add new / custom ones on top. (i.e. Voxel loading, changing gl uniforms, loading custom shaders, etc)
 
+Need help? Wanna know more about the project?
+Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
+
 ## Build requirements:
 * [CMake](https://cmake.org/download/)
 * [Visual Studio](https://visualstudio.microsoft.com/)
