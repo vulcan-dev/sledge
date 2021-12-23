@@ -1,6 +1,6 @@
 #include "teardown/functions.h"
 #include "teardown/signatures.h"
-#include "teardown/functions/memory.h"
+#include "teardown/functions/constructors.h"
 
 #include "util/memory.h"
 #include "util/log.h"
@@ -12,10 +12,19 @@ struct SScanneable {
 };
 
 static const SScanneable aFunctions[] = {
-	// Memory
-	{ Signatures::Free, &Teardown::free, "Teardown::Free" },
-	{ Signatures::Alloc, &Teardown::alloc, "Teardown::Alloc" },
-	{ Signatures::Realloc, &Teardown::realloc, "Teardown::Realloc" },
+	// constructors
+	{ Signatures::Body, &Teardown::Constructors::Body, "CBody::CBody" },
+	{ Signatures::Shape, &Teardown::Constructors::Shape, "CShape::CShape" },
+	{ Signatures::Light, &Teardown::Constructors::Light, "CLight::CLight" },
+	{ Signatures::Location, &Teardown::Constructors::Location, "CLocation::CLocation" },
+	{ Signatures::Water, &Teardown::Constructors::Water, "CWater::CWater" },
+	{ Signatures::Enemy, &Teardown::Constructors::Enemy, "CEnemy::CEnemy" },
+	{ Signatures::Joint, &Teardown::Constructors::Joint, "CJoint::CJoint" },
+	{ Signatures::Vehicle, &Teardown::Constructors::Vehicle, "CVehicle::CVehicle" },
+	{ Signatures::Wheel, &Teardown::Constructors::Wheel, "CWheel::CWheel" },
+	{ Signatures::Screen, &Teardown::Constructors::Screen, "CScreen::CScreen" },
+	{ Signatures::Trigger, &Teardown::Constructors::Trigger, "CTrigger::CTrigger" },
+	{ Signatures::Script, &Teardown::Constructors::Script, "CScript::CScript" },
 };
 
 void Teardown::GetFunctionAddresses() {

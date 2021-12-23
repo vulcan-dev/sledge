@@ -1,58 +1,65 @@
-﻿public delegate void CallbackDelegate();
+﻿using System.Runtime.InteropServices;
 
 public class SledgeLib
 {
+    #pragma warning disable 8618
+    [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8*4)]
+    internal class CSledgeCAPI
+    {
+        internal delegate void dLog(ELogType LogType, string sMsg);
+        [FieldOffset(0x0)] internal dLog Log;
+
+        internal delegate IntPtr dRegisterInputReader(dInputReader Reader);
+        [FieldOffset(0x8)] internal dRegisterInputReader RegisterInputReader;
+
+        internal delegate IntPtr dRegisterCallback(ECallbackType eType, dCallback pCallback);
+        [FieldOffset(0x10)] internal dRegisterCallback RegisterCallback;
+
+        internal delegate IntPtr dGetPlayer();
+        [FieldOffset(0x18)] internal dGetPlayer GetPlayer;
+    }
+    
+    internal static CSledgeCAPI m_CAPI;
+    internal static CPlayerWrapper m_PlayerWrapper;
+    #pragma warning restore 8618
+
+    public static CPlayer Player = new CPlayer();
+
+    internal static bool _InitCAPI(IntPtr pAPI)
+    {
+        object? CAPI = Marshal.PtrToStructure(pAPI, typeof(CSledgeCAPI));
+        if (CAPI == null)
+            return false;
+        m_CAPI = (CSledgeCAPI)CAPI;
+
+        object? PlayerWrapper = Marshal.PtrToStructure(m_CAPI.GetPlayer(), typeof(CPlayerWrapper));
+        if (PlayerWrapper == null)
+            return false;
+        m_PlayerWrapper = (CPlayerWrapper)PlayerWrapper;
+
+        m_CAPI.RegisterInputReader(CBindManager.InputReader);
+
+        m_CAPI.RegisterCallback(ECallbackType.PlayerSpawn, CCallbackManager.PlayerSpawnCallback);
+        m_CAPI.RegisterCallback(ECallbackType.PreUpdate, CCallbackManager.PreUpdateCallback);
+        m_CAPI.RegisterCallback(ECallbackType.PostUpdate, CCallbackManager.PostUpdateCallback);
+
+        WriteLog("sledgelib loaded");
+        return true;
+    }
+
     internal enum ELogType
     {
         General = 4,
         Error = 5
     }
 
-    internal struct CSledgeInternal
-    {
-        internal delegate void LogDelegate(ELogType LogType, string sMsg);
-        internal LogDelegate Log;
-
-        internal delegate IntPtr CreateBindDelegate(EKeyCode iKeyCode, CallbackDelegate Value, bool bActive);
-        internal CreateBindDelegate CreateBind;
-
-        internal delegate IntPtr CreateCallbackDelegate(ECallbackType eType, CallbackDelegate pCallback, bool bActive);
-        internal CreateCallbackDelegate CreateCallback;
-
-        internal delegate bool IsPlayingDelegate();
-        internal IsPlayingDelegate IsPlaying;
-
-        internal delegate IntPtr GetPlayerDelegate();
-        internal GetPlayerDelegate GetPlayer;
-    }
-
-    internal static CSledgeInternal m_Internal;
-
-    internal static bool _SetInternal(IntPtr pInternal)
-    {
-        if (pInternal == IntPtr.Zero)
-            return false;
-
-        object? InternalObj = System.Runtime.InteropServices.Marshal.PtrToStructure(pInternal, typeof(CSledgeInternal));
-        if (InternalObj == null)
-            return false;
-
-        m_Internal = (CSledgeInternal)InternalObj;
-
-        Player.SetWrapper(m_Internal.GetPlayer());
-
-        WriteLog("sledgelib internal api loaded");
-
-        return true;
-    }
-
     public static void WriteLog(string sLog)
     {
-        m_Internal.Log(ELogType.General, sLog);
+        m_CAPI.Log(ELogType.General, sLog);
     }
 
     public static void WriteError(string sLog)
     {
-        m_Internal.Log(ELogType.Error, sLog);
+        m_CAPI.Log(ELogType.Error, sLog);
     }
 }

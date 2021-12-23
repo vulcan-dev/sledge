@@ -3,38 +3,37 @@
 #include "teardown/classes/game.h"
 #include "teardown/classes/player.h"
 
-float GetHealth() {
-	return g_Game->m_Player->m_Health;
-}
+#include "util/log.h"
 
-void SetHealth(float fHealth) {
-	g_Game->m_Player->m_Health = fHealth;
-}
+void SetHealth(float fHealth) { g_Game->m_Player->m_Health = fHealth; }
+float GetHealth() { return g_Game->m_Player->m_Health; }
 
-Vector3 GetPosition() {
-	return g_Game->m_Player->m_Position;
-}
+void SetPosition(Vector3 vPosition) { g_Game->m_Player->m_Position = vPosition; }
+Vector3 GetPosition() { return g_Game->m_Player->m_Position; }
 
-void SetPosition(Vector3 vPosition) {
-	g_Game->m_Player->m_Position = vPosition;
-}
+void SetVelocity(Vector3 vVelocity) { g_Game->m_Player->m_Velocity = vVelocity; }
+Vector3 GetVelocity() { return g_Game->m_Player->m_Velocity; }
+
+void SetCameraTransform(Transform tCameraTransform) { g_Game->m_Player->m_CameraTransform2 = tCameraTransform;}
+Transform GetCameraTransform() { return g_Game->m_Player->m_CameraTransform; }
+
+Vector2 GetMovementKeys() { return g_Game->m_Player->m_MovementKeys; }
+Vector2 GetMouseInput() { return g_Game->m_Player->m_MouseInput; }
 
 struct SPlayerWrapper {
-	// internal delegate float GetHealthDelegate();
-	void* m_GetHealth = GetHealth;
-
-	// internal delegate void SetHealthDelegate(float fHealth);
-	void* m_SetHealth = SetHealth;
-
-	//internal delegate Vector3 GetPositionDelegate();
-	void* m_GetPosition = GetPosition;
-
-	//internal delegate void SetPositionDelegate(Vector3 vPosition);
-	void* m_SetPosition = SetPosition;
+	void* _SetHealth = SetHealth;
+	void* _GetHealth = GetHealth;
+	void* _SetPosition = SetPosition;
+	void* _GetPosition = GetPosition;
+	void* _SetVelocity = SetVelocity;
+	void* _GetVelocity = GetVelocity;
+	void* _SetCameraTransform = SetCameraTransform;
+	void* _GetCameraTransform = GetCameraTransform;
+	void* _GetMovementKeys = GetMovementKeys;
+	void* _GetMouseInput = GetMouseInput;
 };
 
-SPlayerWrapper* PlayerWraper = new SPlayerWrapper();
-
 void* SledgeLib::NetFuncs::GetPlayer() {
-	return PlayerWraper;
+	SPlayerWrapper* PlayerWrapper = new SPlayerWrapper();
+	return PlayerWrapper;
 }

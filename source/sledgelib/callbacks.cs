@@ -1,46 +1,104 @@
-﻿public enum ECallbackType : uint
+﻿using System.Collections.Concurrent;
+
+public delegate void dCallback();
+
+public enum ECallbackType : uint
 {
     PlayerSpawn = 0,
     PreUpdate = 1,
     PostUpdate = 2
 }
 
-internal struct SCallbackWrapper
+internal class CCallbackManager
 {
-    IntPtr m_CallbackInstance;
+    internal static ConcurrentBag<CCallback> m_PlayerSpawnCallbacks = new ConcurrentBag<CCallback>();
+    internal static ConcurrentBag<CCallback> m_PreUpdateCallbacks = new ConcurrentBag<CCallback>();
+    internal static ConcurrentBag<CCallback> m_PostUpdateCallbacks = new ConcurrentBag<CCallback>();
 
-    internal delegate void DestroyDelegate(SCallbackWrapper pThis);
-    internal DestroyDelegate Destroy;
+    internal static void OnPlayerSpawn()
+    {
+        foreach (CCallback Callback in m_PlayerSpawnCallbacks)
+        {
+            if (!Callback.m_Active)
+                continue;
 
-    internal delegate void SetActiveDelegate(SCallbackWrapper pThis, bool bActive);
-    internal SetActiveDelegate SetActive;
+            try
+            {
+                Callback.m_Callback();
+            } catch (Exception e)
+            {
+                SledgeLib.WriteError("Callback error: " + e.Message);
+                Callback.m_Active = false;
+            }
+        }
+    }
+    internal static dCallback PlayerSpawnCallback = new dCallback(OnPlayerSpawn);
+
+    internal static void OnPreUpdate()
+    {
+        foreach (CCallback Callback in m_PreUpdateCallbacks)
+        {
+            if (!Callback.m_Active)
+                continue;
+
+            try
+            {
+                Callback.m_Callback();
+            }
+            catch (Exception e)
+            {
+                SledgeLib.WriteError("Callback error: " + e.Message);
+                Callback.m_Active = false;
+            }
+        }
+    }
+    internal static dCallback PreUpdateCallback = new dCallback(OnPreUpdate);
+
+
+    internal static void OnPostUpdate()
+    {
+        foreach (CCallback Callback in m_PostUpdateCallbacks)
+        {
+            if (!Callback.m_Active)
+                continue;
+
+            try
+            {
+                Callback.m_Callback();
+            }
+            catch (Exception e)
+            {
+                SledgeLib.WriteError("Callback error: " + e.Message);
+                Callback.m_Active = false;
+            }
+        }
+    }
+    internal static dCallback PostUpdateCallback = new dCallback(OnPostUpdate);
 }
 
 public class CCallback
 {
-    private SCallbackWrapper m_CallbackWrapper;
+    internal ECallbackType m_CallbackType;
+    internal dCallback m_Callback;
+    public bool m_Active;
 
-    public CCallback(ECallbackType eType, CallbackDelegate pCallback, bool bActive = true)
+    public CCallback(ECallbackType eType, dCallback Callback, bool bActive = true)
     {
-        IntPtr pCallbackWrapper = SledgeLib.m_Internal.CreateCallback(eType, pCallback, bActive);
+        m_CallbackType = eType;
+        m_Callback = Callback;
+        m_Active = bActive;
 
-        if (pCallbackWrapper == IntPtr.Zero)
-            return;
-
-        SCallbackWrapper? NewCallbackWrapper = (SCallbackWrapper?)System.Runtime.InteropServices.Marshal.PtrToStructure(pCallbackWrapper, typeof(SCallbackWrapper));
-        if (NewCallbackWrapper == null)
-            return;
-
-        m_CallbackWrapper = (SCallbackWrapper)NewCallbackWrapper;
-    }
-
-    ~CCallback()
-    {
-        this.m_CallbackWrapper.Destroy(this.m_CallbackWrapper);
-    }
-
-    public void SetActive(bool bActive)
-    {
-        this.m_CallbackWrapper.SetActive(this.m_CallbackWrapper, bActive);
+        switch (eType)
+        {
+            case ECallbackType.PlayerSpawn:
+                CCallbackManager.m_PlayerSpawnCallbacks.Add(this);
+                break;
+            case ECallbackType.PreUpdate:
+                CCallbackManager.m_PreUpdateCallbacks.Add(this);
+                break;
+            case ECallbackType.PostUpdate:
+                CCallbackManager.m_PostUpdateCallbacks.Add(this);
+                break;
+        }
     }
 }

@@ -3,27 +3,22 @@
 namespace SledgeLib {
 	namespace NetFuncs {
 		/*
-			 internal delegate void LogDelegate(ELogType LogType, string sMsg);
+			 internal delegate void dLog(ELogType LogType, string sMsg);
 		*/
 		void WriteLog(int eLogType, char* cMsg);
 
 		/*
-			internal delegate IntPtr CreateBindDelegate(EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true);
+			internal delegate void dRegisterInputReader(dCallback Callback);
 		*/
-		void* CreateBind(int iKeyCode, void* pCallback, bool bActive);
+		void RegisterInputReader(void* InputReader);
 
 		/*
-			internal delegate IntPtr CreateCallbackDelegate(ECallbackType eType, CallbackDelegate pCallback, bool bActive = true);
+			internal delegate IntPtr dRegisterCallback(ECallbackType eType, CallbackDelegate pCallback);
 		*/
-		void* CreateCallback(unsigned int eType, void* pCallback, bool bActive);
+		void RegisterCallback(unsigned int eType, void* pCallback);
 
 		/*
-			internal delegate bool IsPlayingDelegate();
-		*/
-		bool IsPlaying();
-
-		/*
-			internal delegate IntPtr GetPlayerDelegate();
+			internal delegate CPlayer dGetPlayer();
 		*/
 		void* GetPlayer();
 	}

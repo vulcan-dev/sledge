@@ -11,20 +11,14 @@
 #include <string>
 #include <filesystem>
 
-typedef bool (*tSledgeLibInit) (void*, char*);
-tSledgeLibInit SledgeLibInit;
-
 struct SSledgeLibInternal {
 	void* _WriteLog = SledgeLib::NetFuncs::WriteLog;
-	void* _CreateBind = SledgeLib::NetFuncs::CreateBind;
-	void* _CreateCallback = SledgeLib::NetFuncs::CreateCallback;
-	void* _IsPlaying = SledgeLib::NetFuncs::IsPlaying;
+	void* _RegisterInputReader = SledgeLib::NetFuncs::RegisterInputReader;
+	void* _RegisterCallback = SledgeLib::NetFuncs::RegisterCallback;
 	void* _GetPlayer = SledgeLib::NetFuncs::GetPlayer;
 };
 
-SSledgeLibInternal* GetInternalFunctions() {
-	return new SSledgeLibInternal();
-}
+typedef bool (*tSledgeLibInit) (SSledgeLibInternal*, char*);
 
 bool SledgeLib::Load() {
 	std::string sModulePath(g_ModulePath);
@@ -37,7 +31,9 @@ bool SledgeLib::Load() {
 		return false;
 	}
 	
-	unsigned int iReturn = NetHost::hostfxr_load_assembly(wsLibPath.c_str(), L"SledgeLoader, sledgelib", L"Init", L"SledgeLoader+InitDelegate, sledgelib", nullptr, (void**)&SledgeLibInit);
+	tSledgeLibInit SledgeLibInit;
+
+	unsigned int iReturn = NetHost::hostfxr_load_assembly(wsLibPath.c_str(), L"SledgeLoader, sledgelib", L"Init", L"SledgeLoader+dInit, sledgelib", nullptr, (void**)&SledgeLibInit);
 	if (iReturn != 0 || SledgeLibInit == nullptr) {
 		LogError("hostfxr_load_assembly failed while loading sledgelib ({0:#x})", iReturn);
 		return false;
@@ -45,7 +41,9 @@ bool SledgeLib::Load() {
 	
 	LogVerbose("sledgelib Loader.Init: {}", reinterpret_cast<void*>(SledgeLibInit));
 	
-	if (!SledgeLibInit(GetInternalFunctions, g_ModulePath)) {
+	SSledgeLibInternal* pInternal = new SSledgeLibInternal();
+	
+	if (!SledgeLibInit(pInternal, g_ModulePath)) {
 		LogError("sledgelib failed to initialize");
 		return false;
 	}

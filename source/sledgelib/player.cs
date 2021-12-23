@@ -1,44 +1,72 @@
-﻿internal struct SPlayerWrapper
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
+
+#pragma warning disable 8618
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8 * 2)]
+internal class CPlayerWrapper
 {
-    internal delegate float GetHealthDelegate();
-    internal GetHealthDelegate GetHealth;
+    internal delegate void dSetFloat(float fValue);
+    internal delegate float dGetFloat();
 
-    internal delegate void SetHealthDelegate(float fHealth);
-    internal SetHealthDelegate SetHealth;
+    internal delegate Vector2 dGetVector2();
+    internal delegate void dSetVector2(Vector2 vValue);
 
-    internal delegate Vector3 GetPositionDelegate();
-    internal GetPositionDelegate GetPosition;
+    internal delegate Vector3 dGetVector3();
+    internal delegate void dSetVector3(Vector3 vValue);
 
-    internal delegate void SetPositionDelegate(Vector3 vPosition);
-    internal SetPositionDelegate SetPosition;
+    internal delegate Transform dGetTransform();
+    internal delegate void dSetTransform(Transform tValue);
+
+    [FieldOffset(0x0)] internal dSetFloat SetHealth;
+    [FieldOffset(0x8)] internal dGetFloat GetHealth;
+
+    [FieldOffset(0x10)] internal dSetVector3 SetPosition;
+    [FieldOffset(0x18)] internal dGetVector3 GetPosition;
+
+    [FieldOffset(0x20)] internal dSetVector3 SetVelocity;
+    [FieldOffset(0x28)] internal dGetVector3 GetVelocity;
+
+    [FieldOffset(0x30)] internal dSetTransform SetCameraTransform;
+    [FieldOffset(0x38)] internal dGetTransform GetCameraTransform;
+
+    [FieldOffset(0x40)] internal dGetVector2 GetMovementKeys;
+    [FieldOffset(0x48)] internal dGetVector2 GetMouseInput;
 }
+#pragma warning restore 8618
 
-public interface Player
+public class CPlayer
 {
-    internal static SPlayerWrapper m_PlayerWrapper;
-
-    internal static void SetWrapper(IntPtr pPlayerWrapper)
+    public float m_Health
     {
-        if (pPlayerWrapper == IntPtr.Zero)
-            return;
-
-        SPlayerWrapper? NewPlayerWrapper = (SPlayerWrapper?)System.Runtime.InteropServices.Marshal.PtrToStructure(pPlayerWrapper, typeof(SPlayerWrapper));
-        
-        if (NewPlayerWrapper == null)
-            return;
-
-        m_PlayerWrapper = (SPlayerWrapper)NewPlayerWrapper;
+        get { return SledgeLib.m_PlayerWrapper.GetHealth(); }
+        set { SledgeLib.m_PlayerWrapper.SetHealth(value); }
     }
 
-    public static float m_Health
+    public Vector3 m_Position
     {
-        get { return m_PlayerWrapper.GetHealth(); }
-        set { m_PlayerWrapper.SetHealth(value);}
+        get { return SledgeLib.m_PlayerWrapper.GetPosition(); }
+        set { SledgeLib.m_PlayerWrapper.SetPosition(value); }
     }
 
-    public static Vector3 m_Position
+    public Vector3 m_Velocity
     {
-        get {  return m_PlayerWrapper.GetPosition(); }
-        set { m_PlayerWrapper.SetPosition(value); }
+        get { return SledgeLib.m_PlayerWrapper.GetVelocity(); }
+        set { SledgeLib.m_PlayerWrapper.SetVelocity(value); }
+    }
+
+    public Transform m_CameraTransform
+    {
+        get { return SledgeLib.m_PlayerWrapper.GetCameraTransform(); }
+        set { SledgeLib.m_PlayerWrapper.SetCameraTransform(value); }
+    }
+
+    public Vector2 m_MovementKeys
+    {
+        get { return SledgeLib.m_PlayerWrapper.GetMovementKeys(); }
+    }
+
+    public Vector2 m_MouseInput
+    {
+        get { return SledgeLib.m_PlayerWrapper.GetMouseInput(); }
     }
 }

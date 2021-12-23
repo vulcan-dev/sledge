@@ -1,39 +1,51 @@
-﻿internal struct SBindWrapper
+﻿using System.Collections.Concurrent;
+
+internal delegate void dInputReader(EKeyCode iKeyCode, bool bKeyDown);
+
+internal class CBindManager
 {
-    IntPtr m_BindInstance;
+    internal static ConcurrentBag<CBind> m_Binds = new ConcurrentBag<CBind>();
 
-    internal delegate void DestroyDelegate(SBindWrapper pThis);
-    internal DestroyDelegate Destroy;
+    internal static void OnInputReader(EKeyCode iKeyCode, bool bKeyDown)
+    {
+        // haven't implemented other bind types yet
+        if (!bKeyDown)
+            return;
 
-    internal delegate void SetActiveDelegate(SBindWrapper pThis, bool bActive);
-    internal SetActiveDelegate SetActive;
+        foreach (CBind Bind in m_Binds)
+        {
+            if (!Bind.m_Active)
+                continue;
+
+            if (Bind.m_KeyCode != iKeyCode)
+                continue;
+
+            try
+            {
+                Bind.m_Callback();
+            } catch(Exception e)
+            {
+                SledgeLib.WriteError("Bind error: " + e.Message);
+                Bind.m_Active = false;
+            }
+        }
+    }
+
+    internal static dInputReader InputReader = new dInputReader(OnInputReader);
 }
 
 public class CBind
 {
-    internal SBindWrapper m_BindWrapper;
+    internal EKeyCode m_KeyCode;
+    internal dCallback m_Callback;
+    public bool m_Active;
 
-    public CBind(EKeyCode iKeyCode, CallbackDelegate pCallback, bool bActive = true)
+    public CBind(EKeyCode eKey, dCallback Callback, bool bActive = true)
     {
-        IntPtr pBindWrapper = SledgeLib.m_Internal.CreateBind(iKeyCode, pCallback, bActive); ;
+        m_KeyCode = eKey;
+        m_Callback = Callback;
+        m_Active = bActive;
 
-        if (pBindWrapper == IntPtr.Zero)
-            return;
-
-        SBindWrapper? NewBindWrapper = (SBindWrapper?)System.Runtime.InteropServices.Marshal.PtrToStructure(pBindWrapper, typeof(SBindWrapper));
-        if (NewBindWrapper == null)
-            return;
-
-        m_BindWrapper = (SBindWrapper)NewBindWrapper;
-    }
-
-    ~CBind()
-    {
-        this.m_BindWrapper.Destroy(this.m_BindWrapper);
-    }
-
-    public void SetActive(bool bActive)
-    {
-        this.m_BindWrapper.SetActive(this.m_BindWrapper, bActive);
+        CBindManager.m_Binds.Add(this);
     }
 }

@@ -29,6 +29,18 @@ namespace _Callbacks {
 		void RegisterCallback(CCallback*);
 		void UnregisterCallback(CCallback*);
 	}
+
+	void OnPrePlayerUpdate();
+	namespace PrePlayerUpdate {
+		void RegisterCallback(CCallback*);
+		void UnregisterCallback(CCallback*);
+	}
+
+	void OnPostPlayerUpdate();
+	namespace PostPlayerUpdate {
+		void RegisterCallback(CCallback*);
+		void UnregisterCallback(CCallback*);
+	}
 }
 
 class CCallback {
@@ -40,7 +52,7 @@ public:
 
 	CCallback() = delete;
 
-	CCallback(ECallbackType eType, tCallbackFunction pFunc, bool bActive) {
+	CCallback(ECallbackType eType, tCallbackFunction pFunc, bool bActive = true) {
 		this->m_Type = eType; this->m_Func = pFunc; this->m_Active = bActive;
 
 		switch (this->m_Type) {

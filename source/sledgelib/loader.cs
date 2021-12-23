@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 using System.Reflection;
+using static SledgeLib;
 
 internal class SledgeLoader
 {
-    public delegate IntPtr GetInternalAPIDelegate();
-    public delegate bool InitDelegate(GetInternalAPIDelegate GetInternalAPI, string sModulePath);
+    public delegate bool dInit(IntPtr pInternalApi, string sModulePath);
 
-    public static string? m_ModulePath;
-    public static string? m_ModsPath;
+    public static string m_ModulePath = "";
+    public static string m_ModsPath = "";
 
     private struct SAssemblyConfig
     {
@@ -74,11 +74,11 @@ internal class SledgeLoader
         catch (Exception e)
         {
             SledgeLib.WriteError("GetType failed: " + e);
-            SledgeLib.WriteLog("Available types:");
+            SledgeLib.WriteError("Available types:");
             Type[] AssemblyTypes = vAssembly.GetTypes();
             foreach (Type type in AssemblyTypes)
             {
-                SledgeLib.WriteLog("--> " + type.FullName);
+                SledgeLib.WriteError("--> " + type.FullName);
             }
 
             return false;
@@ -140,24 +140,19 @@ internal class SledgeLoader
             return false;
         }
 
-        SledgeLib.WriteLog("Fully loaded assembly: " + sAssemblyName);
+        SledgeLib.WriteLog("Successfully loaded mod: " + sAssemblyName);
         return true;
     }
 
-    public static bool Init(GetInternalAPIDelegate GetInternalAPI, string sModulePath)
+    public static bool Init(IntPtr pAPI, string sModulePath)
     {
-        if (GetInternalAPI == null || sModulePath == null)
+        if (!SledgeLib._InitCAPI(pAPI))
             return false;
-
-        IntPtr pInternal = GetInternalAPI();
-        if (!SledgeLib._SetInternal(pInternal))
-            return false;
-
-        SledgeLib.WriteLog("loading mods");
 
         m_ModulePath = sModulePath;
         m_ModsPath = sModulePath + "\\mods\\";
 
+        SledgeLib.WriteLog("loading mods");
         LoadAssembly("sledge_examplemod");
 
         return true;
