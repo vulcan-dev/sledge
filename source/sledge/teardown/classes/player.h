@@ -9,9 +9,9 @@ public:
 	char pad_0044[12]; //0x0044
 	Vector3 m_VelocityProcessed; //0x0050
 	char pad_005C[4]; //0x005C
-	Transform m_CameraTransform;
-	Transform m_CameraTransform2;
-	Transform m_CameraTransform3;
+	Transform m_CameraTransform; //0x0060
+	Transform m_CameraTransform2; //0x007C
+	Transform m_CameraTransform3; //0x0098
 	float m_CamPitchAnim; //0x00B4
 	float m_CamRollAnim; //0x00B8
 	float m_TravelDistance; //0x00BC

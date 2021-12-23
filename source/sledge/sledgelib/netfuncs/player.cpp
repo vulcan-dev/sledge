@@ -14,7 +14,7 @@ Vector3 GetPosition() { return g_Game->m_Player->m_Position; }
 void SetVelocity(Vector3 vVelocity) { g_Game->m_Player->m_Velocity = vVelocity; }
 Vector3 GetVelocity() { return g_Game->m_Player->m_Velocity; }
 
-void SetCameraTransform(Transform tCameraTransform) { g_Game->m_Player->m_CameraTransform2 = tCameraTransform;}
+void SetCameraTransform(Transform tCameraTransform) {g_Game->m_Player->m_CameraTransform2 = tCameraTransform; }
 Transform GetCameraTransform() { return g_Game->m_Player->m_CameraTransform; }
 
 Vector2 GetMovementKeys() { return g_Game->m_Player->m_MovementKeys; }
