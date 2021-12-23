@@ -7,6 +7,7 @@ The current goal is to port all of the already available Lua functions to C#, th
 * [CMake](https://cmake.org/download/)
 * [Visual Studio](https://visualstudio.microsoft.com/)
 * C++ and C# SDKs for visual studio
+* [.NET Desktop Runtime >6.0.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 * [Git](https://git-scm.com/downloads)
 
 ## How to build
