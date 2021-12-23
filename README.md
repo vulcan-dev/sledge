@@ -1,2 +1,18 @@
-# sledgeloader
-C# mod loader for Teardown
+# Sledge
+Sledge is an open source project that aims to bring full C# modding support to [Teardown](https://store.steampowered.com/app/1167630/Teardown/).
+
+The current goal is to port all of the already available Lua functions to C#, then add new / custom ones on top. (i.e. Voxel loading, changing gl uniforms, loading custom shaders, etc)
+
+## Build requirements:
+* [CMake](https://cmake.org/download/)
+* [Visual Studio](https://visualstudio.microsoft.com/)
+* C++ and C# SDKs for visual studio
+* [Git](https://git-scm.com/downloads)
+
+## How to build
+1. Clone the repository somewhere using the following command:
+``git clone --recurse-submodules https://github.com/44lr/sledge/``
+2. Run "# 1 - create project.bat"
+3. Open sledge.sln, which will now be located in the "proj" folder.
+4. Click Build.
+5. The built version of the project will now be located on proj/{configuration} (i.e. proj/Debug/)
