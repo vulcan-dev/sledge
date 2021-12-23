@@ -1,12 +1,14 @@
 #include "util/keycodes.h"
 typedef void (*tBindFunction) (void);
+typedef void (*tBindInputReaderCallback) (int, bool);
 
 enum class EBindType : unsigned int {
 	Callback,
+	InputReader,
 	Increase,
 	Decrease,
 	BoolToggle,
-	Bool
+	Bool,
 };
 
 class CKeyBind {

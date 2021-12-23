@@ -27,6 +27,18 @@ void Binds::OnInput(unsigned int uMsg, unsigned __int64 wParam) {
 		if (!Bind->m_Active)
 			continue;
 
+		if (Bind->m_BindType == EBindType::InputReader) {
+			switch (uMsg) {
+				case WM_KEYDOWN:
+					reinterpret_cast<tBindInputReaderCallback>(Bind->m_Value)(static_cast<int>(wParam), true);
+					break;
+				case WM_KEYUP:
+					reinterpret_cast<tBindInputReaderCallback>(Bind->m_Value)(static_cast<int>(wParam), false);
+					break;
+			}
+			continue;
+		}
+
 		if (wParam == Bind->m_KeyId) {
 			switch(uMsg) {
 			case WM_KEYDOWN:
@@ -54,9 +66,10 @@ CKeyBind::~CKeyBind() {
 
 void CKeyBind::OnKeyDown() {
 	switch (this->m_BindType) {
-		case EBindType::Callback:
+		case EBindType::Callback: {
 			reinterpret_cast<tBindFunction>(this->m_Value)();
 			break;
+		}
 
 		case EBindType::Increase: {
 			int* iValue = reinterpret_cast<int*>(this->m_Value);
