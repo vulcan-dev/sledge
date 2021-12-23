@@ -19,7 +19,31 @@ void NetErrorWriter(const wchar_t* wcErrorMsg) {
 }
 
 bool NetHost::Init() {
-	HMODULE HostFXR = LoadLibraryA("C:/Program Files/dotnet/host/fxr/6.0.0/hostfxr.dll");
+	if (!std::filesystem::exists("C:/Program Files/dotnet/host/fxr/")) {
+		LogError("unable to find hostfxr");
+		return false;
+	}
+
+	int iLatestVersion = 0;
+	std::string sLatestVersion = "";
+	for (std::filesystem::directory_entry const& Directory : std::filesystem::directory_iterator("C:/Program Files/dotnet/host/fxr/")) {
+		std::string Path = Directory.path().filename().string();
+		Path.erase(std::remove(Path.begin(), Path.end(), '.'), Path.end());
+
+		int iCurrentVersion = std::stoi(Path);
+		if (iCurrentVersion > iLatestVersion) {
+			iLatestVersion = iCurrentVersion;
+			sLatestVersion = Directory.path().filename().string();
+		}
+	}
+
+	std::string sLibPath = "C:/Program Files/dotnet/host/fxr/";
+	sLibPath.append(sLatestVersion);
+	sLibPath.append("/hostfxr.dll");
+
+	LogVerbose("loading hostfxr version: {}", sLatestVersion);
+
+	HMODULE HostFXR = LoadLibraryA(sLibPath.c_str());
 
 	if (!HostFXR) {
 		LogError("unable to load hostfxr.");
@@ -67,6 +91,6 @@ bool NetHost::Init() {
 	hostfxr_close(HostfxrContext);
 	
 	LogVerbose("hostfxr_load_assembly: {}", reinterpret_cast<void*>(hostfxr_load_assembly));
-
+	
 	return true;
 }
