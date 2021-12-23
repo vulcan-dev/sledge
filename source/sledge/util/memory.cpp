@@ -34,7 +34,7 @@ void GetModuleInfo() {
 	dwModuleSize = ModuleInfo.SizeOfImage;
 }
 
-DWORD64 Memory::dwReadPtr(DWORD64 dwAddress, UINT iOffset) {
+unsigned __int64 Memory::dwReadPtr(DWORD64 dwAddress, UINT iOffset) {
 	int iRelOffset = *(int*)(dwAddress + iOffset);
 	return dwAddress + iRelOffset + sizeof(int) + iOffset;
 }
