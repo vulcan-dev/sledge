@@ -20,21 +20,27 @@ void NetErrorWriter(const wchar_t* wcErrorMsg) {
 
 bool NetHost::Init() {
 	if (!std::filesystem::exists("C:/Program Files/dotnet/host/fxr/")) {
-		LogError("unable to find hostfxr");
+		LogError("unable to find hostfxr (Did you install .NET Desktop Runtime)");
 		return false;
 	}
 
 	int iLatestVersion = 0;
 	std::string sLatestVersion = "";
+	int iCurrentVersion = 0;
 	for (std::filesystem::directory_entry const& Directory : std::filesystem::directory_iterator("C:/Program Files/dotnet/host/fxr/")) {
 		std::string Path = Directory.path().filename().string();
 		Path.erase(std::remove(Path.begin(), Path.end(), '.'), Path.end());
 
-		int iCurrentVersion = std::stoi(Path);
+		iCurrentVersion = std::stoi(Path);
 		if (iCurrentVersion > iLatestVersion) {
 			iLatestVersion = iCurrentVersion;
 			sLatestVersion = Directory.path().filename().string();
 		}
+	}
+
+	if (iCurrentVersion < 600) {
+		LogError("Please update your .NET Desktop Runtime to something newer than 6.0.0, the version you currently have installed is: {}", sLatestVersion);
+		return false;
 	}
 
 	std::string sLibPath = "C:/Program Files/dotnet/host/fxr/";
@@ -67,7 +73,9 @@ bool NetHost::Init() {
 
 	std::string sModulePath(g_ModulePath);
 	std::wstring wsConfigPath(sModulePath.begin(), sModulePath.end());
-	wsConfigPath.append(L"\\Mods\\sledgelib.runtimeconfig.json");
+	wsConfigPath.append(L"\\mods\\sledgelib.runtimeconfig.json");
+
+	LogInfo("module path: {}", g_ModulePath);
 
 	if (!std::filesystem::exists(wsConfigPath)) {
 		LogError("missing file: sledgelib.runtimeconfig.json");
@@ -76,8 +84,9 @@ bool NetHost::Init() {
 
 	hostfxr_handle HostfxrContext = nullptr;
 
-	if (hostfxr_init(wsConfigPath.c_str(), nullptr, &HostfxrContext) || HostfxrContext == nullptr) {
-		LogError("hostfxr_init failed");
+	unsigned int iReturn = hostfxr_init(wsConfigPath.c_str(), nullptr, &HostfxrContext);
+	if (iReturn != 0 || HostfxrContext == nullptr) {
+		LogError("hostfxr_init failed: ({0:#x})", iReturn);
 		return false;
 	}
 
