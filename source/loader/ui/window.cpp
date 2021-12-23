@@ -44,6 +44,8 @@ void Window::Create() {
 	ImGui_ImplGlfw_InitForOpenGL(GLWindow, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
+	ImGui::GetIO().IniFilename = NULL;
+
 	while (!glfwWindowShouldClose(GLWindow)) {
 		glfwPollEvents();
 
