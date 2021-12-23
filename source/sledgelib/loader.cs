@@ -153,7 +153,20 @@ internal class SledgeLoader
         m_ModsPath = sModulePath + "\\mods\\";
 
         SledgeLib.WriteLog("loading mods");
-        LoadAssembly("sledge_examplemod");
+
+        string[] ModFiles = Directory.GetFiles(m_ModsPath);
+        foreach (string ModFile in ModFiles)
+        {
+            if (!ModFile.EndsWith(".dll"))
+                continue;
+
+            string sFileName = Path.GetFileNameWithoutExtension(ModFile);
+
+            if (sFileName == "sledgelib")
+                continue;
+
+            LoadAssembly(sFileName);
+        }
 
         return true;
     }
