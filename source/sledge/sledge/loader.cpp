@@ -19,10 +19,13 @@
 // from: WinBase.h
 #define STD_OUTPUT_HANDLE ((DWORD)-11)
 
+/*
+	Init:
+		Called the moment the DLL is injected
+*/
 void Loader::Init(void* hModule) {
 	AllocConsole();
 
-	// it's either we ignore the return of freopen, or we define a FILE* and get an error for not using it lol
 	freopen("CONOUT$", "w", stdout);
 
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -45,12 +48,6 @@ void Loader::Init(void* hModule) {
 	memcpy(g_ModulePath, sModulePath.c_str(), sModulePath.length());
 	g_ModulePath[sModulePath.length()] = '\0';
 
-	LogInfo("setting up hostfxr");
-	if (!NetHost::Init()) {
-		LogError("failed to init hostfxr");
-		return;
-	}
-
 	LogInfo("hooking cw");
 	if (!Sledge::Hooks::CW()) {
 		LogError("failed to hook cw");
@@ -64,8 +61,6 @@ void Loader::Init(void* hModule) {
 		(useful for hooking, finding sigs, etc)
 */
 void Loader::LateInit() {
-	Sledge::Hooks::Wnd();
-
 	Teardown::GetFunctionAddresses();
 	Teardown::Hooks::Game();
 	Teardown::Hooks::CallbackHooks();
@@ -76,8 +71,15 @@ void Loader::LateInit() {
 		At this point CGame has been created, and all the classes within it as well (CScene, CEditor, CPlayer, etc).
 		(useful for loading libraries / mods)
 */
-
 void Loader::LateLateInit() {
+	Sledge::Hooks::Wnd();
+
+	LogInfo("setting up hostfxr");
+	if (!NetHost::Init()) {
+		LogError("failed to init hostfxr");
+		return;
+	}
+
 	LogInfo("loading sledgelib");
 	if (!SledgeLib::Load()) {
 		LogError("failed to load sledgelib");
