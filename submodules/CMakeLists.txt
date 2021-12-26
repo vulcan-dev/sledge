@@ -31,7 +31,7 @@ target_include_directories(detours PUBLIC detours/src)
 # ---------------------------
 add_library(spng_static STATIC "libspng/spng/spng.c")
 target_compile_options(spng_static PUBLIC -DSPNG_STATIC=1 -DSPNG_USE_MINIZ=1)
-target_include_directories(spng_static PUBLIC libspng/spng)
+target_include_directories(spng_static PUBLIC "libspng/spng")
 target_link_libraries(spng_static PRIVATE miniz)
 
 # ---------------------------

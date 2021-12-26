@@ -2,7 +2,7 @@
 # set up cmake
 # ------------------------------------------------------
 cmake_minimum_required(VERSION 3.20)
-project(sledge LANGUAGES CXX)
+project(sledge LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -72,15 +72,16 @@ target_precompile_headers(sledge PRIVATE
 file(GLOB_RECURSE sledge_loader_sources CONFIGURE_DEPENDS "source/loader/*.cpp")
 file(GLOB_RECURSE sledge_loader_headers CONFIGURE_DEPENDS "source/loader/*.h")
 
+find_package(OpenSSL REQUIRED)
 add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${sledge_loader_headers} ${shared_headers} "resources/launcher_resources.rc")
 target_link_libraries(sledge_loader PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
-	glfw)
+	glfw
+	OpenSSL::Crypto)
 set_target_properties(sledge_loader PROPERTIES
 	VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:sledge_loader>
-	OUTPUT_NAME "sledge"
-)
+	OUTPUT_NAME "sledge")
 target_compile_definitions(sledge_loader PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
 target_include_directories(sledge_loader PRIVATE "source/loader" "source/shared")
 add_dependencies(sledge_loader sledge)
