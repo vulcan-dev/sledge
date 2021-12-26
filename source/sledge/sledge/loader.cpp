@@ -53,6 +53,7 @@ void Loader::Init(void* hModule) {
 		LogError("failed to hook cw");
 		return;
 	}
+	LogInfo("cw hooked");
 }
 
 /*
@@ -61,8 +62,11 @@ void Loader::Init(void* hModule) {
 		(useful for hooking, finding sigs, etc)
 */
 void Loader::LateInit() {
+	LogInfo("getting func addresses");
 	Teardown::GetFunctionAddresses();
+	LogInfo("hooking game cctor");
 	Teardown::Hooks::Game();
+	LogInfo("running callback hooks");
 	Teardown::Hooks::CallbackHooks();
 }
 
