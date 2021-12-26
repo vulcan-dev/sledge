@@ -3,7 +3,7 @@
 
 #include "util/resources.h"
 
-#include "teardown.h"
+#include "game/teardown.h"
 
 #include <thread>
 #include <mutex>
