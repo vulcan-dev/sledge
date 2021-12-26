@@ -68,7 +68,6 @@ void* Steam::GetUnpackedExe(void* pOriginalExe, long lFileSize) {
 	if (SteamHeader->m_Signature != 0xC0DEC0DF)
 		return nullptr;
 
-
 	/*
 		get encrypted code section
 	*/
@@ -140,6 +139,11 @@ void* Steam::GetUnpackedExe(void* pOriginalExe, long lFileSize) {
 		return nullptr;
 
 	NTHeaders->OptionalHeader.AddressOfEntryPoint = static_cast<DWORD>(SteamHeader->m_RealEntryPointOffset);
+
+	#ifdef _DEBUG
+		NTHeaders->OptionalHeader.DllCharacteristics &= ~IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE;
+	#endif
+
 	memcpy(reinterpret_cast<void*>(dwExeBuffer), pOriginalExe, lFileSize);
 	memcpy(reinterpret_cast<void*>(dwExeBuffer + CodeSection->PointerToRawData), reinterpret_cast<void*>(dwDecryptedCodeData), iCodeSectionSize);
 	free(reinterpret_cast<void*>(dwDecryptedCodeData));
