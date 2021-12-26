@@ -19,6 +19,9 @@
 // from: WinBase.h
 #define STD_OUTPUT_HANDLE ((DWORD)-11)
 
+bool bLateInitCalled = false;
+bool bLateLateInitAlreadyCalled = false;
+
 /*
 	Init:
 		Called the moment the DLL is injected
@@ -62,6 +65,9 @@ void Loader::Init(void* hModule) {
 		(useful for hooking, finding sigs, etc)
 */
 void Loader::LateInit() {
+	if (bLateInitCalled)
+		return;
+	bLateInitCalled = true;
 	LogInfo("getting func addresses");
 	Teardown::GetFunctionAddresses();
 	LogInfo("hooking game cctor");
@@ -76,6 +82,10 @@ void Loader::LateInit() {
 		(useful for loading libraries / mods)
 */
 void Loader::LateLateInit() {
+	if (bLateLateInitAlreadyCalled)
+		return;
+	bLateLateInitAlreadyCalled = true;
+
 	Sledge::Hooks::Wnd();
 
 	LogInfo("setting up hostfxr");
