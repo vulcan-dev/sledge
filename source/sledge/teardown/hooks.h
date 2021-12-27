@@ -6,5 +6,6 @@ namespace Teardown {
 		void CallbackHooks();
 		void Log();
 		void ActiveWindow();
+		void Cursor();
 	}
 }

@@ -78,6 +78,8 @@ void Loader::LateInit() {
 	Teardown::Hooks::Log();
 	LogInfo("hooking active window check");
 	Teardown::Hooks::ActiveWindow();
+	LogInfo("hooking cursor capture function");
+	Teardown::Hooks::Cursor();
 }
 
 /*
