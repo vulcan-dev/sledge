@@ -76,6 +76,8 @@ void Loader::LateInit() {
 	Teardown::Hooks::CallbackHooks();
 	LogInfo("hooking log function");
 	Teardown::Hooks::Log();
+	LogInfo("hooking active window check");
+	Teardown::Hooks::ActiveWindow();
 }
 
 /*

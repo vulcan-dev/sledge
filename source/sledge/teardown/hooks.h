@@ -5,5 +5,6 @@ namespace Teardown {
 		void Game();
 		void CallbackHooks();
 		void Log();
+		void ActiveWindow();
 	}
 }
