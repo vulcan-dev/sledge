@@ -8,7 +8,7 @@ namespace SledgeLib {
 		void WriteLog(int eLogType, char* cMsg);
 
 		/*
-			internal delegate void dRegisterInputReader(dCallback Callback);
+			internal delegate IntPtr dRegisterInputReader(dCallback Callback);
 		*/
 		void RegisterInputReader(void* InputReader);
 
@@ -18,7 +18,7 @@ namespace SledgeLib {
 		void RegisterCallback(unsigned int eType, void* pCallback);
 
 		/*
-			internal delegate CPlayer dGetPlayer();
+			internal delegate IntPtr dGetPlayer();
 		*/
 		void* GetPlayer();
 	}
