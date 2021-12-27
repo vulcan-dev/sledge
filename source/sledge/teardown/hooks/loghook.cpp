@@ -16,7 +16,7 @@ void hLog(small_string* ssLog) {
 void Teardown::Hooks::Log() {
 	DWORD64 dwLog = Memory::dwFindPattern(Signatures::Log);
 
-	LogVerbose("Log: {}", dwLog);
+	LogVerbose("Log: {}", reinterpret_cast<void*>(dwLog));
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
