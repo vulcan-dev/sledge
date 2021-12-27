@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 #pragma warning disable 8618
-[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8 * 2)]
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8 * 10)]
 internal class CPlayerWrapper
 {
     internal delegate void dSetFloat(float fValue);
