@@ -72,8 +72,10 @@ void Loader::LateInit() {
 	Teardown::GetFunctionAddresses();
 	LogInfo("hooking game cctor");
 	Teardown::Hooks::Game();
-	LogInfo("running callback hooks");
+	LogInfo("hooking callback functions");
 	Teardown::Hooks::CallbackHooks();
+	LogInfo("hooking log function");
+	Teardown::Hooks::Log();
 }
 
 /*

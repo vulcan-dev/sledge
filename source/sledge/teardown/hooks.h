@@ -4,5 +4,6 @@ namespace Teardown {
 	namespace Hooks {
 		void Game();
 		void CallbackHooks();
+		void Log();
 	}
 }
