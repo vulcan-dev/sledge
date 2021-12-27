@@ -1,7 +1,7 @@
  #include "log.h"
  #include <fmt/color.h>
 
- void Log(ELogType eLogType, std::string sText) {
+ void Log(ELogType eLogType, std::string sText, bool bNewline) {
  	fmt::color LogColor = fmt::color::white;
  	std::string sLogType;
 
@@ -31,8 +31,15 @@
         sLogType = "C# Error";
         LogColor = fmt::color::dark_red;
         break;
+    case ELogType::Teardown:
+        sLogType = "Teardown";
+        LogColor = fmt::color::brown;
+        break;
  	}
 
  	fmt::print(fg(LogColor), "[{}]", sLogType);
- 	fmt::print(fg(fmt::color::white), " {}\n", sText);
+    if (bNewline)
+ 	    fmt::print(fg(fmt::color::white), " {}\n", sText);
+    else
+        fmt::print(fg(fmt::color::white), " {}", sText);
  }
