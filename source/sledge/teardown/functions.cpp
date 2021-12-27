@@ -1,6 +1,8 @@
 #include "teardown/functions.h"
 #include "teardown/signatures.h"
+
 #include "teardown/functions/constructors.h"
+#include "teardown/functions/memory.h"
 
 #include "util/memory.h"
 #include "util/log.h"
@@ -12,6 +14,13 @@ struct SScanneable {
 };
 
 static const SScanneable aFunctions[] = {
+	// memory
+	{ Signatures::free, &Teardown::free, "free" },
+	{ Signatures::alloc, &Teardown::alloc, "alloc" },
+	{ Signatures::calloc, &Teardown::calloc, "calloc" },
+	{ Signatures::realloc, &Teardown::realloc, "realloc" },
+	{ Signatures::memmove, &Teardown::memmove, "memmove" },
+
 	// constructors
 	{ Signatures::Body, &Teardown::Constructors::Body, "CBody::CBody" },
 	{ Signatures::Shape, &Teardown::Constructors::Shape, "CShape::CShape" },
