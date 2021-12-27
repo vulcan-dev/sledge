@@ -8,16 +8,6 @@
 #include <string>
 #include <filesystem>
 
-void NetErrorWriter(const wchar_t* wcErrorMsg) {
-	size_t lMsgLen = wcslen(wcErrorMsg);
-	char* cErrorMsg = new char[lMsgLen];
-
-	wcstombs(cErrorMsg, wcErrorMsg, lMsgLen);
-	cErrorMsg[lMsgLen] = '\0';
-
-	LogNetError("{0}", cErrorMsg);
-}
-
 bool NetHost::Init() {
 	if (!std::filesystem::exists("C:/Program Files/dotnet/host/fxr/")) {
 		LogError("unable to find hostfxr (Did you install .NET Desktop Runtime)");
@@ -94,8 +84,6 @@ bool NetHost::Init() {
 		LogError("hostfxr_get_delegate failed");
 		return false;
 	}
-
-	hostfxr_set_error_writer(NetErrorWriter);
 
 	hostfxr_close(HostfxrContext);
 	
