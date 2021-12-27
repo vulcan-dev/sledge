@@ -1,88 +1,88 @@
 ﻿using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 
-internal delegate void dInputReader(EKeyCode iKeyCode, bool bKeyDown);
-
-public delegate void dBindCallback();
-public delegate void dAdvancedBindCallback(bool bKeyDown);
-
-internal class CBindManager
+namespace SledgeLib
 {
-    internal static ConcurrentBag<CBind> m_Binds = new ConcurrentBag<CBind>();
-    internal static ConcurrentBag<CAdvancedBind> m_AdvancedBinds = new ConcurrentBag<CAdvancedBind>();
+    public delegate void dBindCallback();
+    public delegate void dAdvancedBindCallback(bool bKeyDown);
+    public delegate void dInputReader(EKeyCode iKeyCode, bool bKeyDown); 
 
-    internal static void OnInputReader(EKeyCode iKeyCode, bool bKeyDown)
+    internal class CBindManager
     {
-        foreach (CBind Bind in m_Binds)
+        [DllImport("sledge.dll")] public static extern void RegisterInputReader(dInputReader InputReader);
+
+        internal static ConcurrentBag<CBind> m_Binds = new ConcurrentBag<CBind>();
+
+        internal static void OnInput(EKeyCode iKeyCode, bool bKeyDown)
         {
-            if (!Bind.m_Active)
-                continue;
-
-            if (Bind.m_KeyCode != iKeyCode)
-                continue;
-
-            if (!bKeyDown)
-                continue;
-
-            try
+            foreach(CBind Bind in m_Binds)
             {
-                Bind.m_Callback();
-            } catch(Exception e)
-            {
-                SledgeLib.WriteError("Bind error: " + e.Message);
-                Bind.m_Active = false;
+                if (!Bind.m_Active)
+                    continue;
+
+                if (iKeyCode != Bind.m_KeyCode)
+                    continue;
+
+                if (Bind.m_Callback != null)
+                {
+                    if (!bKeyDown)
+                        continue;
+
+                    try
+                    {
+                        Bind.m_Callback();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error while executing bind: {0}", ex.Message);
+                        Bind.m_Active = false;
+                    }
+                    continue;
+                }
+
+                if (Bind.m_AdvancedCallback != null)
+                {
+                    try
+                    {
+                        Bind.m_AdvancedCallback(bKeyDown);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error while executing bind: {0}", ex.Message);
+                        Bind.m_Active = false;
+                    }
+                    continue;
+                }
             }
         }
+        internal static dInputReader InputReader = new dInputReader(OnInput);
+    }
 
-        foreach (CAdvancedBind AdvBind in m_AdvancedBinds)
+    public class CBind
+    {
+        internal EKeyCode m_KeyCode;
+
+        internal dBindCallback? m_Callback;
+        internal dAdvancedBindCallback? m_AdvancedCallback;
+
+        public bool m_Active = false;
+
+        public CBind(EKeyCode eKey, dBindCallback Callback, bool bActive = true)
         {
-            if (!AdvBind.m_Active)
-                continue;
+            m_KeyCode = eKey;
+            m_Callback = Callback;
+            m_Active = bActive;
 
-            if (AdvBind.m_KeyCode != iKeyCode)
-                continue;
-
-            try
-            {
-                AdvBind.m_Callback(bKeyDown);
-            }
-            catch (Exception e)
-            {
-                SledgeLib.WriteError("Bind error: " + e.Message);
-                AdvBind.m_Active = false;
-            }
+            CBindManager.m_Binds.Add(this);
         }
-    }
 
-    internal static dInputReader InputReader = new dInputReader(OnInputReader);
-}
+        public CBind(EKeyCode eKey, dAdvancedBindCallback Callback, bool bActive = true)
+        {
+            m_KeyCode = eKey;
+            m_AdvancedCallback = Callback;
+            m_Active = bActive;
 
-public class CBind
-{
-    internal EKeyCode m_KeyCode;
-    internal dBindCallback m_Callback;
-    public bool m_Active;
-    public CBind(EKeyCode eKey, dBindCallback Callback, bool bActive = true)
-    {
-        m_KeyCode = eKey;
-        m_Callback = Callback;
-        m_Active = bActive;
-
-        CBindManager.m_Binds.Add(this);
-    }
-}
-
-public class CAdvancedBind
-{
-    internal EKeyCode m_KeyCode;
-    internal dAdvancedBindCallback m_Callback;
-    public bool m_Active;
-
-    public CAdvancedBind(EKeyCode eKey, dAdvancedBindCallback Callback, bool bActive = true)
-    {
-        m_KeyCode = eKey;
-        m_Callback = Callback;
-        m_Active = bActive;
-
-        CBindManager.m_AdvancedBinds.Add(this);
+            CBindManager.m_Binds.Add(this);
+        }
     }
 }

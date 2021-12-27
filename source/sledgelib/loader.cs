@@ -1,173 +1,25 @@
-﻿using System.Text.Json;
-using System.Reflection;
-using static SledgeLib;
+﻿using SledgeLib;
 
 internal class SledgeLoader
 {
-    public delegate bool dInit(IntPtr pInternalApi, string sModulePath);
+    public delegate bool dInit();
 
-    public static string m_ModulePath = "";
-    public static string m_ModsPath = "";
-
-    private struct SAssemblyConfig
+    public static bool Init()
     {
-        public string sTypeName {  get; set; }
-        public string sMethodName { get; set; }
-    }
+        Log.General("initializing binds");
+        CBindManager.RegisterInputReader(CBindManager.InputReader);
 
-    /*
-        to-do:
-                (!) implement protection / restriction so modules can't do whatever they want
-                 -  improve error checking, some of this feels way too overexagerated, but maybe not, who knows
-    */
-    private static bool LoadAssembly(string sAssemblyName)
-    {
-        SledgeLib.WriteLog("Loading and initializing assembly: " + sAssemblyName);
+        Log.General("initializing callbacks");
+        CCallbackManager.RegisterCallback(ECallbackType.PlayerSpawn, CCallbackManager.PlayerSpawnCallback);
+        CCallbackManager.RegisterCallback(ECallbackType.PreUpdate, CCallbackManager.PreUpdateCallback);
+        CCallbackManager.RegisterCallback(ECallbackType.PostUpdate, CCallbackManager.PostUpdateCallback);
+        CCallbackManager.RegisterCallback(ECallbackType.PrePlayerUpdate, CCallbackManager.PrePlayerUpdateCallback);
+        CCallbackManager.RegisterCallback(ECallbackType.PostPlayerUpdate, CCallbackManager.PostPlayerUpdateCallback);
 
-        string sConfig;
-        try
-        {
-            sConfig = System.IO.File.ReadAllText(m_ModsPath + sAssemblyName + ".info.json");
-        }
-        catch (Exception e)
-        {
-            SledgeLib.WriteError("Failed to open info.json: " + e);
-            return false;
-        }
+        Log.General("loading mods");
+        CModLoader.LoadMods();
 
-        SAssemblyConfig AssemblyConfig;
-        try
-        {
-            AssemblyConfig = JsonSerializer.Deserialize<SAssemblyConfig>(sConfig);
-        }
-        catch (Exception e)
-        {
-            SledgeLib.WriteError("error while deserializing config: " + e.ToString());
-            return false;
-        }
-
-        if (string.IsNullOrEmpty(AssemblyConfig.sTypeName) || string.IsNullOrEmpty(AssemblyConfig.sMethodName))
-        {
-            SledgeLib.WriteError("improperly formatted config.json (missing sTypeName and/or sMethodName)");
-            return false;
-        }
-
-        SledgeLib.WriteLog("Loaded assembly config: (sTypeName: " + AssemblyConfig.sTypeName + " | sMethodName: " + AssemblyConfig.sMethodName + ")");
-
-        Assembly vAssembly;
-        try
-        {
-            vAssembly = Assembly.Load(sAssemblyName);
-        }
-        catch (Exception e)
-        {
-            SledgeLib.WriteError("LoadAssembly failed: " + e);
-            return false;
-        }
-        SledgeLib.WriteLog("Loaded assembly: " + sAssemblyName);
-
-        Type? AssemblyType;
-        try
-        {
-            AssemblyType = vAssembly.GetType(AssemblyConfig.sTypeName, true, false);
-        }
-        catch (Exception e)
-        {
-            SledgeLib.WriteError("GetType failed: " + e);
-            SledgeLib.WriteError("Available types:");
-            Type[] AssemblyTypes = vAssembly.GetTypes();
-            foreach (Type type in AssemblyTypes)
-            {
-                SledgeLib.WriteError("--> " + type.FullName);
-            }
-
-            return false;
-        }
-
-        if (AssemblyType == null)
-        {
-            SledgeLib.WriteError("AssemblyType was null");
-            return false;
-        }
-
-        SledgeLib.WriteLog("Got assembly type: " + AssemblyType.ToString());
-
-        MethodInfo? AssemblyMethod;
-        try
-        {
-            AssemblyMethod = AssemblyType.GetMethod(AssemblyConfig.sMethodName);
-        }
-        catch (System.Exception e)
-        {
-            SledgeLib.WriteError("GetMethod failed: " + e);
-            return false;
-        }
-
-        if (AssemblyMethod == null)
-        {
-            SledgeLib.WriteError("AssemblyMethod was null");
-            return false;
-        }
-
-        SledgeLib.WriteLog("Got assembly method: " + AssemblyMethod.ToString());
-
-        object? AssemblyInstance;
-        try
-        {
-            AssemblyInstance = Activator.CreateInstance(AssemblyType);
-        }
-        catch (System.Exception e)
-        {
-            SledgeLib.WriteError("CreateInstance error:" + e);
-            return false;
-        }
-
-        if (AssemblyInstance == null)
-        {
-            SledgeLib.WriteError("AssemblyInstance was null");
-            return false;
-        }
-
-        SledgeLib.WriteLog("Got assembly instance: " + AssemblyInstance.ToString());
-
-        try
-        {
-            AssemblyMethod.Invoke(AssemblyInstance, null);
-        }
-        catch (Exception e)
-        {
-            SledgeLib.WriteError("Method.Invoke error:" + e);
-            return false;
-        }
-
-        SledgeLib.WriteLog("Successfully loaded mod: " + sAssemblyName);
-        return true;
-    }
-
-    public static bool Init(IntPtr pAPI, string sModulePath)
-    {
-        if (!SledgeLib._InitCAPI(pAPI))
-            return false;
-
-        m_ModulePath = sModulePath;
-        m_ModsPath = sModulePath + "\\mods\\";
-
-        SledgeLib.WriteLog("loading mods");
-
-        string[] ModFiles = Directory.GetFiles(m_ModsPath);
-        foreach (string ModFile in ModFiles)
-        {
-            if (!ModFile.EndsWith(".dll"))
-                continue;
-
-            string sFileName = Path.GetFileNameWithoutExtension(ModFile);
-
-            if (sFileName == "sledgelib")
-                continue;
-
-            LoadAssembly(sFileName);
-        }
-
+        Log.General("sledgelib succesfully initialized");
         return true;
     }
 }

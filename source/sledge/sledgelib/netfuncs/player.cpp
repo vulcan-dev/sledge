@@ -1,39 +1,21 @@
-#include "sledgelib/netfuncs.h"
-
 #include "teardown/classes/game.h"
 #include "teardown/classes/player.h"
 
-#include "util/log.h"
+#define _sledgelib_export extern "C" __declspec(dllexport)
 
-void SetHealth(float fHealth) { g_Game->m_Player->m_Health = fHealth; }
-float GetHealth() { return g_Game->m_Player->m_Health; }
+_sledgelib_export void SetHealth(float fValue) { g_Game->m_Player->m_Health = fValue; }
+_sledgelib_export float GetHealth() { return g_Game->m_Player->m_Health; }
 
-void SetPosition(Vector3 vPosition) { g_Game->m_Player->m_Position = vPosition; }
-Vector3 GetPosition() { return g_Game->m_Player->m_Position; }
+_sledgelib_export void SetPosition(Vector3 vPosition) { g_Game->m_Player->m_Position = vPosition; }
+_sledgelib_export Vector3 GetPosition() { return g_Game->m_Player->m_Position; }
 
-void SetVelocity(Vector3 vVelocity) { g_Game->m_Player->m_Velocity = vVelocity; }
-Vector3 GetVelocity() { return g_Game->m_Player->m_Velocity; }
+_sledgelib_export void SetVelocity(Vector3 vVelocity) { g_Game->m_Player->m_Velocity = vVelocity; }
+_sledgelib_export Vector3 GetVelocity() { return g_Game->m_Player->m_Velocity; }
 
-void SetCameraTransform(Transform tCameraTransform) {g_Game->m_Player->m_CameraTransform2 = tCameraTransform; }
-Transform GetCameraTransform() { return g_Game->m_Player->m_CameraTransform; }
+_sledgelib_export void SetCameraTransform(Transform tCameraTransform) { g_Game->m_Player->m_CameraTransform2 = tCameraTransform; }
+_sledgelib_export Transform GetCameraTransform() { return g_Game->m_Player->m_CameraTransform2; }
 
-Vector2 GetMovementKeys() { return g_Game->m_Player->m_MovementKeys; }
-Vector2 GetMouseInput() { return g_Game->m_Player->m_MouseInput; }
+_sledgelib_export Vector2 GetMovementInput() { return g_Game->m_Player->m_MovementKeys; }
+_sledgelib_export Vector2 GetMouseInput() { return g_Game->m_Player->m_MouseInput; }
 
-struct SPlayerWrapper {
-	void* _SetHealth = SetHealth;
-	void* _GetHealth = GetHealth;
-	void* _SetPosition = SetPosition;
-	void* _GetPosition = GetPosition;
-	void* _SetVelocity = SetVelocity;
-	void* _GetVelocity = GetVelocity;
-	void* _SetCameraTransform = SetCameraTransform;
-	void* _GetCameraTransform = GetCameraTransform;
-	void* _GetMovementKeys = GetMovementKeys;
-	void* _GetMouseInput = GetMouseInput;
-};
-
-void* SledgeLib::NetFuncs::GetPlayer() {
-	SPlayerWrapper* PlayerWrapper = new SPlayerWrapper();
-	return PlayerWrapper;
-}
+_sledgelib_export void Respawn() { g_Game->m_RespawnPlayer = true; }
