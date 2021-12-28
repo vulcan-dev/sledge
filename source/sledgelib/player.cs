@@ -21,5 +21,8 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern Vector2 GetMouseInput();
 
         [DllImport("sledge.dll")] public static extern void Respawn();
+
+        [DllImport("sledge.dll")] public static extern uint GetGrabbedBody();
+        [DllImport("sledge.dll")] public static extern void ReleaseGrabbedBody();
     }
 }

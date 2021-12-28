@@ -1,6 +1,8 @@
 #include "teardown/classes/game.h"
 #include "teardown/classes/player.h"
 
+#include "teardown/classes/entities.h"
+
 #define sledgelib_func extern "C" __declspec(dllexport)
 
 sledgelib_func void SetHealth(float fValue) { g_Game->m_Player->m_Health = fValue; }
@@ -19,3 +21,6 @@ sledgelib_func Vector2 GetMovementInput() { return g_Game->m_Player->m_MovementK
 sledgelib_func Vector2 GetMouseInput() { return g_Game->m_Player->m_MouseInput; }
 
 sledgelib_func void Respawn() { g_Game->m_RespawnPlayer = true; }
+
+sledgelib_func unsigned int GetGrabbedBody() { return g_Game->m_Player->m_GrabbedBody->m_Id; }
+sledgelib_func void ReleaseGrabbedBody() { g_Game->m_Player->m_GrabbedBody = nullptr; }
