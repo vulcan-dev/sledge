@@ -15,13 +15,9 @@
 typedef void (*tUpdate)	(CGame* pGame, void* pDevice);
 tUpdate Update;
 void hUpdate(CGame* pGame, void* pDevice) {
-	if (pGame->m_State == EGameState::Playing) {
-		_Callbacks::OnPreUpdate();
-		Update(pGame, pDevice);
-		_Callbacks::OnPostUpdate();
-		return;
-	}
+	_Callbacks::OnPreUpdate();
 	Update(pGame, pDevice);
+	_Callbacks::OnPostUpdate();
 }
 
 typedef void (*tSpawnPlayer) (void* pPlayer);
