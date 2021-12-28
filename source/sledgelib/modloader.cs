@@ -12,7 +12,7 @@ internal class CModLoader
 
     internal static void LoadAssembly(string sModsPath, string sModName)
     {
-        Log.General("loadding assembly: {0}", sModName);
+        Log.General("loading assembly: {0}", sModName);
 
         string sConfig = "";
         try
@@ -95,8 +95,6 @@ internal class CModLoader
 
         if (sModsPath == null)
             return;
-
-        Log.General("path: {0}", sModsPath);
 
         string[] ModFiles = Directory.GetFiles(sModsPath);
         foreach (string ModFile in ModFiles)
