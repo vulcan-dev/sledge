@@ -60,7 +60,7 @@ internal class CModLoader
             foreach (Type t in ModTypes)
             {
                 if (t.FullName != null)
-                    Log.General("\t- {0}", t.Name);
+                    Log.General("\t* {0}", t.FullName);
             }
             return;
         }
