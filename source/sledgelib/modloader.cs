@@ -55,6 +55,13 @@ internal class CModLoader
         if (ModType == null)
         {
             Log.Error("failed to get type: {0} for assembly: {1}.dll", ModInfo.sTypeName, sModName);
+            Type[] ModTypes = ModAssembly.GetTypes();
+            Log.General("available assembly types: {0}", ModTypes.Length);
+            foreach (Type t in ModTypes)
+            {
+                if (t.FullName != null)
+                    Log.General("\t- {0}", t.Name);
+            }
             return;
         }
 
