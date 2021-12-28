@@ -4,12 +4,13 @@ namespace SledgeLib
 {
     public enum EGameState : uint
     {
-        Splash = 1,
-        Menu = 2,
-        UI = 3,
-        Playing = 4,
-        Editing = 5,
-        Quitting = 6
+        Unknown,
+        Splash,
+        Menu,
+        UI,
+        Playing,
+        Editing,
+        Quitting
     }
 
     public class Game
