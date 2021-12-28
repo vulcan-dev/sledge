@@ -5,8 +5,8 @@
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
-sledgelib_func unsigned int GetState() { return g_Game->m_State; }
-sledgelib_func void SetState(unsigned int iState) { g_Game->m_NextState = static_cast<EGameState>(iState); }
+sledgelib_func unsigned int _GetState() { return g_Game->m_State; }
+sledgelib_func void _SetState(unsigned int iState) { g_Game->m_NextState = static_cast<EGameState>(iState); }
 
 sledgelib_func bool IsPlaying() { return g_Game->m_Playing; }
 
