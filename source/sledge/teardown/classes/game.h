@@ -1,5 +1,7 @@
 #pragma once
 
+#include "teardown/small_string.h"
+
 enum EGameState: unsigned int {
 	Splash = 1,
 	Menu = 2,
@@ -12,8 +14,8 @@ enum EGameState: unsigned int {
 class CGame
 {
 public:
-	uint32_t m_ResX; //0x0000
-	uint32_t m_ResY; //0x0004
+	unsigned int m_ResX; //0x0000
+	unsigned int m_ResY; //0x0004
 	EGameState m_State; //0x0008
 	EGameState m_NextState; //0x000C
 	float m_LoadEffect; //0x0010
@@ -53,7 +55,12 @@ public:
 	bool m_QuickSave; //0x0265
 	char pad_0266[1]; //0x0266
 	bool m_RespawnPlayer; //0x0267
-	char pad_0268[520]; //0x0268
+	char pad_0268[96]; //0x0268
+	small_string m_LevelId; //0x02C8
+	small_string m_LevelPath; //0x02D8
+	small_string m_LevelLayers; //0x02E8
+	char pad_02F8[376]; //0x02F8
+
 }; //Size: 0x0470
 
 inline CGame* g_Game;
