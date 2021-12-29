@@ -43,7 +43,8 @@ file(GLOB_RECURSE sledge_headers CONFIGURE_DEPENDS "source/sledge/*.h")
 add_library(sledge SHARED ${sledge_sources} ${shared_sources} ${sledge_headers} ${shared_headers})
 target_link_libraries(sledge PRIVATE
     sledge_shared_dependencies
-	sledge_warnings)
+	sledge_warnings
+	steamworks)
 target_include_directories(sledge PRIVATE "source/sledge" "source/shared")
 target_compile_definitions(sledge PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
 add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)mods\" mkdir \"$(OutDir)mods\")
