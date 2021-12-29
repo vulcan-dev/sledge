@@ -17,6 +17,12 @@ public:
 	uint32_t size() const { return m_Size; }
 	uint32_t capacity() const { return m_Capacity; }
 
+	T get_at(unsigned int iIdx) {
+		if (iIdx == 0 || iIdx > m_Size)
+			return nullptr;
+		return m_Data[iIdx];
+	}
+
 	void push_back(const T& value)
 	{
 		if (m_Capacity <= m_Size)
