@@ -50,17 +50,22 @@ public:
 	void* N00000089; //0x00D8
 	class CSteamInterface* m_SteamInterface; //0x00E0
 	void* N0000008B; //0x00E8
-	char pad_00F0[372]; //0x00F0
+	char pad_00F0[52]; //0x00F0
+	float m_SoundSpeed; //0x0124
+	float m_GameSpeed; //0x0128
+	float m_TimeStep; //0x012C
+	char pad_0130[16]; //0x0130
+	float m_UpdateDelta; //0x0140
+	char pad_0144[288]; //0x0144
 	bool m_QuickLoad; //0x0264
 	bool m_QuickSave; //0x0265
 	char pad_0266[1]; //0x0266
 	bool m_RespawnPlayer; //0x0267
 	char pad_0268[96]; //0x0268
-	small_string m_LevelId; //0x02C8
-	small_string m_LevelPath; //0x02D8
-	small_string m_LevelLayers; //0x02E8
+	class small_string m_LevelId; //0x02C8
+	class small_string m_LevelPath; //0x02D8
+	class small_string m_LevelLayers; //0x02E8
 	char pad_02F8[376]; //0x02F8
-
 }; //Size: 0x0470
 
 inline CGame* g_Game;
