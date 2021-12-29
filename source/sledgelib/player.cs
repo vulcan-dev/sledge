@@ -5,14 +5,21 @@ namespace SledgeLib
 {
     public class Player
     {
-        [DllImport("sledge.dll")] public static extern void SetHealth(float fValue);
-        [DllImport("sledge.dll")] public static extern float GetHealth();
+        [DllImport("sledge.dll")] internal static extern void SetPlayerHealth(float fValue);
+        public static dSetFloat SetHealth = SetPlayerHealth;
+        [DllImport("sledge.dll")] internal static extern float GetPlayerHealth();
+        public static dGetFloat GetHealth = GetPlayerHealth;
 
-        [DllImport("sledge.dll")] public static extern void SetPosition(Vector3 vPosition);
-        [DllImport("sledge.dll")] public static extern Vector3 GetPosition();
+        [DllImport("sledge.dll")] internal static extern void SetPlayerPosition(Vector3 vPosition);
+        public static dSetVector3 SetPosition = SetPlayerPosition;
 
-        [DllImport("sledge.dll")] public static extern void SetVelocity(Vector3 vVelocity);
-        [DllImport("sledge.dll")] public static extern Vector3 GetVelocity();
+        [DllImport("sledge.dll")] internal static extern Vector3 GetPlayerPosition();
+        public static dGetVector3 GetPosition = GetPlayerPosition;
+
+        [DllImport("sledge.dll")] internal static extern void SetPlayerVelocity(Vector3 vVelocity);
+        public static dSetVector3 SetVelocity = SetPlayerVelocity;
+        [DllImport("sledge.dll")] internal static extern Vector3 GetPlayerVelocity();
+        public static dGetVector3 GetVelocity = GetPlayerVelocity;
 
         [DllImport("sledge.dll")] public static extern void SetCameraTransform(Transform tCameraTransform);
         [DllImport("sledge.dll")] public static extern Transform GetCameraTransform();

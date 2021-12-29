@@ -1,31 +1,46 @@
-﻿//using System.Numerics;
-//using System.Runtime.InteropServices;
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
 
-//internal delegate void dVoid();
 
-//internal delegate bool dGetBool();
-//internal delegate void dSetBool(bool bValue);
+public delegate void dVoid();
 
-//internal delegate uint dGetUInt();
-//internal delegate void dSetUInt(uint iValue);
+public delegate bool dGetBool();
+public delegate void dSetBool(bool bValue);
+public delegate bool dGetBoolEntity(uint iHandle);
+public delegate void dSetBoolEntity(uint iHandle, bool bValue);
 
-//internal delegate void dSetFloat(float fValue);
-//internal delegate float dGetFloat();
 
-//internal delegate Vector2 dGetVector2();
-//internal delegate void dSetVector2(Vector2 vValue);
+public delegate uint dGetUInt();
+public delegate void dSetUInt(uint iValue);
+public delegate uint dGetUIntEntity(uint iHandle);
+public delegate uint dSetUIntEntity(uint iHandle, uint iValue);
 
-//internal delegate Vector3 dGetVector3();
-//internal delegate void dSetVector3(Vector3 vValue);
+public delegate float dGetFloat();
+public delegate void dSetFloat(float fValue);
+public delegate void dGetFloatEntity(uint iHandle);
+public delegate void dSetFloatEntity(uint iHandle, float fValue);
 
-//internal delegate Vector4 dGetVector4();
-//internal delegate void dSetVector4(Vector4 vValue);
+public delegate Vector2 dGetVector2();
+public delegate void dSetVector2(Vector2 vValue);
+public delegate Vector2 dGetVector2Entity(uint iHandle);
+public delegate void dSetVector2Entity(uint iHandle, Vector2 vValue);
 
-//internal delegate Quaternion dGetQuaternion();
-//internal delegate void dSetQuaternion(Quaternion qValue);
+public delegate Vector3 dGetVector3();
+public delegate void dSetVector3(Vector3 vValue);
+public delegate Vector3 dGetVector3Entity(uint iHandle);
+public delegate void dSetVector3Entity(uint iHandle, Vector3 vValue);
 
-//internal delegate Transform dGetTransform();
-//internal delegate void dSetTransform(Transform tValue);
+public delegate Vector4 dGetVector4();
+public delegate void dSetVector4(Vector4 vValue);
+public delegate Vector4 dGetVector4Entity(uint iHandle);
+public delegate Vector4 dSetVector4Entity(uint iHandle, Vector4 vValue);
 
-//[return: MarshalAs(UnmanagedType.LPStr)]
-//internal delegate string dGetString();
+public delegate Quaternion dGetQuaternion();
+public delegate void dSetQuaternion(Quaternion qValue);
+public delegate Quaternion dGetQuaternionEntity(uint iHandle);
+public delegate void dSetQuaternionEntity(uint iHandle, Quaternion qValue);
+
+public delegate Transform dGetTransform();
+public delegate void dSetTransform(Transform tValue);
+public delegate Transform dGetTransformEntity(uint iHandle);
+public delegate void dSetTransformEntity(uint iHandle, Transform tValue);
