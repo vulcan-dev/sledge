@@ -15,3 +15,5 @@ sledgelib_func void SetMapOpen(bool bValue) { g_Game->m_MapOpen = bValue; }
 
 sledgelib_func void QuickSave() { g_Game->m_QuickSave = true; }
 sledgelib_func void QuickLoad() { g_Game->m_QuickLoad = true; }
+
+sledgelib_func float GetUpdateDelta() { return g_Game->m_UpdateDelta; }
