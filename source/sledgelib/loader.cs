@@ -17,6 +17,12 @@ internal class SledgeLoader
         CCallbackManager.RegisterCallback(ECallbackType.PostPlayerUpdate, CCallbackManager.PostPlayerUpdateCallback);
 
         Log.General("loading mods");
+        if (!CModLoader.Init())
+        {
+            Log.Error("ModLoader failed to initialize");
+            return false;
+        }
+
         CModLoader.LoadMods();
 
         Log.General("sledgelib succesfully initialized");
