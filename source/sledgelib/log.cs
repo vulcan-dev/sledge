@@ -22,6 +22,8 @@ namespace SledgeLib
             if (Caller != null && sAssemblyName != null)
                 sCallingAssembly = sAssemblyName;
 
+            string sStackTrace = Environment.StackTrace;
+
             string sMsg = "";
             try
             {
@@ -30,6 +32,8 @@ namespace SledgeLib
             catch (Exception e)
             {
                 Error("Logger error while formatting: {0}", e.Message);
+                Error("Stack trace: {0}", sStackTrace);
+                return;
             }
 
             _WriteLog(eType, "[" + sCallingAssembly + "] - " + sMsg);
