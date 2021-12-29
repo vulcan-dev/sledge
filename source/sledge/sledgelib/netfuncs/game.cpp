@@ -12,3 +12,6 @@ sledgelib_func bool IsPlaying() { return g_Game->m_Playing; }
 
 sledgelib_func bool GetMapOpen() { return g_Game->m_MapOpen; }
 sledgelib_func void SetMapOpen(bool bValue) { g_Game->m_MapOpen = bValue; }
+
+sledgelib_func void QuickSave() { g_Game->m_QuickSave = true; }
+sledgelib_func void QuickLoad() { g_Game->m_QuickLoad = true; }

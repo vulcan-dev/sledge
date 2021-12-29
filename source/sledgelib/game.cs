@@ -26,5 +26,8 @@ namespace SledgeLib
 
         [DllImport("sledge.dll")] public static extern bool GetMapOpen();
         [DllImport("sledge.dll")] public static extern void SetMapOpen(bool bOpen);
+
+        [DllImport("sledge.dll")] public static extern void QuickSave();
+        [DllImport("sledge.dll")] public static extern void QuickLoad();
     }
 }
