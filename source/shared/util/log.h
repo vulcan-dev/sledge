@@ -8,6 +8,7 @@ enum class ELogType {
 	Warning,
 	Error,
 	Net,
+	NetWarning,
 	NetError,
 	Teardown
 };

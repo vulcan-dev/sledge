@@ -27,6 +27,10 @@
         sLogType = "C#";
         LogColor = fmt::color::orange;
         break;
+    case ELogType::NetWarning:
+        sLogType = "C# Warning";
+        LogColor = fmt::color::light_yellow;
+        break;
     case ELogType::NetError:
         sLogType = "C# Error";
         LogColor = fmt::color::dark_red;
