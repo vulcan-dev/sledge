@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace SledgeLib
 {
@@ -11,7 +10,7 @@ namespace SledgeLib
     {
         [DllImport("sledge.dll")] public static extern void RegisterInputReader(dInputReader InputReader);
 
-        internal static ConcurrentBag<CBind> m_Binds = new ConcurrentBag<CBind>();
+        internal static List<CBind> m_Binds = new List<CBind>();
 
         internal static void OnInput(EKeyCode iKeyCode, bool bKeyDown)
         {
@@ -73,7 +72,7 @@ namespace SledgeLib
             m_Callback = Callback;
             m_Active = bActive;
 
-            CBindManager.m_Binds.Add(this);
+            lock (CBindManager.m_Binds) { CBindManager.m_Binds.Add(this); }
         }
 
         public CBind(EKeyCode eKey, dAdvancedBindCallback Callback, bool bActive = true)
@@ -82,7 +81,12 @@ namespace SledgeLib
             m_AdvancedCallback = Callback;
             m_Active = bActive;
 
-            CBindManager.m_Binds.Add(this);
+            lock (CBindManager.m_Binds) { CBindManager.m_Binds.Add(this); }
+        }
+
+        ~CBind()
+        {
+            lock (CBindManager.m_Binds) { CBindManager.m_Binds.Remove(this); }
         }
     }
 }
