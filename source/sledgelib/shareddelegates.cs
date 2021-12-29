@@ -17,7 +17,7 @@ public delegate uint dSetUIntEntity(uint iHandle, uint iValue);
 
 public delegate float dGetFloat();
 public delegate void dSetFloat(float fValue);
-public delegate void dGetFloatEntity(uint iHandle);
+public delegate float dGetFloatEntity(uint iHandle);
 public delegate void dSetFloatEntity(uint iHandle, float fValue);
 
 public delegate Vector2 dGetVector2();
