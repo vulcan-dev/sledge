@@ -84,7 +84,7 @@ namespace SledgeLib
             lock (CBindManager.m_Binds) { CBindManager.m_Binds.Add(this); }
         }
 
-        ~CBind()
+        public void Unregister()
         {
             lock (CBindManager.m_Binds) { CBindManager.m_Binds.Remove(this); }
         }

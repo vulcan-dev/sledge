@@ -90,7 +90,7 @@ namespace SledgeLib
             }
         }
 
-        ~CCallback()
+        public void Unregister()
         {
             switch (m_CallbackType)
             {
