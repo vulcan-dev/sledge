@@ -20,7 +20,8 @@ void Window::MoveWindow(int iX, int iY) {
 }
 
 void Window::Close() {
-	glfwSetWindowShouldClose(GLWindow, 1);
+	if (GLWindow != nullptr)
+		glfwSetWindowShouldClose(GLWindow, 1);
 }
 
 void Window::Create() {
