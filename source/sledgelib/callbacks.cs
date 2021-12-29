@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace SledgeLib
 {
@@ -9,15 +8,15 @@ namespace SledgeLib
     {
         [DllImport("sledge.dll")] public static extern void RegisterCallback(ECallbackType CallbackType, dCallback CallbackFunc);
 
-        internal static ConcurrentBag<CCallback> m_PlayerSpawnCallbacks = new ConcurrentBag<CCallback>();
-        internal static ConcurrentBag<CCallback> m_PreUpdateCallbacks = new ConcurrentBag<CCallback>();
-        internal static ConcurrentBag<CCallback> m_PostUpdateCallbacks = new ConcurrentBag<CCallback>();
-        internal static ConcurrentBag<CCallback> m_PrePlayerUpdateCallbacks = new ConcurrentBag<CCallback>();
-        internal static ConcurrentBag<CCallback> m_PostPlayerUpdateCallbacks = new ConcurrentBag<CCallback>();
+        internal static List<CCallback> m_PlayerSpawnCallbacks = new List<CCallback>();
+        internal static List<CCallback> m_PreUpdateCallbacks = new List<CCallback>();
+        internal static List<CCallback> m_PostUpdateCallbacks = new List<CCallback>();
+        internal static List<CCallback> m_PrePlayerUpdateCallbacks = new List<CCallback>();
+        internal static List<CCallback> m_PostPlayerUpdateCallbacks = new List<CCallback>();
 
-        internal static void IterateCallbacks(ConcurrentBag<CCallback> Bag)
+        internal static void IterateCallbacks(List<CCallback> CallbackList)
         {
-            foreach (CCallback Callback in Bag)
+            foreach (CCallback Callback in CallbackList)
             {
                 if (!Callback.m_Active)
                     continue;
@@ -74,19 +73,41 @@ namespace SledgeLib
             switch (eType)
             {
                 case ECallbackType.PlayerSpawn:
-                    CCallbackManager.m_PlayerSpawnCallbacks.Add(this);
+                    lock(CCallbackManager.m_PlayerSpawnCallbacks) { CCallbackManager.m_PlayerSpawnCallbacks.Add(this); }
                     break;
                 case ECallbackType.PreUpdate:
-                    CCallbackManager.m_PreUpdateCallbacks.Add(this);
+                    lock (CCallbackManager.m_PreUpdateCallbacks) { CCallbackManager.m_PreUpdateCallbacks.Add(this); }
                     break;
                 case ECallbackType.PostUpdate:
-                    CCallbackManager.m_PostUpdateCallbacks.Add(this);
+                    lock (CCallbackManager.m_PostUpdateCallbacks) { CCallbackManager.m_PostUpdateCallbacks.Add(this); }
                     break;
                 case ECallbackType.PrePlayerUpdate:
-                    CCallbackManager.m_PrePlayerUpdateCallbacks.Add(this);
+                    lock (CCallbackManager.m_PrePlayerUpdateCallbacks) { CCallbackManager.m_PrePlayerUpdateCallbacks.Add(this); }
                     break;
                 case ECallbackType.PostPlayerUpdate:
-                    CCallbackManager.m_PostPlayerUpdateCallbacks.Add(this);
+                    lock (CCallbackManager.m_PostPlayerUpdateCallbacks) { CCallbackManager.m_PostPlayerUpdateCallbacks.Add(this); }
+                    break;
+            }
+        }
+
+        ~CCallback()
+        {
+            switch (m_CallbackType)
+            {
+                case ECallbackType.PlayerSpawn:
+                    lock (CCallbackManager.m_PlayerSpawnCallbacks) { CCallbackManager.m_PlayerSpawnCallbacks.Remove(this); }
+                    break;
+                case ECallbackType.PreUpdate:
+                    lock (CCallbackManager.m_PreUpdateCallbacks) { CCallbackManager.m_PreUpdateCallbacks.Remove(this); }
+                    break;
+                case ECallbackType.PostUpdate:
+                    lock (CCallbackManager.m_PostUpdateCallbacks) { CCallbackManager.m_PostUpdateCallbacks.Remove(this); }
+                    break;
+                case ECallbackType.PrePlayerUpdate:
+                    lock (CCallbackManager.m_PrePlayerUpdateCallbacks) { CCallbackManager.m_PrePlayerUpdateCallbacks.Remove(this); }
+                    break;
+                case ECallbackType.PostPlayerUpdate:
+                    lock (CCallbackManager.m_PostPlayerUpdateCallbacks) { CCallbackManager.m_PostPlayerUpdateCallbacks.Remove(this); }
                     break;
             }
         }
