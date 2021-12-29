@@ -32,11 +32,12 @@ namespace SledgeLib
             catch (Exception e)
             {
                 Error("Logger error while formatting: {0}", e.Message);
-                Error("Stack trace: {0}", sStackTrace);
                 return;
             }
 
             _WriteLog(eType, "[" + sCallingAssembly + "] - " + sMsg);
+            if (eType == ELogType.Error)
+                _WriteLog(eType, "Stack trace: " + sStackTrace);
         }
 
         public static void General(string sFormat, params object[] oArgs) { _Log(ELogType.General, Assembly.GetCallingAssembly(), sFormat, oArgs); }
