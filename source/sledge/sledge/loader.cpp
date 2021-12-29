@@ -1,6 +1,7 @@
 #include "sledge/loader.h"
 #include "sledge/hooks.h"
 #include "sledge/misc/nethost.h"
+#include "sledge/misc/steam.h"
 
 #include "teardown/functions.h"
 #include "teardown/hooks.h"
@@ -45,11 +46,16 @@ void Loader::Init(void* hModule) {
 
 	char cModuleName[MAX_PATH];
 	GetModuleFileNameA(reinterpret_cast<HMODULE>(hModule), cModuleName, MAX_PATH);
-
+	
 	std::string sModuleName(cModuleName);
 	std::string sModulePath = sModuleName.substr(0, sModuleName.find_last_of('\\'));
 	memcpy(g_ModulePath, sModulePath.c_str(), sModulePath.length());
 	g_ModulePath[sModulePath.length()] = '\0';
+	
+	if (!Steam::Init()) {
+		LogError("failed to initialize steam");
+		return;
+	}
 
 	LogInfo("hooking cw");
 	if (!Sledge::Hooks::CW()) {
