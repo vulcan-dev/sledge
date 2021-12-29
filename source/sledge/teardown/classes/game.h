@@ -2,7 +2,7 @@
 
 #include "teardown/small_string.h"
 
-enum EGameState: unsigned int {
+enum class EGameState: unsigned int {
 	Splash = 1,
 	Menu = 2,
 	UI = 3,
