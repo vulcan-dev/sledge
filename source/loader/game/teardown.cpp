@@ -26,8 +26,8 @@
 #define CREATE_SUSPENDED 0x00000004
 #define INFINITE 0xFFFFFFFF
 
-
 void Teardown::Launch() {
+
 	/*
 		get teardown's install dir, check if exe exists
 	*/
@@ -82,6 +82,8 @@ void Teardown::Launch() {
 	/*
 		launch unpacked exe
 	*/
+	SetEnvironmentVariableA("SteamAppId", "1167630"); // Set SteamAppId var to initialize SteamAPI
+
 	PROCESS_INFORMATION ProcInfo;
 	STARTUPINFOA StartupInfo;
 
