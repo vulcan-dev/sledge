@@ -47,7 +47,8 @@ public:
 	Vector4 m_Rotation3; //0x006C
 	Vector3 m_Velocity; //0x007C
 	Vector3 m_AngularVelocity; //0x0088
-	char pad_0094[16]; //0x0094
+	char pad_0094[12]; //0x0094
+	float m_Mass; //0x00A0
 	Vector3 m_CenterOfMass; //0x00A4
 	char pad_00B0[44]; //0x00B0
 	bool m_Active; //0x00DC
