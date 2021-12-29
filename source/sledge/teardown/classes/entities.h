@@ -51,7 +51,7 @@ public:
 	float m_Mass; //0x00A0
 	Vector3 m_CenterOfMass; //0x00A4
 	char pad_00B0[44]; //0x00B0
-	bool m_Active; //0x00DC
+	bool m_Dynamic; //0x00DC
 	char pad_00DD[7]; //0x00DD
 	unsigned char m_ActiveTimeLeft; //0x00E4
 	bool m_Colliding; //0x00E5
