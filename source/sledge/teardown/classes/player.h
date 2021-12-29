@@ -1,3 +1,5 @@
+#pragma once
+
 #include "util/math.h"
 
 class CPlayer
