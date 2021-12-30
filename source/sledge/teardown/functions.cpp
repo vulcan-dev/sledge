@@ -26,7 +26,7 @@ static const SScanneable aFunctions[] = {
 	{Signatures::SetBool, &Teardown::SetBool, "SetBool" },
 	{Signatures::SetInt, &Teardown::SetInt, "SetInt" },
 	{Signatures::SetFloat, &Teardown::SetFloat, "SetFloat" },
-	{Signatures::GetString, &Teardown::SetString, "SetString" },
+	{Signatures::SetString, &Teardown::SetString, "SetString" },
 
 	{Signatures::GetBool, &Teardown::GetBool, "GetBool" },
 	{Signatures::GetInt, &Teardown::GetInt, "GetInt" },

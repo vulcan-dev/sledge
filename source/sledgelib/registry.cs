@@ -12,5 +12,8 @@ namespace SledgeLib
 
         [DllImport("sledge.dll")] public static extern void SetFloat(string sKeyName, float fValue);
         [DllImport("sledge.dll")] public static extern float GetFloat(string sKeyName);
+
+        [DllImport("sledge.dll")] public static extern void SetString(string sKeyName, string sValue);
+        [DllImport("sledge.dll")] [return: MarshalAs(UnmanagedType.LPStr)] public static extern string GetString(string sKeyName);
     }
 }

@@ -8,7 +8,7 @@ typedef void (*tSetString) (void* pRegistry, class small_string* ssKeyName, clas
 typedef bool (*tGetBool) (void* pRegistry, class small_string* ssKeyName);
 typedef int (*tGetInt) (void* pRegistry, class small_string* ssKeyName);
 typedef float (*tGetFloat) (void* pRegistry, class small_string* ssKeyName);
-typedef class small_string* (*tGetString) (void* pRegistry, class small_string* ssKeyName);
+typedef void (*tGetString) (void* pRegistry, class small_string* ssReturn, class small_string* ssKeyName);
 
 namespace Teardown {
 	inline tSetBool SetBool;
