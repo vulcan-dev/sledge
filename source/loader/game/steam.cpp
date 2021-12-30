@@ -7,6 +7,10 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 
+/*
+	to-do:
+		remove bind section
+*/
 class CSteamHeader
 {
 public:
@@ -76,6 +80,9 @@ void* Steam::GetUnpackedExe(void* pOriginalExe, long lFileSize) {
 	int iCodeSectionSize = CodeSection->SizeOfRawData + sizeof(SteamHeader->m_OriginalCodeBytes);
 	DWORD64 dwEncryptedBuff = reinterpret_cast<DWORD64>(malloc(iCodeSectionSize));
 	if (dwEncryptedBuff == NULL)
+		return nullptr;
+
+	if (iCodeSectionSize < sizeof(SteamHeader->m_OriginalCodeBytes))
 		return nullptr;
 
 	memcpy(reinterpret_cast<void*>(dwEncryptedBuff), SteamHeader->m_OriginalCodeBytes, sizeof(SteamHeader->m_OriginalCodeBytes));
