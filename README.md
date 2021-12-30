@@ -23,7 +23,11 @@ Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 5. The built version of the project will now be located on proj/{configuration} (i.e. proj/Debug/)
 
 ## Creating a mod
-1. Run: .\mod.ps1 -c ModName GenTemplate(y/n)
+1. Head on over to Sledge's install dir
+2. Open a powershell window there
+3. Run: ``& '.\Generate mod project.ps1' -c YourModName``
+4. Type Y if you wanna use the project template, or N if you dont
+5. Press enter
 
 Options:  
 - -c --create(projectName, projectTemplate(y/n)) - Creates a new project  
