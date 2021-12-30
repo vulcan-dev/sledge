@@ -3,6 +3,7 @@
 
 #include "teardown/functions/constructors.h"
 #include "teardown/functions/memory.h"
+#include "teardown/functions/registry.h"
 
 #include "util/memory.h"
 #include "util/log.h"
@@ -20,6 +21,17 @@ static const SScanneable aFunctions[] = {
 	{ Signatures::calloc, &Teardown::calloc, "calloc" },
 	{ Signatures::realloc, &Teardown::realloc, "realloc" },
 	{ Signatures::memmove, &Teardown::memmove, "memmove" },
+
+	// registry
+	{Signatures::SetBool, &Teardown::SetBool, "SetBool" },
+	{Signatures::SetInt, &Teardown::SetInt, "SetInt" },
+	{Signatures::SetFloat, &Teardown::SetFloat, "SetFloat" },
+	{Signatures::GetString, &Teardown::SetString, "SetString" },
+
+	{Signatures::GetBool, &Teardown::GetBool, "GetBool" },
+	{Signatures::GetInt, &Teardown::GetInt, "GetInt" },
+	{Signatures::GetFloat, &Teardown::GetFloat, "GetFloat" },
+	{Signatures::GetString, &Teardown::GetString, "GetString" },
 
 	// constructors
 	{ Signatures::Body, &Teardown::Constructors::Body, "CBody::CBody" },
