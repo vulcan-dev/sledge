@@ -5,8 +5,10 @@ namespace SledgeLib
 {
     public class Body
     {
-        [DllImport("sledge.dll")] private static extern float GetBodyMass(uint iHandle);
-        public static dGetFloatEntity GetMass = GetBodyMass;
+        [DllImport("sledge.dll")] private static extern Transform GetBodyTransform(uint iHandle);
+        public static dGetTransformEntity GetTransform = GetBodyTransform;
+        [DllImport("sledge.dll")] private static extern void SetBodyTransform(uint iHandle, Transform tTransform);
+        public static dSetTransformEntity SetTransform = SetBodyTransform;
 
         [DllImport("sledge.dll")] private static extern bool GetBodyDynamic(uint iHandle);
         public static dGetBoolEntity IsDynamic = GetBodyDynamic;
@@ -32,5 +34,8 @@ namespace SledgeLib
         public static dGetQuaternionEntity GetRotation = GetBodyRotation;
         [DllImport("sledge.dll")] private static extern void SetBodyRotation(uint iHandle, Quaternion vRotation);
         public static dSetQuaternionEntity SetRotation = SetBodyRotation;
+
+        [DllImport("sledge.dll")] private static extern float GetBodyMass(uint iHandle);
+        public static dGetFloatEntity GetMass = GetBodyMass;
     }
 }
