@@ -2,9 +2,10 @@
  #include <fmt/color.h>
 
  void Log(ELogType eLogType, std::string sText, bool bNewline) {
-    if (static_cast<int>(eLogType) < static_cast<int>(LogLevel)) {
-        return;
-    }
+    #ifndef _DEBUG
+     if (eLogType == ELogType::Verbose)
+         return;
+    #endif
 
  	fmt::color LogColor = fmt::color::white;
  	std::string sLogType;
