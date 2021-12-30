@@ -17,7 +17,7 @@ Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 ## How to build
 1. Clone the repository somewhere using the following command:
 ``git clone --recurse-submodules https://github.com/44lr/sledge/``
-2. Run "# 1 - create project.bat"
+2. Run "Create project.bat"
 3. Open sledge.sln, which will now be located in the "proj" folder.
 4. Click Build.
 5. The built version of the project will now be located on proj/{configuration} (i.e. proj/Debug/)
