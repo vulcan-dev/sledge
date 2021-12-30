@@ -10,4 +10,8 @@ public struct Transform
         Position = new Vector3();
         Rotation = new Quaternion();
     }
+    public Transform(Vector3 vPosition, Quaternion qRotation)
+    {
+        Position = vPosition; Rotation = qRotation;
+    }
 }
