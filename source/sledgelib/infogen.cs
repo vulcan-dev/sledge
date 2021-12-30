@@ -6,6 +6,7 @@ internal class CModInfoGenerator
 {
     private static string[] ValidLoadMethodNames = { "init", "start", "initmod", "loadmod", "startmod", "modinit", "modstart" };
     private static string[] ValidUnloadMethodNames = { "shutdown", "stop", "disable", "shutdownmod", "stopmod", "disablemod", "modshutodwn" };
+    private static string[] ValidReloadMethodNames = { "reload", "restart", "onreload", "onrestart"};
 
     internal static bool GenerateModInfo(Assembly ModAssembly, string sModInfoPath, string sModName)
     {
@@ -22,6 +23,7 @@ internal class CModInfoGenerator
         string? sFinalTypeName = null;
         string? sFinalLoadMethodName = null;
         string? sFinalUnloadMethodName = null;
+        string? sFinalReloadMethodName = null;
 
         foreach (Type ModType in ModTypes)
         {
@@ -54,9 +56,14 @@ internal class CModInfoGenerator
 
                 if (ValidUnloadMethodNames.Contains(Method.Name.ToLowerInvariant()))
                 {
-                    Log.General("Found valid load method name for {0}", sModName);
+                    Log.General("Found valid unload method name for {0}", sModName);
                     sFinalUnloadMethodName = Method.Name;
-                    sFinalTypeName = sTypeName;
+                }
+
+                if (ValidReloadMethodNames.Contains(Method.Name.ToLowerInvariant()))
+                {
+                    Log.General("Found valid reload method name for {0}", sModName);
+                    sFinalReloadMethodName = Method.Name;
                 }
             }
         }
@@ -73,6 +80,7 @@ internal class CModInfoGenerator
         ModInfo.sUnloadMethodName = sFinalUnloadMethodName;
         ModInfo.sModName = sModName;
         ModInfo.sModAuthor = "Unknown";
+        ModInfo.sReloadMethodName = sFinalReloadMethodName != null ? sFinalReloadMethodName : "";
 
         string sSerializedModInfo = JsonSerializer.Serialize<CModLoader.SModInfo>(ModInfo);
 

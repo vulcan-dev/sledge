@@ -13,6 +13,7 @@ internal class CModLoader
         public string sTypeName { get; set; }
         public string sLoadMethodName { get; set; }
         public string sUnloadMethodName { get; set; }
+        public string sReloadMethodName { get; set; }
     }
 
     internal struct SRegisteredModInfo
@@ -24,6 +25,7 @@ internal class CModLoader
         public object m_Instance;
         public MethodInfo m_Load;
         public MethodInfo m_Unload;
+        public MethodInfo? m_Reload;
         public AssemblyLoadContext m_LoadContext;
     }
 
@@ -199,6 +201,10 @@ internal class CModLoader
             return false;
         }
 
+        MethodInfo? ModReloadMethod = null;
+        if (!string.IsNullOrEmpty(ModInfo.sReloadMethodName))
+            ModReloadMethod = ModType.GetMethod(ModInfo.sReloadMethodName);
+
         try
         {
             object? ModInstance = Activator.CreateInstance(ModType);
@@ -217,6 +223,7 @@ internal class CModLoader
 
         RegModInfo.m_Load = ModLoadMethod;
         RegModInfo.m_Unload = ModUnloadMethod;
+        RegModInfo.m_Reload = ModReloadMethod;
 
         RegisterLoadedMod(RegModInfo);
         return true;
@@ -250,9 +257,15 @@ internal class CModLoader
             if (RegisteredMod.m_Path != ModInfo.m_Path || RegisteredMod.m_Name != ModInfo.m_Name)
                 continue;
 
+            MethodInfo MethodToInvoke;
+            if (RegisteredMod.m_Reload != null)
+                MethodToInvoke = RegisteredMod.m_Reload;
+            else
+                MethodToInvoke = RegisteredMod.m_Load;
+
             try
             {
-                RegisteredMod.m_Load.Invoke(RegisteredMod.m_Instance, null);
+                MethodToInvoke.Invoke(RegisteredMod.m_Instance, null);
             }
             catch (Exception ex)
             {
