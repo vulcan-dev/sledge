@@ -44,7 +44,7 @@ public:
 	void* N00000083; //0x00A8
 	void* N00000084; //0x00B0
 	void* N00000085; //0x00B8
-	void* N00000086; //0x00C0
+	void* m_Registry; //0x00C0
 	void* N00000087; //0x00C8
 	void* N00000088; //0x00D0
 	void* N00000089; //0x00D8
