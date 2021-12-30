@@ -15,3 +15,21 @@ public struct Transform
         Position = vPosition; Rotation = qRotation;
     }
 }
+
+public struct Bounds
+{
+    public Vector3 m_Min;
+    public Vector3 m_Max;
+
+    public Bounds()
+    {
+        m_Min = new Vector3();
+        m_Max = new Vector3();
+    }
+
+    public Bounds(Vector3 vMin, Vector3 vMax)
+    {
+        m_Min = vMin;
+        m_Max = vMax;
+    }
+}

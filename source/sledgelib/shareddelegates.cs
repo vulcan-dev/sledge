@@ -44,3 +44,8 @@ public delegate Transform dGetTransform();
 public delegate void dSetTransform(Transform tValue);
 public delegate Transform dGetTransformEntity(uint iHandle);
 public delegate void dSetTransformEntity(uint iHandle, Transform tValue);
+
+public delegate Bounds dGetBounds();
+public delegate void dSetBounds(Bounds bValue);
+public delegate Bounds dGetBoundsEntity(uint iHandle);
+public delegate void dSetBoundsEntity(uint iHandle, Bounds bValue);

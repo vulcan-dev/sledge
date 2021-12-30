@@ -16,3 +16,8 @@ struct Transform {
 	Vector3 m_Position;
 	Vector4 m_Rotation;
 };
+
+struct Bounds {
+	Vector3 m_Min;
+	Vector3 m_Max;
+};
