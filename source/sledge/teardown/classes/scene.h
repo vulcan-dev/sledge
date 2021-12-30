@@ -32,3 +32,5 @@ public:
 	virtual void Function0();
 	virtual void Function1();
 }; //Size: 0x08D0
+
+inline CScene* g_Scene;

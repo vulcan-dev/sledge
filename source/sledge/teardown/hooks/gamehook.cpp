@@ -1,6 +1,8 @@
 #include "teardown/hooks.h"
 #include "teardown/signatures.h"
+
 #include "teardown/classes/game.h"
+#include "teardown/classes/scene.h"
 
 #include "sledge/loader.h"
 
@@ -19,6 +21,8 @@ CGame* hGameCCtor(void* pAlloc, void* pMemory) {
 	LogVerbose("g_Game: {}", reinterpret_cast<void*>(g_Game));
 
 	Loader::LateLateInit();
+
+	g_Scene = g_Game->m_Scene;
 
 	return g_Game;
 }
