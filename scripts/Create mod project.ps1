@@ -2,7 +2,7 @@ function Create-LibCS([String] $projectName, [String] $projectTemplate) {
     $fileContents = ""
 
     if ($projectTemplate -eq "Y") {
-        $fileContents = "// Documention: https://github.com/44lr/sledge/wiki/API-Documentation
+        $fileContents = "// Documentation: https://github.com/44lr/sledge/wiki/API-Documentation
 
 using SledgeLib;
 
@@ -61,7 +61,7 @@ namespace $projectName {
     }
 }"
     } else {
-        $fileContents = "// Documention: https://github.com/44lr/sledge/wiki/API-Documentation
+        $fileContents = "// Documentation: https://github.com/44lr/sledge/wiki/API-Documentation
 
 using SledgeLib;
 
