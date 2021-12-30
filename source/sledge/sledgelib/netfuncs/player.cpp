@@ -14,11 +14,11 @@ sledgelib_func Vector3 GetPlayerPosition() { return g_Game->m_Player->m_Position
 sledgelib_func void SetPlayerVelocity(Vector3 vVelocity) { g_Game->m_Player->m_Velocity = vVelocity; }
 sledgelib_func Vector3 GetPlayerVelocity() { return g_Game->m_Player->m_Velocity; }
 
-sledgelib_func void SetCameraTransform(Transform tCameraTransform) { g_Game->m_Player->m_CameraTransform2 = tCameraTransform; }
-sledgelib_func Transform GetCameraTransform() { return g_Game->m_Player->m_CameraTransform2; }
+sledgelib_func void SetPlayerCameraTransform(Transform tCameraTransform) { g_Game->m_Player->m_CameraTransform2 = tCameraTransform; }
+sledgelib_func Transform GetPlayerCameraTransform() { return g_Game->m_Player->m_CameraTransform2; }
 
-sledgelib_func Vector2 GetMovementInput() { return g_Game->m_Player->m_MovementKeys; }
-sledgelib_func Vector2 GetMouseInput() { return g_Game->m_Player->m_MouseInput; }
+sledgelib_func Vector2 GetPlayerMovementInput() { return g_Game->m_Player->m_MovementKeys; }
+sledgelib_func Vector2 GetPlayerMouseInput() { return g_Game->m_Player->m_MouseInput; }
 
 sledgelib_func void Respawn() { g_Game->m_RespawnPlayer = true; }
 

@@ -21,11 +21,15 @@ namespace SledgeLib
         [DllImport("sledge.dll")] internal static extern Vector3 GetPlayerVelocity();
         public static dGetVector3 GetVelocity = GetPlayerVelocity;
 
-        [DllImport("sledge.dll")] public static extern void SetCameraTransform(Transform tCameraTransform);
-        [DllImport("sledge.dll")] public static extern Transform GetCameraTransform();
+        [DllImport("sledge.dll")] public static extern void SetPlayerCameraTransform(Transform tCameraTransform);
+        public static dSetTransform SetCameraTransform = SetPlayerCameraTransform;
+        [DllImport("sledge.dll")] public static extern Transform GetPlayerCameraTransform();
+        public static dGetTransform GetCameraTransform = GetPlayerCameraTransform;
 
-        [DllImport("sledge.dll")] public static extern Vector2 GetMovementInput();
-        [DllImport("sledge.dll")] public static extern Vector2 GetMouseInput();
+        [DllImport("sledge.dll")] public static extern Vector2 GetPlayerMovementInput();
+        public static dGetVector2 GetMovement = GetPlayerMovementInput;
+        [DllImport("sledge.dll")] public static extern Vector2 GetPlayerMouseInput();
+        public static dGetVector2 GetMouse = GetPlayerMouseInput;
 
         [DllImport("sledge.dll")] public static extern void Respawn();
 
