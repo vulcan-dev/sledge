@@ -67,21 +67,39 @@ internal class CModLoader
         Log.General("Unregistered and unloaded mod: {0}", Mod.m_Name);
     }
 
-    private static Assembly? _ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName Name)
+    private static Assembly? _ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName DependencyName)
     {
-        if (Name.ToString() == ThisAssembly.GetName().ToString())
+        if (DependencyName.ToString() == ThisAssembly.GetName().ToString())
             return ThisAssembly;
 
-        foreach(SRegisteredModInfo ModInfo in RegisteredMods)
+        if (DependencyName.Name == null)
+        {
+            Log.Error("Error ocurred while loading dependency for mod {0}: Dependency name was null?");
+            return null;
+        }
+
+        foreach (SRegisteredModInfo ModInfo in RegisteredMods)
         {
             if (LoadContext.Name != ModInfo.m_LoadContext.Name)
                 continue;
 
-            Log.General("Mod {0} loaded an external dependency: {1}", ModInfo.m_Name, Name);
-            break;
+            if (!Directory.Exists(ModInfo.m_Path + "\\dependencies"))
+            {
+                Log.Error("Mod {0} tried to load a dependency without having a dependency folder", ModInfo.m_Name);
+                return null;
+            }
+
+            try
+            {
+                return ModInfo.m_LoadContext.LoadFromAssemblyPath(ModInfo.m_Path + "\\dependencies\\" + DependencyName.Name + ".dll");
+            } catch (Exception ex)
+            {
+                Log.Error("Error occurred while loading dependency {0} for mod {1}: {2}", DependencyName.Name, ModInfo.m_Name, ex.ToString());
+                return null;
+            }
         }
 
-        Log.Error("Unable to load assembly dependency: {0}", Name.ToString());
+        Log.Error("Unable to locate assembly dependency: {0}", DependencyName.Name.ToString());
         return null;
     }
 
@@ -343,9 +361,13 @@ internal class CModLoader
 
     internal static void LoadMods()
     {
-        // ModsPath can't be 1, because Init already checks for it
+        EnumerationOptions ModEnumOptions = new EnumerationOptions();
+        ModEnumOptions.RecurseSubdirectories = true;
+        ModEnumOptions.MaxRecursionDepth = 1;
+
+        // ModsPath can't be null, because Init already checks for it
         #pragma warning disable CS8604
-        string[] ModFiles = Directory.GetFiles(ModsPath, "*.dll", SearchOption.AllDirectories);
+        string[] ModFiles = Directory.GetFiles(ModsPath, "*.dll", ModEnumOptions);
         #pragma warning restore CS8604
 
         foreach (string sModFilePath in ModFiles)
@@ -356,6 +378,9 @@ internal class CModLoader
 
             string? sModPath = Path.GetDirectoryName(sModFilePath);
             if (sModPath == null)
+                continue;
+
+            if (Path.GetFileName(sModPath) == "dependencies")
                 continue;
 
             RegisterMod(sModPath, sModName);
