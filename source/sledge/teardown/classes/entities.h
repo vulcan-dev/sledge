@@ -62,8 +62,7 @@ class CShape : public CEntity
 {
 public:
 	Transform m_LocalTransform; //0x0028
-	Vector3 m_BoundsMin; //0x0044
-	Vector3 m_BoundsMax; //0x0050
+	Bounds m_Bounds; //0x0044
 	char pad_005C[4]; //0x005C
 	void* N0000053F; //0x0060
 	void* N000004EE; //0x0068
