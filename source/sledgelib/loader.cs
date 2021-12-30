@@ -6,17 +6,17 @@ internal class SledgeLoader
 
     public static bool Init()
     {
-        Log.General("initializing binds");
+        Log.Verbose("Initializing Binds");
         CBindManager.RegisterInputReader(CBindManager.InputReader);
 
-        Log.General("initializing callbacks");
+        Log.Verbose("Initializing Callbacks");
         CCallbackManager.RegisterCallback(ECallbackType.PlayerSpawn, CCallbackManager.PlayerSpawnCallback);
         CCallbackManager.RegisterCallback(ECallbackType.PreUpdate, CCallbackManager.PreUpdateCallback);
         CCallbackManager.RegisterCallback(ECallbackType.PostUpdate, CCallbackManager.PostUpdateCallback);
         CCallbackManager.RegisterCallback(ECallbackType.PrePlayerUpdate, CCallbackManager.PrePlayerUpdateCallback);
         CCallbackManager.RegisterCallback(ECallbackType.PostPlayerUpdate, CCallbackManager.PostPlayerUpdateCallback);
 
-        Log.General("loading mods");
+        Log.Verbose("Loading Mods");
         if (!CModLoader.Init())
         {
             Log.Error("ModLoader failed to initialize");
@@ -25,7 +25,7 @@ internal class SledgeLoader
 
         CModLoader.LoadMods();
 
-        Log.General("sledgelib succesfully initialized");
+        Log.General("Sledgelib Succesfully Initialized");
         return true;
     }
 }

@@ -10,9 +10,10 @@ namespace SledgeLib
 
         internal enum ELogType
         {
+            Verbose = 0,
             General = 4,
             Warning = 5,
-            Error = 6
+            Error = 6,
         }
 
         private static void _Log(ELogType eType, Assembly Caller, string sFormat, params object[] oArgs)
@@ -45,5 +46,7 @@ namespace SledgeLib
         public static void Warning(string sFormat, params object[] oArgs) { _Log(ELogType.Warning, Assembly.GetCallingAssembly(), sFormat, oArgs); }
 
         public static void Error(string sFormat, params object[] oArgs) { _Log(ELogType.Error, Assembly.GetCallingAssembly(), sFormat, oArgs); }
+
+        public static void Verbose(string sFormat, params object[] oArgs) { _Log(ELogType.Verbose, Assembly.GetCallingAssembly(), sFormat, oArgs); }
     }
 }

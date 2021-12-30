@@ -13,6 +13,17 @@ enum class ELogType {
 	Teardown
 };
 
+enum class ELogLevel {
+	Verbose,
+	Info
+};
+
+#ifdef _DEBUG
+inline ELogLevel LogLevel = ELogLevel::Verbose;
+#else
+inline ELogLevel LogLevel = ELogLevel::Info;
+#endif
+
 template <typename... Args>
 inline std::string FormatLog(const char* cFmt, Args&&... Arguments) {
 	return fmt::vformat(cFmt, fmt::make_format_args(std::forward<Args>(Arguments)...));

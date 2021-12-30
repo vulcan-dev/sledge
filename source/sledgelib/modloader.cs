@@ -259,8 +259,6 @@ internal class CModLoader
                 Log.Error("Error ocurred while invoking loader function for mod {0}: {1}", RegisteredMod.m_Name, ex.Message);
                 UnregisterLoadedMod(RegisteredMod);
             }
-
-            Log.General("Successfully started mod: {0}", RegisteredMod.m_Name);
         }
     }
 
