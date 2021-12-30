@@ -21,3 +21,12 @@ Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 3. Open sledge.sln, which will now be located in the "proj" folder.
 4. Click Build.
 5. The built version of the project will now be located on proj/{configuration} (i.e. proj/Debug/)
+
+## Creating a mod
+1. Run: .\mod.ps1 -c ModName GenTemplate(y/n)
+
+Options:  
+- -c --create(projectName, projectTemplate(y/n)) - Creates a new project  
+- -r --rename(projectName, newProjectName) - Renames a project  
+- -d --delete(projectName) - Deletes a project  
+- -b --build(projectName) - Builds a project  
