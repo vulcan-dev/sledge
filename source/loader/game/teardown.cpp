@@ -9,6 +9,7 @@
 
 #include <windef.h>
 #include <winreg.h>
+#include <WinUser.h>
 
 #include <handleapi.h>
 #include <synchapi.h>
@@ -33,6 +34,11 @@ void Teardown::Launch() {
 	*/
 	const char* cTeardownPath = Teardown::GetPath();
 
+	if (cTeardownPath == 0) {
+		MessageBoxA(NULL, "Unable to find Teardown installation", "Error", MB_ICONERROR | MB_OK);
+		return;
+	}
+
 	char cCurrentPath[MAX_PATH];
 	GetCurrentDirectoryA(MAX_PATH, cCurrentPath);
 
@@ -40,28 +46,36 @@ void Teardown::Launch() {
 	sprintf(cDLLPath, "%s\\%s", cCurrentPath, "sledge.dll");
 	const char* cDLLPath2 = cDLLPath;
 
-	if (!std::filesystem::exists(cDLLPath))
+	if (!std::filesystem::exists(cDLLPath)) {
+		MessageBoxA(NULL, "Unable to find sledge.dll", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 
 	char cExePath[MAX_PATH];
 	sprintf(cExePath, "%s\\%s", cTeardownPath, "teardown.exe");
-	if (!std::filesystem::exists(cExePath))
+	if (!std::filesystem::exists(cExePath)) {
+		MessageBoxA(NULL, "Unable to find teardown.exe", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 
 	/*
 		read packed exe into a buffer, unpack the buffer, write buffer to exe
 	*/
 	FILE* TeardownExe = fopen(cExePath, "rb");
-	if (TeardownExe == NULL)
+	if (TeardownExe == NULL) {
+		MessageBoxA(NULL, "Unable to open teardown.exe", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 
 	fseek(TeardownExe, 0, SEEK_END);
 	long lFileSize = ftell(TeardownExe);
 	rewind(TeardownExe);
 
 	void* pExeBuffer = malloc(lFileSize);
-	if (pExeBuffer == NULL)
+	if (pExeBuffer == NULL) {
+		MessageBoxA(NULL, "Unable to allocate memory for exe buffer", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 
 	fread(pExeBuffer, lFileSize, 1, TeardownExe);
 	fclose(TeardownExe);
@@ -69,14 +83,23 @@ void Teardown::Launch() {
 	void* pUnpackedBuffer = Steam::GetUnpackedExe(pExeBuffer, lFileSize);
 	free(pExeBuffer);
 
+	if (pUnpackedBuffer == nullptr) {
+		MessageBoxA(NULL, "Failed to unpack Teardown", "Error", MB_ICONERROR | MB_OK);
+		return;
+	}
+
 	char cUnpackedDir[MAX_PATH];
 	sprintf(cUnpackedDir, "%s\\teardown.unpacked.exe", cTeardownPath);
 	FILE* UnpackedOutput = fopen(cUnpackedDir, "wb");
-	if (UnpackedOutput == NULL)
+	if (UnpackedOutput == NULL) {
+		MessageBoxA(NULL, "Unable to open teardown.unpacked.exe (is Sledge already running?)", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 
-	if (!fwrite(pUnpackedBuffer, 1, lFileSize, UnpackedOutput))
+	if (!fwrite(pUnpackedBuffer, 1, lFileSize, UnpackedOutput)) {
+		MessageBoxA(NULL, "Unable to write to teardown.unpacked.exe", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 	fclose(UnpackedOutput);
 
 	/*
@@ -91,11 +114,15 @@ void Teardown::Launch() {
 	ZeroMemory(&StartupInfo, sizeof(StartupInfo));
 
 
-	if (!CreateProcessA(NULL, const_cast<LPSTR>(cUnpackedDir), NULL, NULL, TRUE, CREATE_DEFAULT_ERROR_MODE | CREATE_SUSPENDED, NULL, cTeardownPath, &StartupInfo, &ProcInfo))
+	if (!CreateProcessA(NULL, const_cast<LPSTR>(cUnpackedDir), NULL, NULL, TRUE, CREATE_DEFAULT_ERROR_MODE | CREATE_SUSPENDED, NULL, cTeardownPath, &StartupInfo, &ProcInfo)) {
+		MessageBoxA(NULL, "CreateProcessA failed when starting teardown.unpacked.exe", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 
-	if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cDLLPath2, 1))
+	if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cDLLPath2, 1)) {
+		MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
 		return;
+	}
 
 	ResumeThread(ProcInfo.hThread);
 
