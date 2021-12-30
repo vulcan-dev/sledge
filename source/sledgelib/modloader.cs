@@ -275,7 +275,6 @@ internal class CModLoader
                 if (File.GetLastWriteTime(sAssemblyPath) == RegisteredMod.m_AssemblyLastWrite)
                     return;
 
-                Log.General("reloaded");
                 ReloadMod(RegisteredMod);
                 return;
             }
