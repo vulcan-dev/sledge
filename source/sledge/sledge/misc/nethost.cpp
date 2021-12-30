@@ -65,7 +65,7 @@ bool NetHost::Init() {
 	std::wstring wsConfigPath(sModulePath.begin(), sModulePath.end());
 	wsConfigPath.append(L"\\mods\\sledgelib.runtimeconfig.json");
 
-	LogInfo("module path: {}", g_ModulePath);
+	LogVerbose("module path: {}", g_ModulePath);
 
 	if (!std::filesystem::exists(wsConfigPath)) {
 		LogError("missing file: sledgelib.runtimeconfig.json");

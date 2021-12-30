@@ -2,6 +2,11 @@
  #include <fmt/color.h>
 
  void Log(ELogType eLogType, std::string sText, bool bNewline) {
+    #ifndef _DEBUG
+     if (eLogType == ELogType::Verbose)
+         return;
+    #endif
+
  	fmt::color LogColor = fmt::color::white;
  	std::string sLogType;
 

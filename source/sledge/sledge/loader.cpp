@@ -40,7 +40,7 @@ void Loader::Init(void* hModule) {
 	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(hConsole, dwMode);
 
-	LogInfo("slegde mod loader - {} build", g_Build);
+	LogInfo("Slegde Mod Loader - {} build", g_Build);
 
 	g_Module = GetModuleHandle(NULL);
 
@@ -57,12 +57,12 @@ void Loader::Init(void* hModule) {
 		return;
 	}
 
-	LogInfo("hooking cw");
+	LogVerbose("hooking cw");
 	if (!Sledge::Hooks::CW()) {
 		LogError("failed to hook cw");
 		return;
 	}
-	LogInfo("cw hooked");
+	LogVerbose("cw hooked");
 }
 
 /*
@@ -74,17 +74,17 @@ void Loader::LateInit() {
 	if (bLateInitCalled)
 		return;
 	bLateInitCalled = true;
-	LogInfo("getting func addresses");
+	LogVerbose("getting func addresses");
 	Teardown::GetFunctionAddresses();
-	LogInfo("hooking game cctor");
+	LogVerbose("hooking game cctor");
 	Teardown::Hooks::Game();
-	LogInfo("hooking callback functions");
+	LogVerbose("hooking callback functions");
 	Teardown::Hooks::CallbackHooks();
-	LogInfo("hooking log function");
+	LogVerbose("hooking log function");
 	Teardown::Hooks::Log();
-	LogInfo("hooking active window check");
+	LogVerbose("hooking active window check");
 	Teardown::Hooks::ActiveWindow();
-	LogInfo("hooking cursor capture function");
+	LogVerbose("hooking cursor capture function");
 	Teardown::Hooks::Cursor();
 }
 
@@ -100,13 +100,13 @@ void Loader::LateLateInit() {
 
 	Sledge::Hooks::Wnd();
 
-	LogInfo("setting up hostfxr");
+	LogVerbose("setting up hostfxr");
 	if (!NetHost::Init()) {
 		LogError("failed to init hostfxr");
 		return;
 	}
 
-	LogInfo("loading sledgelib");
+	LogVerbose("loading sledgelib");
 	if (!SledgeLib::Load()) {
 		LogError("failed to load sledgelib");
 		return;
