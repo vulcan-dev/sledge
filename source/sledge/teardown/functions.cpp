@@ -35,8 +35,9 @@ static const SScanneable aFunctions[] = {
 	{Signatures::GetString, &Teardown::GetString, "GetString" },
 
 	// entity
-	{Signatures::GenVoxPhysBuffer, &Teardown::Entities::GenVoxBuffers, "GenVoxBuffers" },
-	{Signatures::GenVoxTexture, &Teardown::Entities::GenVoxTexture, "GenVoxTexture" },
+	{Signatures::GenVoxPhysBuffer, &Teardown::Entity::GenVoxBuffers, "GenVoxBuffers" },
+	{Signatures::GenVoxTexture, &Teardown::Entity::GenVoxTexture, "GenVoxTexture" },
+	{Signatures::LoadVox, &Teardown::Entity::LoadVox, "LoadVox" },
 
 	// constructors
 	{ Signatures::Body, &Teardown::Constructors::Body, "CBody::CBody" },

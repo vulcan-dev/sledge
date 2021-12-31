@@ -42,6 +42,7 @@ namespace Signatures {
 	*/
 	inline CSignature GenVoxTexture("\xE8\x00\x00\x00\x00\x41\x0F\x10\x46\x00", "x????xxxx?");
 	inline CSignature GenVoxPhysBuffer("\xE8\x00\x00\x00\x00\x41\xFF\xC7\x48\x83\xC7\x1C", "x????xxxxxxx");
+	inline CSignature LoadVox("\xE8\x00\x00\x00\x00\x49\x89\x86\x00\x00\x00\x00", "x????xxx????");
 
 	/*
 		registry sigs
