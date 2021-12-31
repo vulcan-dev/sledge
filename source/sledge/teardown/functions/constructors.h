@@ -2,7 +2,7 @@
 
 namespace Teardown {
 	namespace Constructors {
-		typedef class CEntity* (*tClassConstructor) (CEntity* pSelf, CEntity* pParent);
+		typedef class CEntity* (*tClassConstructor) (void* pAlloc, CEntity* pParent);
 
 		inline tClassConstructor Body;
 		inline tClassConstructor Shape;
