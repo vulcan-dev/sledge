@@ -1,7 +1,21 @@
 #include "teardown/classes/entities.h"
 #include "teardown/utils.h"
 
+#include "teardown/functions/memory.h"
+#include "teardown/functions/constructors.h"
+
 #define sledgelib_func extern "C" __declspec(dllexport)
+
+sledgelib_func unsigned int CreateBody() {
+	void* pBodyBuffer = Teardown::alloc(sizeof(CBody));
+	if (pBodyBuffer == NULL)
+		return;
+
+	Teardown::Constructors::Body(pBodyBuffer, nullptr);
+	CBody* Body = reinterpret_cast<CBody*>(pBodyBuffer);
+
+	return Body->m_Id;
+}
 
 sledgelib_func Transform GetBodyTransform(unsigned int iBodyHandle) {
 	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);

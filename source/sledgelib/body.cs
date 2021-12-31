@@ -5,6 +5,9 @@ namespace SledgeLib
 {
     public class Body
     {
+        [DllImport("sledge.dll")] private static extern uint CreateBody();
+        public static dGetUInt Create = CreateBody;
+
         [DllImport("sledge.dll")] private static extern Transform GetBodyTransform(uint iHandle);
         public static dGetTransformEntity GetTransform = GetBodyTransform;
         [DllImport("sledge.dll")] private static extern void SetBodyTransform(uint iHandle, Transform tTransform);
