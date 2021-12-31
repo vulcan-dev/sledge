@@ -26,4 +26,16 @@ sledgelib_func unsigned int GetGrabbedBody() {
 	if (!g_Game->m_Player->m_GrabbedBody) return 0;
 	return g_Game->m_Player->m_GrabbedBody->m_Id;
 }
-sledgelib_func void ReleaseGrabbedBody() { g_Game->m_Player->m_GrabbedBody = nullptr; }
+
+sledgelib_func unsigned int GetGrabbedShape() {
+	if (!g_Game->m_Player->m_GrabbedShape) return 0;
+	return g_Game->m_Player->m_GrabbedShape->m_Id;
+}
+
+sledgelib_func void ReleaseGrab() {
+	if (g_Game->m_Player->m_GrabBody)
+		g_Game->m_Player->m_GrabBody->Destroy(true);
+
+	g_Game->m_Player->m_GrabbedBody = nullptr;
+	g_Game->m_Player->m_GrabbedShape = nullptr;
+}

@@ -5,6 +5,12 @@ namespace SledgeLib
 {
     public class Shape
     {
+        [DllImport("sledge.dll")] private static extern uint CreateShape(uint iBodyHandle);
+        public delegate uint dCreateShape(uint iBodyHandle);
+        public static dCreateShape Create = CreateShape;
+
+        [DllImport("sledge.dll")] private static extern bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
+
         [DllImport("sledge.dll")] private static extern Transform GetShapeLocalTransform(uint iHandle);
         public static dGetTransformEntity GetLocalTransform = GetShapeLocalTransform;
         [DllImport("sledge.dll")] private static extern void SetShapeLocalTransform(uint iHandle, Transform tTransform);

@@ -44,6 +44,9 @@ namespace Signatures {
 	inline CSignature GenVoxPhysBuffer("\xE8\x00\x00\x00\x00\x41\xFF\xC7\x48\x83\xC7\x1C", "x????xxxxxxx");
 	inline CSignature LoadVox("\xE8\x00\x00\x00\x00\x49\x89\x86\x00\x00\x00\x00", "x????xxx????");
 
+	inline CSignature InitializeBody("\xE8\x00\x00\x00\x00\x48\x85\xF6\x74\x2B", "x????xxxxx");
+	inline CSignature SetBodyDynamic("\x88\x91\x00\x00\x00\x00\x4C\x8B\xC1", "xx????xxx", false);
+
 	/*
 		registry sigs
 	*/

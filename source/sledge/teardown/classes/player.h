@@ -29,7 +29,9 @@ public:
 	bool m_M1Down; //0x00E1
 	char pad_00E2[46]; //0x00E2
 	class CBody* m_GrabbedBody; //0x0110
-	char pad_0118[64]; //0x0118
+	char pad_0118[48]; //0x0118
+	class CBody* m_GrabBody; //0x0148
+	char pad_0150[8]; //0x0150
 	float m_Health; //0x0158
 	char pad_015C[1420]; //0x015C
 	class CShape* m_GrabbedShape; //0x06E8

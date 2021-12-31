@@ -9,11 +9,10 @@
 sledgelib_func unsigned int CreateBody() {
 	void* pBodyBuffer = Teardown::alloc(sizeof(CBody));
 	if (pBodyBuffer == NULL)
-		return;
+		return 0;
 
 	Teardown::Constructors::Body(pBodyBuffer, nullptr);
 	CBody* Body = reinterpret_cast<CBody*>(pBodyBuffer);
-
 	return Body->m_Id;
 }
 

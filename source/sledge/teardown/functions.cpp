@@ -38,6 +38,8 @@ static const SScanneable aFunctions[] = {
 	{Signatures::GenVoxPhysBuffer, &Teardown::Entity::GenVoxBuffers, "GenVoxBuffers" },
 	{Signatures::GenVoxTexture, &Teardown::Entity::GenVoxTexture, "GenVoxTexture" },
 	{Signatures::LoadVox, &Teardown::Entity::LoadVox, "LoadVox" },
+	{Signatures::InitializeBody, &Teardown::Entity::InitializeBody, "InitializeBody" },
+	{Signatures::SetBodyDynamic, &Teardown::Entity::SetBodyDynamic, "SetBodyDynamic" },
 
 	// constructors
 	{ Signatures::Body, &Teardown::Constructors::Body, "CBody::CBody" },

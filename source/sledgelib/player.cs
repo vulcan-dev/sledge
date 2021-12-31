@@ -33,7 +33,8 @@ namespace SledgeLib
 
         [DllImport("sledge.dll")] public static extern void Respawn();
 
+        [DllImport("sledge.dll")] public static extern uint GetGrabbedShape();
         [DllImport("sledge.dll")] public static extern uint GetGrabbedBody();
-        [DllImport("sledge.dll")] public static extern void ReleaseGrabbedBody();
+        [DllImport("sledge.dll")] public static extern void ReleaseGrab();
     }
 }
