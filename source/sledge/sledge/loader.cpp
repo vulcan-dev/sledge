@@ -57,22 +57,6 @@ void Loader::Init(void* hModule) {
 		return;
 	}
 
-	LogVerbose("hooking cw");
-	if (!Sledge::Hooks::CW()) {
-		LogError("failed to hook cw");
-		return;
-	}
-	LogVerbose("cw hooked");
-}
-
-/*
-	LateInit:
-		At this point, SteamStub is done unpacking, everything is loaded in memory, but nothing is initialized yet.
-		(useful for hooking, finding sigs, etc)
-*/
-void Loader::LateInit() {
-	if (bLateInitCalled)
-		return;
 	bLateInitCalled = true;
 	LogVerbose("getting func addresses");
 	Teardown::GetFunctionAddresses();
@@ -82,23 +66,25 @@ void Loader::LateInit() {
 	Teardown::Hooks::CallbackHooks();
 	LogVerbose("hooking log function");
 	Teardown::Hooks::Log();
-	LogVerbose("hooking active window check");
-	Teardown::Hooks::ActiveWindow();
-	LogVerbose("hooking cursor capture function");
-	Teardown::Hooks::Cursor();
 }
 
 /*
-	LateLateInit:
+	LateInit:
 		At this point CGame has been created, and all the classes within it as well (CScene, CEditor, CPlayer, etc).
-		(useful for loading libraries / mods)
+		(primarily used for loading libraries / mods)
 */
-void Loader::LateLateInit() {
+void Loader::LateInit() {
 	if (bLateLateInitAlreadyCalled)
 		return;
 	bLateLateInitAlreadyCalled = true;
 
 	Sledge::Hooks::Wnd();
+
+	LogVerbose("hooking active window check");
+	Teardown::Hooks::ActiveWindow();
+
+	LogVerbose("hooking cursor capture function");
+	Teardown::Hooks::Cursor();
 
 	LogVerbose("setting up hostfxr");
 	if (!NetHost::Init()) {

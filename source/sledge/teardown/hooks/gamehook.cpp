@@ -19,11 +19,8 @@ tGameCCtor GameCCtor;
 CGame* hGameCCtor(void* pAlloc, void* pMemory) {
 	g_Game = GameCCtor(pAlloc, pMemory);
 	LogVerbose("g_Game: {}", reinterpret_cast<void*>(g_Game));
-
-	Loader::LateLateInit();
-
 	g_Scene = g_Game->m_Scene;
-
+	Loader::LateInit();
 	return g_Game;
 }
 
