@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Reflection;
 
 namespace SledgeLib
 {
@@ -8,8 +9,6 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern uint CreateShape(uint iBodyHandle);
         public delegate uint dCreateShape(uint iBodyHandle);
         public static dCreateShape Create = CreateShape;
-
-        [DllImport("sledge.dll")] public static extern bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
 
         [DllImport("sledge.dll")] private static extern Transform GetShapeLocalTransform(uint iHandle);
         public static dGetTransformEntity GetLocalTransform = GetShapeLocalTransform;
@@ -36,6 +35,34 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern void SetShapeCollisionFilter(uint iHandle, sbyte CollisionLayer, sbyte CollisionMask);
         public delegate void dSetShapeCollisionFilter(uint iHandle, sbyte CollisionLayer, sbyte CollisionMask);
         public static dSetShapeCollisionFilter SetCollisionFilter = SetShapeCollisionFilter;
+
+        [DllImport("sledge.dll")] private static extern bool _LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
+        public static bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale)
+        {
+            if (!sVoxPath.EndsWith(".vox"))
+                Log.Warning("LoadVox called with path that does not end in .vox");
+
+            if (!File.Exists(sVoxPath))
+            {
+                Assembly Caller = Assembly.GetCallingAssembly(); ;
+                string? sModPath = ModLoader.GetPathByAssembly(Caller);
+                
+                if (sModPath == null) return false;
+                if (!File.Exists(sModPath + "/" + sVoxPath))
+                {
+                    Log.General("unable to find vox at: {0}", sModPath + "/" + sVoxPath);
+                    return false;
+                }
+                sVoxPath = sModPath + "/" + sVoxPath;
+            }
+
+            if (!_LoadVox(iHandle, sVoxPath, sVoxName, fScale))
+            {
+                Log.Error("Failed to load vox: {0}", sVoxPath);
+                return false;
+            }
+            return true;
+        }
 
     }
 }

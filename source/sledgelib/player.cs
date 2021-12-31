@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Reflection;
 
 namespace SledgeLib
 {
@@ -47,13 +48,33 @@ namespace SledgeLib
                 return;
             }
 
+            if (!sFile.EndsWith(".vox"))
+                Log.Warning("RegisterTool called with file name that does not end in .vox");
+
+            if (!File.Exists(sFile))
+            {
+                Assembly Caller = Assembly.GetCallingAssembly(); ;
+                string? sModPath = ModLoader.GetPathByAssembly(Caller);
+
+                if (sModPath == null) return;
+                if (!File.Exists(sModPath + "/" + sFile))
+                {
+                    Log.General("unable to find vox at: {0}", sModPath + "/" + sFile);
+                    return;
+                }
+                sFile = "RAW:" + sModPath + "/" + sFile;
+            }
+
+            sFile = sFile.Replace("\\", "/");
+            Log.General("path: {0}", sFile);
+
             if (iGroup < 1 || iGroup > 6)
                 iGroup = 6;
 
             int iIdx = _GetLastToolIdx() + 1;
 
             _RegisterTool(sId, sName, sFile, (uint)iGroup);
-
+            
             Registry.SetString("game.tool." + sId + ".name", sName);
             Registry.SetInt("game.tool." + sId + ".index", iIdx);
             Registry.SetInt("game.tool." + sId + ".group", iGroup);

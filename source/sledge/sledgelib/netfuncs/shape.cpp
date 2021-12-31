@@ -22,7 +22,7 @@ sledgelib_func unsigned int CreateShape(unsigned int iBodyHandle) {
 	return Shape->m_Id;
 }
 
-sledgelib_func bool LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cObjectName, float fScale) {
+sledgelib_func bool _LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cObjectName, float fScale) {
 	CShape* Shape = Teardown::Utils::GetEntityByIdx<CShape*>(iShapeHandle, EEntityType::Shape);
 	if (!Shape) return false;
 	if (Shape->m_Parent == NULL || Shape->m_Parent->m_Type != EEntityType::Body) return false;
@@ -43,7 +43,7 @@ sledgelib_func bool LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cOb
 
 	Teardown::Entity::SetBodyDynamic(reinterpret_cast<CBody*>(Shape->m_Parent), true);
 	Teardown::Entity::InitializeBody(reinterpret_cast<CBody*>(Shape->m_Parent));
-
+	
 	return true;
 }
 
