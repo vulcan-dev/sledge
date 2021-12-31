@@ -4,7 +4,7 @@ using System.Text.Json;
 
 using SledgeLib;
 
-internal class CModLoader
+internal class ModLoader
 {
     internal struct SModInfo
     {
@@ -32,14 +32,24 @@ internal class CModLoader
     internal static List<SRegisteredModInfo> RegisteredMods = new List<SRegisteredModInfo>();
     internal static string? ModsPath = null;
     internal static FileSystemWatcher? Watcher = null;
-    internal static Assembly ThisAssembly = typeof(CModLoader).Assembly;
+    internal static Assembly ThisAssembly = typeof(ModLoader).Assembly;
+
+    internal static string? GetPathByAssembly(Assembly ModAssembly)
+    {
+        foreach (SRegisteredModInfo Mod in RegisteredMods)
+        {
+            if (Mod.m_ModAsembly == ModAssembly)
+                return Mod.m_Path;
+        }
+
+        return null;
+    }
 
     internal static void RegisterLoadedMod(SRegisteredModInfo Mod) 
     {
         lock (RegisteredMods) { RegisteredMods.Add(Mod); }
         Log.General("Registered mod: {0}", Mod.m_Name);
     }
-
     internal static void UnregisterLoadedMod(SRegisteredModInfo Mod)
     {
         lock (RegisteredMods) { RegisteredMods.Remove(Mod); }

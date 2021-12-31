@@ -74,7 +74,7 @@ internal class CModInfoGenerator
             return false;
         }
 
-        CModLoader.SModInfo ModInfo = new CModLoader.SModInfo();
+        ModLoader.SModInfo ModInfo = new ModLoader.SModInfo();
         ModInfo.sTypeName = sFinalTypeName; 
         ModInfo.sLoadMethodName = sFinalLoadMethodName;
         ModInfo.sUnloadMethodName = sFinalUnloadMethodName;
@@ -82,7 +82,7 @@ internal class CModInfoGenerator
         ModInfo.sModAuthor = "Unknown";
         ModInfo.sReloadMethodName = sFinalReloadMethodName != null ? sFinalReloadMethodName : "";
 
-        string sSerializedModInfo = JsonSerializer.Serialize<CModLoader.SModInfo>(ModInfo);
+        string sSerializedModInfo = JsonSerializer.Serialize<ModLoader.SModInfo>(ModInfo);
 
         File.WriteAllText(sModInfoPath, sSerializedModInfo);
         Log.General("Generated mod info for {0}", sModName);
