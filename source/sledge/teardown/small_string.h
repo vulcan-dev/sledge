@@ -11,7 +11,10 @@ public:
 		char m_StackBuffer[16] = { 0 };
 	};
 
-	small_string() {};
+	small_string() {
+		Teardown::alloc(sizeof(this));
+		memset(this, 0, sizeof(this));
+	};
 	small_string(const char* cStr)
 	{
 		size_t lLenght = cStr ? strlen(cStr) : 0;
@@ -34,8 +37,7 @@ public:
 	inline const char* c_str() { return m_StackBuffer[15] ? m_HeapBuffer : &m_StackBuffer[0]; }
 	inline size_t len() { return m_StackBuffer[15] ? strlen(m_HeapBuffer) : strlen(m_StackBuffer); }
 
-	void operator=(small_string& ssSource)
-	{
+	void operator=(small_string ssSource){
 		size_t lSourceLen = ssSource.len();
 
 		if (ssSource.m_StackBuffer[15])
@@ -55,7 +57,7 @@ public:
 			memcpy(this->m_StackBuffer, ssSource.m_StackBuffer, lSourceLen);
 			this->m_StackBuffer[lSourceLen] = 0;
 		}
-	};
+	}
 
 	inline void resize(size_t lNewSize)
 	{
