@@ -9,7 +9,7 @@ namespace SledgeLib
         public delegate uint dCreateShape(uint iBodyHandle);
         public static dCreateShape Create = CreateShape;
 
-        [DllImport("sledge.dll")] private static extern bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
+        [DllImport("sledge.dll")] public static extern bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
 
         [DllImport("sledge.dll")] private static extern Transform GetShapeLocalTransform(uint iHandle);
         public static dGetTransformEntity GetLocalTransform = GetShapeLocalTransform;
@@ -36,5 +36,6 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern void SetShapeCollisionFilter(uint iHandle, sbyte CollisionLayer, sbyte CollisionMask);
         public delegate void dSetShapeCollisionFilter(uint iHandle, sbyte CollisionLayer, sbyte CollisionMask);
         public static dSetShapeCollisionFilter SetCollisionFilter = SetShapeCollisionFilter;
+
     }
 }
