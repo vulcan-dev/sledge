@@ -1,7 +1,10 @@
 #include "teardown/classes/game.h"
+#include "teardown/classes/scene.h"
 #include "teardown/classes/player.h"
-
 #include "teardown/classes/entities.h"
+
+#include "teardown/functions/registry.h"
+#include "teardown/functions/memory.h"
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
@@ -38,4 +41,29 @@ sledgelib_func void ReleaseGrab() {
 
 	g_Game->m_Player->m_GrabbedBody = nullptr;
 	g_Game->m_Player->m_GrabbedShape = nullptr;
+}
+
+sledgelib_func int _GetLastToolIdx() {
+	return 17 + g_Game->m_Player->m_RegisteredTools.size();
+}
+
+sledgelib_func void _RegisterTool(char* cId, char* cName, char* cFile, unsigned int iGroup) {
+	if (iGroup < 1 || iGroup > 6)
+		iGroup = 6;
+
+	CRegisteredTool Tool = *reinterpret_cast<CRegisteredTool*>(Teardown::alloc(sizeof(CRegisteredTool)));
+	memset(&Tool, 0, sizeof(CRegisteredTool));
+
+	Tool.m_Id = small_string(cId);;
+	Tool.m_Name = small_string(cName);
+	Tool.m_File = small_string(cFile);
+	Tool.m_Group = iGroup;
+
+	g_Game->m_Player->m_RegisteredTools.push_back(Tool);
+}
+
+sledgelib_func unsigned int GetPlayerVehicleBody() {
+	if (!g_Game->m_Scene->m_CurrentVehicle)
+		return 0;
+	return g_Game->m_Scene->m_CurrentVehicle->m_Body->m_Id;
 }

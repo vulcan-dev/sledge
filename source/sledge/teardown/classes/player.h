@@ -1,6 +1,18 @@
 #pragma once
 
 #include "util/math.h"
+#include "teardown/small_string.h"
+#include "teardown/small_vector.h"
+
+class CRegisteredTool
+{
+public:
+	small_string m_Id; //0x0000
+	small_string m_Name; //0x0010
+	small_string m_File; //0x0020
+	int32_t m_Group; //0x0030
+	char pad_0034[4]; //0x0034
+}; //Size: 0x0038
 
 class CPlayer
 {
@@ -38,7 +50,9 @@ public:
 	class CShape* m_InteractableShape; //0x06F0
 	char pad_06F8[132]; //0x06F8
 	bool m_BlurEffect; //0x077C
-	char pad_077D[12419]; //0x077D
+	char pad_077D[12371]; //0x077D
+	small_vector<CRegisteredTool> m_RegisteredTools; //0x37D0
+	char pad_37E0[32]; //0x37E0
 	Vector3 m_GroundVelocity; //0x3800
 	char pad_380C[812]; //0x380C
 }; //Size: 0x3B38

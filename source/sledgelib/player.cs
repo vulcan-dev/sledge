@@ -36,5 +36,31 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern uint GetGrabbedShape();
         [DllImport("sledge.dll")] public static extern uint GetGrabbedBody();
         [DllImport("sledge.dll")] public static extern void ReleaseGrab();
+
+        [DllImport("sledge.dll")] private static extern void _RegisterTool(string sId, string sName, string sFile, uint iGroup = 6);
+        [DllImport("sledge.dll")] private static extern int _GetLastToolIdx();
+        public static void RegisterTool(string sId, string sName, string sFile, int iGroup = 6, bool bEnabled = false)
+        {
+            if (!Game.IsPlaying())
+            {
+                Log.Warning("Attempted to register tool {0} while not in-game", sName);
+                return;
+            }
+
+            if (iGroup < 1 || iGroup > 6)
+                iGroup = 6;
+
+            int iIdx = _GetLastToolIdx() + 1;
+
+            _RegisterTool(sId, sName, sFile, (uint)iGroup);
+
+            Registry.SetString("game.tool." + sId + ".name", sName);
+            Registry.SetInt("game.tool." + sId + ".index", iIdx);
+            Registry.SetInt("game.tool." + sId + ".group", iGroup);
+            Registry.SetBool("game.tool." + sId + ".enabled", bEnabled);
+        }
+
+        [DllImport("sledge.dll")] private static extern uint GetPlayerVehicleBody();
+        public static dGetUInt GetVehicleBody = GetPlayerVehicleBody;
     }
 }
