@@ -38,6 +38,12 @@ namespace Signatures {
 	inline CSignature Script("\xE8\x00\x00\x00\x00\x48\x8B\xF8\xEB\x03\x48\x8B\xFB", "x????xxxxxxxx");
 
 	/*
+		entity sigs
+	*/
+	inline CSignature GenVoxTexture("\xE8\x00\x00\x00\x00\x41\x0F\x10\x46\x00", "x????xxxx?");
+	inline CSignature GenVoxPhysBuffer("\xE8\x00\x00\x00\x00\x41\xFF\xC7\x48\x83\xC7\x1C", "x????xxxxxxx");
+
+	/*
 		registry sigs
 	*/
 	inline CSignature SetBool("\xE8\x00\x00\x00\x00\x90\x48\x8D\x4D\x87\xE8\x00\x00\x00\x00\x84\xDB", "x????xxxxxx????xx");

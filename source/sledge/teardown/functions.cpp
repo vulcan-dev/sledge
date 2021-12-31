@@ -4,6 +4,7 @@
 #include "teardown/functions/constructors.h"
 #include "teardown/functions/memory.h"
 #include "teardown/functions/registry.h"
+#include "teardown/functions/entity.h"
 
 #include "util/memory.h"
 #include "util/log.h"
@@ -32,6 +33,10 @@ static const SScanneable aFunctions[] = {
 	{Signatures::GetInt, &Teardown::GetInt, "GetInt" },
 	{Signatures::GetFloat, &Teardown::GetFloat, "GetFloat" },
 	{Signatures::GetString, &Teardown::GetString, "GetString" },
+
+	// entity
+	{Signatures::GenVoxPhysBuffer, &Teardown::Entities::GenVoxBuffers, "GenVoxBuffers" },
+	{Signatures::GenVoxTexture, &Teardown::Entities::GenVoxTexture, "GenVoxTexture" },
 
 	// constructors
 	{ Signatures::Body, &Teardown::Constructors::Body, "CBody::CBody" },
