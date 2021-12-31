@@ -19,6 +19,8 @@ enum EEntityType : unsigned char {
 	Script = 12
 };
 
+class CVox;
+
 class CEntity
 {
 public:
@@ -70,7 +72,7 @@ public:
 	unsigned char m_CollisionLayer; //0x0072
 	unsigned char m_CollisionMask; //0x0073
 	char pad_0074[36]; //0x0074
-	class CVox* m_Vox; //0x0098
+	CVox* m_Vox; //0x0098
 	char pad_00A0[16]; //0x00A0
 	float m_EmissiveScale; //0x00B0
 	bool m_Broken; //0x00B4
