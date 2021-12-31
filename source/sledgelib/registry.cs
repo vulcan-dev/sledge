@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SledgeLib
 {
@@ -14,6 +15,13 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern float GetFloat(string sKeyName);
 
         [DllImport("sledge.dll")] public static extern void SetString(string sKeyName, string sValue);
-        [DllImport("sledge.dll")] [return: MarshalAs(UnmanagedType.LPStr)] public static extern string GetString(string sKeyName);
+        [DllImport("sledge.dll")] private static extern void _GetString(string sKeyName, StringBuilder sReturn, uint iReturnLen);
+        public static string GetString(string sKeyName)
+        {
+            StringBuilder sReturn = new StringBuilder(255);
+
+            _GetString(sKeyName, sReturn, 255);
+            return sReturn.ToString();
+        }
     }
 }

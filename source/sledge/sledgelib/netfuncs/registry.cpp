@@ -17,18 +17,14 @@ sledgelib_func void SetFloat(char* cKeyName, float fValue) { Teardown::SetFloat(
 sledgelib_func float GetFloat(char* cKeyName) { return Teardown::GetFloat(g_Game->m_Registry, new small_string(cKeyName)); }
 
 sledgelib_func void SetString(char* cKeyName, char* cValue) { Teardown::SetString(g_Game->m_Registry, new small_string(cKeyName), new small_string(cValue)); }
-sledgelib_func char* GetString(char* cKeyName) {
+sledgelib_func void _GetString(char* cKeyName, char* cReturn, unsigned int iReturnBufferSize) {
 	small_string ssReturn("null");
 	Teardown::GetString(g_Game->m_Registry, &ssReturn, new small_string(cKeyName));
-	size_t lReturnLen = ssReturn.len();
+	if (ssReturn.len() > iReturnBufferSize) {
+		cReturn[0] = '\0';
+		return;
+	}
 
-	char* cCopy = reinterpret_cast<char*>(CoTaskMemAlloc(lReturnLen));
-	if (!cCopy)
-		return nullptr;
-	
-	memcpy(cCopy, ssReturn.c_str(), lReturnLen);
-	cCopy[lReturnLen] = '\0';
-
-
-	return cCopy;
+	memcpy(cReturn, ssReturn.c_str(), ssReturn.len());
+	cReturn[ssReturn.len()] = '\0';
 }
