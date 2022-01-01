@@ -5,8 +5,8 @@ using SledgeLib;
 internal class CModInfoGenerator
 {
     private static string[] ValidLoadMethodNames = { "init", "start", "initmod", "loadmod", "startmod", "modinit", "modstart" };
-    private static string[] ValidUnloadMethodNames = { "shutdown", "stop", "disable", "shutdownmod", "stopmod", "disablemod", "modshutodwn" };
-    private static string[] ValidReloadMethodNames = { "reload", "restart", "onreload", "onrestart"};
+    private static string[] ValidUnloadMethodNames = { "shutdown", "stop", "disable", "unload", "shutdownmod", "stopmod", "disablemod", "modshutodwn", "modunload" };
+    private static string[] ValidReloadMethodNames = { "reload", "restart", "reset", "onreload", "onrestart", "onreset", "restarting", "reloading", "resetting"};
 
     internal static bool GenerateModInfo(Assembly ModAssembly, string sModInfoPath, string sModName)
     {
