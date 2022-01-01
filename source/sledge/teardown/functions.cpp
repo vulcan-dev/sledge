@@ -5,6 +5,7 @@
 #include "teardown/functions/memory.h"
 #include "teardown/functions/registry.h"
 #include "teardown/functions/entity.h"
+#include "teardown/functions/misc.h"
 
 #include "util/memory.h"
 #include "util/log.h"
@@ -54,6 +55,9 @@ static const SScanneable aFunctions[] = {
 	{ Signatures::Screen, &Teardown::Constructors::Screen, "CScreen::CScreen" },
 	{ Signatures::Trigger, &Teardown::Constructors::Trigger, "CTrigger::CTrigger" },
 	{ Signatures::Script, &Teardown::Constructors::Script, "CScript::CScript" },
+
+	// misc
+	{ Signatures::QueryRaycast, &Teardown::QueryRaycast, "QueryRaycast" }
 };
 
 void Teardown::GetFunctionAddresses() {
