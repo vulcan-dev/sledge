@@ -11,6 +11,12 @@
 #include <processthreadsapi.h>
 #include <detours.h>
 
+typedef void (*tSetState) (CGame* pGame, unsigned int iStatus);
+tSetState SetState;
+void hSetState(CGame* pGame, unsigned int iState) {
+	SetState(pGame, iState);
+	_Callbacks::OnStateChange(iState);
+}
 
 typedef void (*tUpdate)	(CGame* pGame, void* pDevice);
 tUpdate Update;
@@ -41,8 +47,10 @@ void Teardown::Hooks::CallbackHooks() {
 	SpawnPlayer = reinterpret_cast<tSpawnPlayer>(Memory::dwFindPattern(Signatures::SpawnPlayer));
 	UpdatePlayer = reinterpret_cast<tUpdatePlayer>(Memory::dwFindPattern(Signatures::UpdatePlayer));
 	Update = reinterpret_cast<tUpdate>(Memory::dwFindPattern(Signatures::Update));
+	SetState = reinterpret_cast<tSetState>(Memory::dwFindPattern(Signatures::SetState));
 	
 	LogVerbose("SpawnPlayer: {}", reinterpret_cast<void*>(SpawnPlayer));
+	LogVerbose("UpdatePlayer: {}", reinterpret_cast<void*>(UpdatePlayer));
 	LogVerbose("UpdatePlayer: {}", reinterpret_cast<void*>(UpdatePlayer));
 	LogVerbose("Update: {}", reinterpret_cast<void*>(Update));
 
@@ -51,5 +59,6 @@ void Teardown::Hooks::CallbackHooks() {
 	DetourAttach(&SpawnPlayer, hSpawnPlayer);
 	DetourAttach(&UpdatePlayer, hUpdatePlayer);
 	DetourAttach(&Update, hUpdate);
+	DetourAttach(&SetState, hSetState);
 	DetourTransactionCommit();
 }

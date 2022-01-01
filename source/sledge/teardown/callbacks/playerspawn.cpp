@@ -3,7 +3,6 @@
 #include <vector>
 #include <mutex>
 
-
 std::vector<CCallback*> vPlayerSpawnCallbacks;
 std::mutex PlayerSpawnMutex;
 
@@ -28,6 +27,6 @@ void _Callbacks::OnPlayerSpawn() {
 		if (!Callback->m_Active)
 			continue;
 
-		Callback->m_Func();
+		reinterpret_cast<tCallback>(Callback->m_Func)();
 	}
 }

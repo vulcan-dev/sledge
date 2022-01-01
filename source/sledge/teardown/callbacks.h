@@ -1,15 +1,14 @@
 #pragma once
-
-typedef void (*tCallbackFunction) (void);
-
 enum class ECallbackType : unsigned int {
 	PlayerSpawn,
 	PreUpdate,
 	PostUpdate,
 	PrePlayerUpdate,
-	PostPlayerUpdate
+	PostPlayerUpdate,
+	StateChange
 };
 
+typedef void (*tCallback) ();
 
 class CCallback;
 
@@ -25,13 +24,13 @@ namespace _Callbacks {
 		void RegisterCallback(CCallback*);
 		void UnregisterCallback(CCallback*);
 	}
-
+	
 	void OnPlayerSpawn();
 	namespace PlayerSpawn {
 		void RegisterCallback(CCallback*);
 		void UnregisterCallback(CCallback*);
 	}
-
+	
 	void OnPrePlayerUpdate();
 	namespace PrePlayerUpdate {
 		void RegisterCallback(CCallback*);
@@ -43,6 +42,12 @@ namespace _Callbacks {
 		void RegisterCallback(CCallback*);
 		void UnregisterCallback(CCallback*);
 	}
+
+	void OnStateChange(unsigned int iState);
+	namespace StateChange {
+		void RegisterCallback(CCallback*);
+		void UnregisterCallback(CCallback*);
+	}
 }
 
 class CCallback {
@@ -50,11 +55,11 @@ private:
 	ECallbackType m_Type;
 public:
 	bool m_Active;
-	tCallbackFunction m_Func;
+	void* m_Func;
 
 	CCallback() = delete;
 
-	CCallback(ECallbackType eType, tCallbackFunction pFunc, bool bActive = true) {
+	CCallback(ECallbackType eType, void* pFunc, bool bActive = true) {
 		this->m_Type = eType; this->m_Func = pFunc; this->m_Active = bActive;
 
 		switch (this->m_Type) {
@@ -72,6 +77,9 @@ public:
 			break;
 		case ECallbackType::PostPlayerUpdate:
 			_Callbacks::PostPlayerUpdate::RegisterCallback(this);
+			break;
+		case ECallbackType::StateChange:
+			_Callbacks::StateChange::RegisterCallback(this);
 			break;
 		}
 	}
@@ -92,6 +100,9 @@ public:
 			break;
 		case ECallbackType::PostPlayerUpdate:
 			_Callbacks::PostPlayerUpdate::UnregisterCallback(this);
+			break;
+		case ECallbackType::StateChange:
+			_Callbacks::StateChange::UnregisterCallback(this);
 			break;
 		}
 	}

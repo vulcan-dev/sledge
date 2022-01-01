@@ -26,7 +26,7 @@ void _Callbacks::OnPreUpdate() {
 		if (!Callback->m_Active)
 			continue;
 
-		Callback->m_Func();
+		reinterpret_cast<tCallback>(Callback->m_Func)();
 	}
 }
 
@@ -53,6 +53,6 @@ void _Callbacks::OnPostUpdate() {
 		if (!Callback->m_Active)
 			continue;
 
-		Callback->m_Func();
+		reinterpret_cast<tCallback>(Callback->m_Func)();
 	}
 }
