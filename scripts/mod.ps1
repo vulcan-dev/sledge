@@ -6,58 +6,69 @@ function Create-LibCS([String] $projectName, [String] $projectTemplate) {
 
 using SledgeLib;
 
-namespace $projectName {
-    public class Mod {
-        // Post Player Update
-        private static dCallback cb_PostPlayerUpdateFunc = new dCallback(() => {
+public class $projectName {
+    // Game state change
+    private static dUIntCallback cb_StateChangeFunc = new dUIntCallback((uint iState) => {
+
+    });
+
+    // Post player update
+    private static dCallback cb_PostPlayerUpdateFunc = new dCallback(() => {
+    
+    });
+
+    // Post update
+    private static dCallback cb_PostUpdateFunc = new dCallback(() => {
+    
+    });
+
+    // Pre player update
+    private static dCallback cb_PrePlayerUpdateFunc = new dCallback(() => {
         
-        });
+    });
+
+    // Pre update
+    private static dCallback cb_PreUpdateFunc = new dCallback(() => {
     
-        // Post Update
-        private static dCallback cb_PostUpdateFunc = new dCallback(() => {
+    });
+
+    // Player spawn
+    private static dCallback cb_PlayerSpawnFunc = new dCallback(() => {
+        Log.General(""Player Spawned"");
+    });
+
+    private static CCallback? cb_StateChange;
+    private static CCallback? cb_PrePlayerUpdate;
+    private static CCallback? cb_PostPlayerUpdate;
+    private static CCallback? cb_PreUpdate;
+    private static CCallback? cb_PostUpdate;
+    private static CCallback? cb_PlayerSpawn;
+
+    public static void Init() {
+        cb_StateChange = new CCallback(ECallbackType.StateChange, cb_StateChangeFunc);
+        cb_PostPlayerUpdate = new CCallback(ECallbackType.PostPlayerUpdate, cb_PostPlayerUpdateFunc);
+        cb_PostUpdate = new CCallback(ECallbackType.PostUpdate, cb_PostUpdateFunc);
+        cb_PrePlayerUpdate = new CCallback(ECallbackType.PrePlayerUpdate, cb_PrePlayerUpdateFunc);
+        cb_PreUpdate = new CCallback(ECallbackType.PreUpdate, cb_PrePlayerUpdateFunc);
+        cb_PlayerSpawn = new CCallback(ECallbackType.PlayerSpawn, cb_PlayerSpawnFunc);
+
+        Log.General(""$projectName loaded"");
+    }
+
+    public static void Reset() {
         
-        });
-    
-        // Pre Player Update
-        private static dCallback cb_PrePlayerUpdateFunc = new dCallback(() => {
-            
-        });
-    
-        // Pre Update
-        private static dCallback cb_PreUpdateFunc = new dCallback(() => {
-        
-        });
-    
-        // Player Spawn
-        private static dCallback cb_PlayerSpawnFunc = new dCallback(() => {
-            Log.General(""Player Spawned"");
-        });
+        Log.General(""$projectName reset"");
+    }
 
-        private static CCallback? cb_PrePlayerUpdate;
-        private static CCallback? cb_PostPlayerUpdate;
-        private static CCallback? cb_PreUpdate;
-        private static CCallback? cb_PostUpdate;
-        private static CCallback? cb_PlayerSpawn;
-    
-        public static void Init() {
-            cb_PostPlayerUpdate = new CCallback(ECallbackType.PostPlayerUpdate, cb_PostPlayerUpdateFunc);
-            cb_PostUpdate = new CCallback(ECallbackType.PostUpdate, cb_PostUpdateFunc);
-            cb_PrePlayerUpdate = new CCallback(ECallbackType.PrePlayerUpdate, cb_PrePlayerUpdateFunc);
-            cb_PreUpdate = new CCallback(ECallbackType.PreUpdate, cb_PrePlayerUpdateFunc);
-            cb_PlayerSpawn = new CCallback(ECallbackType.PlayerSpawn, cb_PlayerSpawnFunc);
+    public static void Unload() {
+        if (cb_StateChange != null) { cb_StateChange.Unregister(); cb_StateChange = null; }
+        if (cb_PrePlayerUpdate != null) { cb_PrePlayerUpdate.Unregister(); cb_PrePlayerUpdate = null; }
+        if (cb_PostPlayerUpdate != null) { cb_PostPlayerUpdate.Unregister(); cb_PostPlayerUpdate = null; }
+        if (cb_PreUpdate != null) { cb_PreUpdate.Unregister(); cb_PreUpdate = null; }
+        if (cb_PostUpdate != null) { cb_PostUpdate.Unregister(); cb_PostUpdate = null; }
+        if (cb_PlayerSpawn != null) { cb_PlayerSpawn.Unregister(); cb_PlayerSpawn = null; }
 
-            Log.General(""$projectName Initialized"");
-        }
-
-        public static void Shutdown() {
-            if (cb_PrePlayerUpdate != null) { cb_PrePlayerUpdate.Unregister(); cb_PrePlayerUpdate = null; }
-            if (cb_PostPlayerUpdate != null) { cb_PostPlayerUpdate.Unregister(); cb_PostPlayerUpdate = null; }
-            if (cb_PreUpdate != null) { cb_PreUpdate.Unregister(); cb_PreUpdate = null; }
-            if (cb_PostUpdate != null) { cb_PostUpdate.Unregister(); cb_PostUpdate = null; }
-            if (cb_PlayerSpawn != null) { cb_PlayerSpawn.Unregister(); cb_PlayerSpawn = null; }
-
-            Log.General(""$projectName Shutdown"");
-        }
+        Log.General(""$projectName unloaded"");
     }
 }"
     } else {
@@ -65,24 +76,26 @@ namespace $projectName {
 
 using SledgeLib;
 
-namespace $projectName {
-    public class Mod {
-        public static void Init() {
-            Log.General(""$projectName Initialized"");
-        }
-
-        public static void Shutdown() {
-            Log.General(""$projectName Shutdown"");
-        }
-    }
-}"
+public class $projectName {
+    public static void Init() {
+        Log.General(""$projectName initialized"");
     }
 
-    New-Item -Path . -Name "Lib.cs" -ItemType "file" -Force -Value $fileContents
+    public static void Reset() {
+        Log.General(""$projectName reset"");
+    }
+    public static void Shutdown() {
+        Log.General(""$projectName shutdown"");
+    }
+}
+"
+    }
+
+    New-Item -Path . -Name "$projectName.cs" -ItemType "file" -Force -Value $fileContents
 }
 
 function Create-CSProj([String] $projectName) {
-    New-Item -Path . -Name "Lib.csproj" -ItemType "file" -Force -Value "<Project Sdk=""Microsoft.NET.Sdk"">
+    New-Item -Path . -Name "${projectName}.csproj" -ItemType "file" -Force -Value "<Project Sdk=""Microsoft.NET.Sdk"">
     <PropertyGroup>
        <TargetFramework>net6.0</TargetFramework>
        <AssemblyName>$projectName</AssemblyName>
@@ -93,7 +106,7 @@ function Create-CSProj([String] $projectName) {
     </PropertyGroup>
     
     <Target Name=""PostBuild"" AfterTargets=""PostBuildEvent"">
-        <Exec Command=""xcopy `$(ProjectDir)`$(OutDir)$projectName.dll ..\..\mods\$projectName /y"" />
+        <Exec Command=""xcopy `$(ProjectDir)`$(OutDir)$projectName.dll ..\..\mods\$projectName\ /y /i"" />
     </Target>
     <ItemGroup>
        <Reference Include=""sledgelib"">
@@ -117,10 +130,10 @@ function Create-Project([String] $projectName, [String] $projectTemplate) {
     Set-Location $projectName
 
     dotnet new sln -n $projectName --force
-    dotnet new classlib -o Lib -f net6.0 --no-restore --force
-    dotnet sln add .\Lib\Lib.csproj
+    dotnet new classlib -o ${projectName} -f net6.0 --no-restore --force
+    dotnet sln add .\${projectName}\${projectName}.csproj
 
-    Set-Location Lib
+    Set-Location ${projectName}
 
     if (Test-Path -Path "Class1.cs") {
         Remove-Item -Path "Class1.cs"
@@ -148,12 +161,12 @@ function Rename-Project([String] $projectName, [String] $newName) {
 
     Write-Output "Renaming Project: $projectName to $newName"
 
-    if (Test-Path -Path "$projectName/Lib/bin") {
-        Remove-Item -Path "$projectName/Lib/bin" -Recurse
+    if (Test-Path -Path "$projectName/${projectName}/bin") {
+        Remove-Item -Path "$projectName/${projectName}/bin" -Recurse
     }
 
-    if (Test-Path -Path "$projectName/Lib/obj") {
-        Remove-Item -Path "$projectName/Lib/obj" -Recurse
+    if (Test-Path -Path "$projectName/${projectName}/obj") {
+        Remove-Item -Path "$projectName/${projectName}/obj" -Recurse
     }
 
     if (Test-Path -Path "./mods/$projectName") {

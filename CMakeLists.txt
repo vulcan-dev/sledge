@@ -51,7 +51,7 @@ add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)mods
 add_custom_command(TARGET sledge POST_BUILD COMMAND dotnet build --configuration Release \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib\")
 add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib/sledgelib.dll\" \"$(OutDir)mods/sledgelib.dll\")
 add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib/sledgelib.runtimeconfig.json\" \"$(OutDir)mods/sledgelib.runtimeconfig.json\")
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/scripts/Create mod project.ps1\" \"$(OutDir)Create mod project.ps1\")
+add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/scripts/mod.ps1\" \"$(OutDir)mod.ps1\")
 
 # ------------------------------------------------------
 # precompiled libs for dll

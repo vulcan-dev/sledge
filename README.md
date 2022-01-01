@@ -25,7 +25,7 @@ Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 ## Creating a mod
 1. Head on over to Sledge's install dir
 2. Open a powershell window there
-3. Run: ``& '.\Generate mod project.ps1' -c YourModName``
+3. Run: ``& '.\mod.ps1' -c YourModName``
 4. Type Y if you wanna use the project template, or N if you dont
 5. Press enter
 
