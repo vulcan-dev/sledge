@@ -66,7 +66,6 @@ namespace SledgeLib
             }
 
             sFile = sFile.Replace("\\", "/");
-            Log.General("path: {0}", sFile);
 
             if (iGroup < 1 || iGroup > 6)
                 iGroup = 6;
