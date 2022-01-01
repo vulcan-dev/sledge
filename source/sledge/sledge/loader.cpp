@@ -74,11 +74,12 @@ void Loader::Init(void* hModule) {
 		(primarily used for loading libraries / mods)
 */
 void Loader::LateInit() {
+	Sledge::Hooks::Wnd();
+
 	if (bLateLateInitAlreadyCalled)
 		return;
 	bLateLateInitAlreadyCalled = true;
 
-	Sledge::Hooks::Wnd();
 
 	LogVerbose("hooking active window check");
 	Teardown::Hooks::ActiveWindow();
