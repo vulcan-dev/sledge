@@ -21,16 +21,27 @@ enum EEntityType : unsigned char {
 
 class CVox;
 
+struct SProjectile
+{
+public:
+	Vector3 m_Position; //0x0000
+	Vector3 m_Velocity; //0x000C
+	float m_LifeTime; //0x0018
+	float m_MaxLifeTime; //0x001C
+	uint32_t m_Type; //0x0020
+	float m_DamageRadius; //0x0024
+}; //Size: 0x0028
+
 class CEntity
 {
 public:
-	EEntityType m_Type;
-	unsigned char m_Flags;
-	char pad_000A[2];
-	unsigned int m_Id;
-	class CEntity* m_Parent;
-	class CEntity* m_Sibling;
-	class CEntity* m_Child;
+	EEntityType m_Type; //0x0008
+	unsigned char m_Flags; //0x0009
+	char pad_000A[2]; //0x000A
+	unsigned int m_Id; //0x000C
+	class CEntity* m_Parent;  //0x0010
+	class CEntity* m_Sibling; //0x0018
+	class CEntity* m_Child; //0x0020
 
 	virtual void Destroy(bool bFree) = 0;
 	virtual void SetParent(CEntity* Parent) = 0;

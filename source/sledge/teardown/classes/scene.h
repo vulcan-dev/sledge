@@ -1,12 +1,13 @@
 #pragma once
 
 #include "teardown/small_vector.h"
+#include "teardown/classes/entities.h"
 
 class CScene
 {
 public:
 	char pad_0008[136]; //0x0008
-	small_vector<class CProjectile*> m_Projectiles; //0x0090
+	small_vector<SProjectile> m_Projectiles; //0x0090
 	class CEnvironment* m_Environment; //0x00A0
 	char pad_00A8[32]; //0x00A8
 	class CLight* m_Flashlight; //0x00C8
