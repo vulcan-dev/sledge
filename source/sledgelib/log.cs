@@ -10,10 +10,10 @@ namespace SledgeLib
 
         internal enum ELogType
         {
-            Verbose = 0,
             General = 4,
             Warning = 5,
             Error = 6,
+            Verbose = 7
         }
 
         private static void _Log(ELogType eType, Assembly Caller, string sFormat, params object[] oArgs)

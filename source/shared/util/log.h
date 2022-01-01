@@ -10,6 +10,7 @@ enum class ELogType {
 	Net,
 	NetWarning,
 	NetError,
+	NetVerbose,
 	Teardown
 };
 
