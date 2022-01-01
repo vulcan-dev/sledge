@@ -57,7 +57,8 @@ static const SScanneable aFunctions[] = {
 	{ Signatures::Script, &Teardown::Constructors::Script, "CScript::CScript" },
 
 	// misc
-	{ Signatures::QueryRaycast, &Teardown::QueryRaycast, "QueryRaycast" }
+	{ Signatures::QueryRaycast, &Teardown::QueryRaycast, "QueryRaycast" },
+	{ Signatures::DebugPrint, &Teardown::DebugPrint, "DebugPrint" }
 };
 
 void Teardown::GetFunctionAddresses() {

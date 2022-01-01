@@ -19,4 +19,7 @@ struct SRaycastFilter
 namespace Teardown {
 	typedef bool (*tQueryRaycast) (CScene* pScene, Vector3* vOrigin, Vector3* vDirection, float fMaxDist, void* pFilter, float* fDistOut, Vector3* vHitPos, CShape** pHitShape, void* pUnk);
 	inline tQueryRaycast QueryRaycast;
+
+	typedef void (*tDebugPrint) (void* m_Debug, small_string* ssMessage);
+	inline tDebugPrint DebugPrint;
 }

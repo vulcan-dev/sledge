@@ -47,7 +47,7 @@ public:
 	void* m_Registry; //0x00C0
 	void* N00000087; //0x00C8
 	void* N00000088; //0x00D0
-	void* N00000089; //0x00D8
+	void* m_Debug; //0x00D8
 	class CSteamInterface* m_SteamInterface; //0x00E0
 	void* N0000008B; //0x00E8
 	char pad_00F0[52]; //0x00F0

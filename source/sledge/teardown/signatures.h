@@ -68,4 +68,5 @@ namespace Signatures {
 	inline CSignature IsWindowActive("\xE8\x00\x00\x00\x00\x84\xC0\x74\x16\x48\x8B\xD3", "x????xxxxxxx");
 	inline CSignature SetCursorCaptured("\x48\x83\xEC\x28\x48\x8B\x41\x08\x38\x50\x23", "xxxxxxxxxxx", false);
 	inline CSignature QueryRaycast("\xE8\x00\x00\x00\x00\x84\xC0\x75\x5A", "x????xxxx");
+	inline CSignature DebugPrint("\x44\x8B\x81\x00\x00\x00\x00\x4C\x8B\xD2", "xxx????xxx", false);
 }

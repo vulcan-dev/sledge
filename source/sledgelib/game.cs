@@ -31,5 +31,6 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern void QuickLoad();
 
         [DllImport("sledge.dll")] public static extern float GetUpdateDelta();
+        [DllImport("sledge.dll")] public static extern void DebugPrint(string sMessage);
     }
 }
