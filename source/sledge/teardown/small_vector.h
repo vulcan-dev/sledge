@@ -58,7 +58,7 @@ template<typename T>
 			{
 				m_Size = 0;
 				m_Capacity = 0;
-				Teardown:free(m_Data);
+				Teardown::free(m_Data);
 				m_Data = nullptr;
 			}
 		}
