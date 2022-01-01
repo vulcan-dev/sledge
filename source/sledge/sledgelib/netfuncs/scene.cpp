@@ -40,3 +40,16 @@ sledgelib_func SRaycastReturn QueryRaycast(Vector3 vOrigin, Vector3 vDirection, 
 
 	return Return;
 }
+
+sledgelib_func void Shoot(Vector3 vOrigin, Vector3 vVelocity, unsigned int iType, float fLifeTime, float fDamage) {
+	SProjectile ProjectileInfo = *reinterpret_cast<SProjectile*>(Teardown::alloc(sizeof(SProjectile)));
+
+	ProjectileInfo.m_Position = vOrigin;
+	ProjectileInfo.m_Velocity = vVelocity;
+	ProjectileInfo.m_DamageRadius = fDamage;
+	ProjectileInfo.m_LifeTime = 0;
+	ProjectileInfo.m_MaxLifeTime = fLifeTime;
+	ProjectileInfo.m_Type = iType;
+
+	g_Scene->m_Projectiles.push_back(ProjectileInfo);
+}

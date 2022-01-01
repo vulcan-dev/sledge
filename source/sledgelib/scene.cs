@@ -10,9 +10,17 @@ namespace SledgeLib
         public Vector3 m_HitNormal;
         public uint m_HitShape;
     }
+    
+    public enum EProjectileType
+    {
+        Normal = 0,
+        Shotgun = 1,
+        Rocket = 2
+    }
 
     public class Scene
     {
         [DllImport("sledge.dll")] public static extern SRaycastReturn QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist);
+        [DllImport("sledge.dll")] public static extern void Shoot(Vector3 vOrigin, Vector3 vVelocity, EProjectileType eProjectileType, float fLifeTime, float fDamage);
     }
 }
