@@ -65,5 +65,8 @@ sledgelib_func void _RegisterTool(char* cId, char* cName, char* cFile, unsigned 
 sledgelib_func unsigned int GetPlayerVehicleBody() {
 	if (!g_Game->m_Scene->m_CurrentVehicle)
 		return 0;
-	return g_Game->m_Scene->m_CurrentVehicle->m_Body->m_Id;
+	return g_Scene->m_CurrentVehicle->m_Body->m_Id;
 }
+
+sledgelib_func bool M1Down() { return g_Game->m_Player->m_M1Down; }
+sledgelib_func bool M2Down() { return g_Game->m_Player->m_M2Down; }

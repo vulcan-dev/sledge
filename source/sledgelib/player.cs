@@ -82,5 +82,8 @@ namespace SledgeLib
 
         [DllImport("sledge.dll")] private static extern uint GetPlayerVehicleBody();
         public static dGetUInt GetVehicleBody = GetPlayerVehicleBody;
+
+        [DllImport("sledge.dll")] public static extern bool M1Down();
+        [DllImport("sledge.dll")] public static extern bool M2Down();
     }
 }
