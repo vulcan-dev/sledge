@@ -3,8 +3,6 @@
 
 #include "teardown/small_string.h"
 
-#include <combaseapi.h>
-
 #define sledgelib_func extern "C" __declspec(dllexport)
 
 sledgelib_func void SetBool(char* cKeyName, bool bValue) { Teardown::SetBool(g_Game->m_Registry, new small_string(cKeyName), bValue); }
