@@ -5,9 +5,8 @@ branches:
     only:
         - main
 
-artifacts:
-    - path: proj\Release\Sledge.zip
-      type: zip
+image:
+    - Visual Studio 2022
 
 skip_commits:
     files:
@@ -15,14 +14,22 @@ skip_commits:
         .gitignore
         .github/*
 
-platform: x64
+# releases
+artifacts:
+    - path: proj\Release\Sledge.zip
+      name: SledgeRel
+      type: zip
 
-configuration:
-    - Release
+deploy:
+    release: sledge-v$(APPVEYOR_BUILD_VERSION)
+    description: Automated build
+    provider: GitHub
+    auth_token:
+        secure: pAR0F1856OJePIBpQOxEe7xxWOVsNkF/T33PV5Z4YIU0qOGdIWOzcj0oqdtp4UCn
+    artifact: SledgeRel
+    draft: false
+    prerelease: false
    
-image:
-    - Visual Studio 2022
-
 # cloning
 clone_folder: c:/sledge
 
@@ -31,6 +38,11 @@ install:
     - git submodule update --init --recursive
 
 # building
+platform: x64
+
+configuration:
+    - Release
+
 before_build:
     - cmd: mkdir proj
     - cmd: cd proj
