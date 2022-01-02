@@ -21,7 +21,9 @@ sledgelib_func void SetPlayerCameraTransform(Transform tCameraTransform) { g_Gam
 sledgelib_func Transform GetPlayerCameraTransform() { return g_Game->m_Player->m_CameraTransform2; }
 
 sledgelib_func Vector2 GetPlayerMovementInput() { return g_Game->m_Player->m_MovementKeys; }
-sledgelib_func Vector2 GetPlayerMouseInput() { return g_Game->m_Player->m_MouseInput; }
+
+sledgelib_func Vector2 GetPlayerCameraAngles() { return g_Game->m_Player->m_CameraAngles; }
+sledgelib_func void SetPlayerCameraAngles(Vector2 vAngles) { g_Game->m_Player->m_CameraAngles = vAngles; }
 
 sledgelib_func void Respawn() { g_Game->m_RespawnPlayer = true; }
 

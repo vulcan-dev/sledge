@@ -30,7 +30,7 @@ public:
 	float m_CamRollAnim; //0x00B8
 	float m_TravelDistance; //0x00BC
 	float m_TravelDistanceClamped; //0x00C0
-	Vector2 m_MouseInput; //0x00C4 useful for calculating camera rotation
+	Vector2 m_CameraAngles; //0x00C4 Camera angles in radians
 	Vector2 m_MovementKeys; //0x00CC
 	Vector2 m_MouseDelta; //0x00D4
 	char pad_00DC[1]; //0x00DC
