@@ -48,23 +48,37 @@ namespace SledgeLib
             if (!sVoxPath.EndsWith(".vox"))
                 Log.Warning("LoadVox called with path that does not end in .vox");
 
-            if (!File.Exists(sVoxPath))
+            if (!Path.IsPathRooted(sVoxPath))
             {
-                Assembly Caller = Assembly.GetCallingAssembly(); ;
-                string? sModPath = ModLoader.GetPathByAssembly(Caller);
-                
-                if (sModPath == null) return false;
-                if (!File.Exists(sModPath + "/" + sVoxPath))
+                if (File.Exists(Path.GetFullPath(sVoxPath)))
                 {
-                    Log.General("unable to find vox at: {0}", sModPath + "/" + sVoxPath);
-                    return false;
+                    sVoxPath = Path.GetFullPath(sVoxPath);
+                } else
+                {
+                    Assembly Caller = Assembly.GetCallingAssembly(); ;
+                    string? sModPath = ModLoader.GetPathByAssembly(Caller);
+
+                    if (sModPath == null)
+                    {
+                        Log.Error("Assembly ModPath is null");
+                        return false;
+                    }
+
+                    if (!File.Exists(sModPath + "/" + sVoxPath))
+                    {
+                        Log.Error("Unable to find vox file: {0}", sModPath + "/" + sVoxPath);
+                        return false;
+                    }
+
+                    sVoxPath = sModPath + "/" + sVoxPath;
                 }
-                sVoxPath = sModPath + "/" + sVoxPath;
+            } else if (!File.Exists(sVoxPath))
+            {
+                Log.Error("Unable to find vox file: {0}", sVoxPath);
+                return false;
             }
 
-            sVoxPath = sVoxPath.Replace("\\", "/");
-
-            if (!_LoadVox(iHandle, sVoxPath, sVoxName, fScale))
+            if (!_LoadVox(iHandle, sVoxPath.Replace("\\", "/"), sVoxName, fScale))
             {
                 Log.Error("Failed to load vox: {0}", sVoxPath);
                 return false;
