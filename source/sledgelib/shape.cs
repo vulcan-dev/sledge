@@ -21,6 +21,9 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern uint GetShapeBody(uint iHandle);
         public static dGetUIntEntity GetBody = GetShapeBody;
 
+        [DllImport("sledge.dll")] private static extern uint GetShapeSibling(uint iHandle);
+        public static dGetUIntEntity GetSibling = GetShapeSibling;
+
         [DllImport("sledge.dll")] private static extern Bounds GetShapeBounds(uint iHandle);
         public static dGetBoundsEntity GetBounds = GetShapeBounds;
 

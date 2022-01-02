@@ -94,3 +94,23 @@ sledgelib_func void SetBodyRotation(unsigned int iBodyHandle, Vector4 vValue) {
 	if (!Body) return;
 	Body->m_Rotation = vValue;
 }
+
+sledgelib_func unsigned int GetBodySibling(unsigned int iBodyHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+	if (!Body) return 0;
+
+	if (!Body->m_Sibling)
+		return 0;
+
+	return Body->m_Sibling->m_Id;
+}
+
+sledgelib_func unsigned int GetBodyChild(unsigned int iBodyHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+	if (!Body) return 0;
+
+	if (!Body->m_Child)
+		return 0;
+	
+	return Body->m_Child->m_Id;
+}

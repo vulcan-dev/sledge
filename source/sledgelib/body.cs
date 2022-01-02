@@ -40,5 +40,24 @@ namespace SledgeLib
 
         [DllImport("sledge.dll")] private static extern float GetBodyMass(uint iHandle);
         public static dGetFloatEntity GetMass = GetBodyMass;
+
+        [DllImport("sledge.dll")] private static extern uint GetBodySibling(uint iHandle);
+        public static dGetUIntEntity GetSibling = GetBodySibling;
+        [DllImport("sledge.dll")] private static extern uint GetBodyChild(uint iHandle);
+        public static dGetUIntEntity GetChild = GetBodyChild;
+
+        public static List<uint> GetChildren(uint iHandle)
+        {
+            uint iLastHandle = Body.GetChild(iHandle);
+
+            List<uint> ChildrenList = new List<uint>();
+            while (iLastHandle != 0)
+            {
+                ChildrenList.Add(iLastHandle);
+                iLastHandle = Shape.GetSibling(iLastHandle);
+            }
+
+            return ChildrenList;
+        }
     }
 }

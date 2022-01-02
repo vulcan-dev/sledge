@@ -30,14 +30,14 @@ sledgelib_func bool _LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cO
 	small_string ssPath(cVoxPath);
 	small_string ssObjectName(cObjectName);
 	CVox* pPrevVox = Shape->m_Vox;
-
+	
 	Shape->m_Vox = Teardown::Entity::LoadVox(&ssPath, &ssObjectName, fScale);
 
 	if (!Shape->m_Vox) {
 		Shape->m_Vox = pPrevVox;
 		return false;
 	}
-
+	
 	Teardown::Entity::GenVoxTexture(Shape->m_Vox);
 	Teardown::Entity::GenVoxBuffers(Shape->m_Vox);
 
@@ -100,4 +100,14 @@ sledgelib_func void SetShapeCollisionFilter(unsigned int iShapeHandle, unsigned 
 	if (!Shape) return;
 	Shape->m_CollisionLayer = CollisionLayer;
 	Shape->m_CollisionMask = CollisionMask;
+}
+
+sledgelib_func unsigned int GetShapeSibling(unsigned int iShapeHandle) {
+	CShape* Shape = Teardown::Utils::GetEntityByIdx<CShape*>(iShapeHandle, EEntityType::Shape);
+	if (!Shape) return 0;
+	
+	if (!Shape->m_Sibling)
+		return 0;
+
+	return Shape->m_Sibling->m_Id;
 }
