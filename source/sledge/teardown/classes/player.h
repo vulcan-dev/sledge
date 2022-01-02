@@ -45,7 +45,18 @@ public:
 	class CBody* m_GrabBody; //0x0148
 	char pad_0150[8]; //0x0150
 	float m_Health; //0x0158
-	char pad_015C[1420]; //0x015C
+	char pad_015C[1156]; //0x015C
+	small_string m_ToolName; //0x05E0
+	class CBody* m_ToolBody; //0x05F0
+	char pad_05F8[28]; //0x05F8
+	Transform m_ToolTransform; //0x0614
+	char pad_0630[8]; //0x0630
+	float m_ToolRecoil; //0x0638 breaks if > 1
+	float m_EquipAnim; //0x063C union between float and bool
+	float m_ToolCooldown; //0x0640
+	char pad_0644[96]; //0x0644
+	float m_TimeSinceLastJump; //0x06A4
+	char pad_06A8[64]; //0x06A8
 	class CShape* m_GrabbedShape; //0x06E8
 	class CShape* m_InteractableShape; //0x06F0
 	char pad_06F8[132]; //0x06F8

@@ -72,3 +72,10 @@ sledgelib_func unsigned int GetPlayerVehicleBody() {
 
 sledgelib_func bool M1Down() { return g_Game->m_Player->m_M1Down; }
 sledgelib_func bool M2Down() { return g_Game->m_Player->m_M2Down; }
+
+sledgelib_func unsigned int GetToolBody() {
+	if (g_Game->m_Player->m_ToolBody == NULL)
+		return 0;
+
+	return g_Game->m_Player->m_ToolBody->m_Id;
+}

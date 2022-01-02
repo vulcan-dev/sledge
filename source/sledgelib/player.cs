@@ -88,5 +88,7 @@ namespace SledgeLib
 
         [DllImport("sledge.dll")] public static extern bool M1Down();
         [DllImport("sledge.dll")] public static extern bool M2Down();
+
+        [DllImport("sledge.dll")] public static extern uint GetToolBody();
     }
 }
