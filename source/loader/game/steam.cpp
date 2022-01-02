@@ -17,12 +17,12 @@ public:
 	unsigned int m_Key; //0x0000
 	unsigned int m_Signature; //0x0004
 	char pad_0008[24]; //0x0008
-	uint64_t m_RealEntryPointOffset; //0x0020
+	unsigned long long m_RealEntryPointOffset; //0x0020
 	char pad_0028[16]; //0x0028
-	uint32_t m_AppId; //0x0038
+	unsigned int m_AppId; //0x0038
 	char pad_003C[12]; //0x003C
-	uint64_t m_CodeSectionVirtualAddr; //0x0048
-	uint64_t m_CodeSectionSize; //0x0050
+	unsigned long long m_CodeSectionVirtualAddr; //0x0048
+	unsigned long long m_CodeSectionSize; //0x0050
 	unsigned char m_AESKey[32]; //0x0058
 	unsigned char m_AESIV[16]; //0x0078
 	char m_OriginalCodeBytes[16]; //0x0088
