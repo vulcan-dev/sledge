@@ -1,12 +1,7 @@
 # initial config
 version: 1.0.{build}-{branch}
-
-branches:
-    only:
-        - main
-
-image:
-    - Visual Studio 2022
+skip_tags: true
+image: Visual Studio 2022
 
 skip_commits:
     files:
@@ -21,15 +16,15 @@ artifacts:
       type: zip
 
 deploy:
-    release: sledge-v$(APPVEYOR_BUILD_VERSION)
-    description: Automated build
     provider: GitHub
+    release: sledge-v$(APPVEYOR_BUILD_VERSION)
     auth_token:
         secure: pAR0F1856OJePIBpQOxEe7xxWOVsNkF/T33PV5Z4YIU0qOGdIWOzcj0oqdtp4UCn
+    repository: 44lr/sledge
     artifact: SledgeRel
-    draft: false
-    prerelease: false
-   
+    on:
+        branch: main
+
 # cloning
 clone_folder: c:/sledge
 
