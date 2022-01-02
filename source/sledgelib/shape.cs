@@ -39,6 +39,12 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern bool _LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
         public static bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale)
         {
+            if (iHandle == 0)
+            {
+                Log.Error("Invalid handle passed to LoadVox");
+                return false;
+            }
+
             if (!sVoxPath.EndsWith(".vox"))
                 Log.Warning("LoadVox called with path that does not end in .vox");
 
@@ -55,6 +61,8 @@ namespace SledgeLib
                 }
                 sVoxPath = sModPath + "/" + sVoxPath;
             }
+
+            sVoxPath = sVoxPath.Replace("\\", "/");
 
             if (!_LoadVox(iHandle, sVoxPath, sVoxName, fScale))
             {
