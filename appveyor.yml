@@ -3,7 +3,11 @@ version: 1.0.{build}-{branch}
 
 branches:
     only:
-        - appveyor       
+        - appveyor
+
+artifacts:
+    - path: C:/sledge/proj/Release/1.0.{build}-{branch}-rel.zip
+      type: zip
 
 skip_commits:
     files:
@@ -35,3 +39,7 @@ before_build:
 build:
     parallel: true
     project: C:/sledge/proj/sledge.sln
+
+after_build:
+    - cmd: cd C:/sledge/proj/Release/
+    - cmd: 7z a 1.0.{build}-{branch}-rel.zip sledge.dll mod.ps1 sledge.exe mods
