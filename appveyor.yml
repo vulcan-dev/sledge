@@ -46,7 +46,7 @@ configuration:
 before_build:
     - cmd: mkdir proj
     - cmd: cd proj
-    - cmd: cmake c:/sledge/ -G"Visual Studio 17 2022" -A x64 -T v143 -DOPENSSL_ROOT_DIR=C:\OpenSSL-v30-Win64\bin
+    - cmd: cmake c:/sledge/ -G"Visual Studio 17 2022" -A x64 -T v143 -DOPENSSL_ROOT_DIR=C:/OpenSSL-v30-Win64
 
 build:
     parallel: true
