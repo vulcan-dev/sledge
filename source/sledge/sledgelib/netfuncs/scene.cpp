@@ -37,7 +37,7 @@ sledgelib_func SRaycastReturn QueryRaycast(Vector3 vOrigin, Vector3 vDirection, 
 		Return.m_HitNormal = vHitNormal;
 		Return.m_HitDist = fDist;
 	}
-
+	
 	return Return;
 }
 
@@ -52,4 +52,8 @@ sledgelib_func void Shoot(Vector3 vOrigin, Vector3 vVelocity, unsigned int iType
 	ProjectileInfo.m_Type = iType;
 
 	g_Scene->m_Projectiles.push_back(ProjectileInfo);
+}
+
+sledgelib_func void DrawLine(Vector3 vPoint0, Vector3 vPoint1, Vector4 vColour, bool bIgnoreDepth) {
+	Teardown::DrawLine(g_Game->m_Renderer, &vPoint0, &vPoint1, &vColour, &vColour, bIgnoreDepth);
 }

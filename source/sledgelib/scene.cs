@@ -22,5 +22,6 @@ namespace SledgeLib
     {
         [DllImport("sledge.dll")] public static extern SRaycastReturn QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist);
         [DllImport("sledge.dll")] public static extern void Shoot(Vector3 vOrigin, Vector3 vVelocity, EProjectileType eProjectileType, float fLifeTime, float fDamage);
+        [DllImport("sledge.dll")] public static extern void DrawLine(Vector3 vPoint0, Vector3 vPoint1, Vector4 vColor, bool bIgnoreDepth);
     }
 }

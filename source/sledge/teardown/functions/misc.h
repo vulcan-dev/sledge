@@ -22,4 +22,7 @@ namespace Teardown {
 
 	typedef void (*tDebugPrint) (void* m_Debug, small_string* ssMessage);
 	inline tDebugPrint DebugPrint;
+
+	typedef void (*tDrawLine) (void* pRenderer, Vector3* vPoint0, Vector3* vPoint1, Vector4* Colour, Vector4* Colour2, bool bDepthCheck);
+	inline tDrawLine DrawLine;
 }

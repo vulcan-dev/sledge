@@ -28,7 +28,7 @@ public:
 	void* N00000053; //0x0028
 	class CGameInput* m_Input; //0x0030
 	void* N00000055; //0x0038
-	void* N00000056; //0x0040
+	void* m_Renderer; //0x0040
 	class CScene* m_Scene; //0x0048
 	void* N00000078; //0x0050
 	class CCameraController* m_CameraController; //0x0058
