@@ -5,6 +5,10 @@ branches:
     only:
         - main
 
+artifacts:
+    - path: proj\Release\Sledge.zip
+      type: zip
+
 skip_commits:
     files:
         README.md
