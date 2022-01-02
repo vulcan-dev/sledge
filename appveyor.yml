@@ -7,7 +7,7 @@ branches:
 
 skip_commits:
     files:
-        "*.md"
+        README.md
         .gitignore
         .github/*
 
