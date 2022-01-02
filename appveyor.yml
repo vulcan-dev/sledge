@@ -6,7 +6,7 @@ branches:
         - appveyor
 
 artifacts:
-    - path: C:/sledge/proj/Release/1.0.{build}-{branch}-rel.zip
+    - path: proj\Release\rel.zip
       type: zip
 
 skip_commits:
@@ -42,4 +42,4 @@ build:
 
 after_build:
     - cmd: cd C:/sledge/proj/Release/
-    - cmd: 7z a 1.0.{build}-{branch}-rel.zip sledge.dll mod.ps1 sledge.exe mods
+    - cmd: 7z a rel.zip sledge.dll mod.ps1 sledge.exe mods
