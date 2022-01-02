@@ -31,7 +31,7 @@ namespace SledgeLib
             {
                 case ECallbackType.PlayerSpawn:
                     lock (CCallbackManager.m_PlayerSpawnCallbacks) { CCallbackManager.m_PlayerSpawnCallbacks.Add(this); }
-                    break;
+                    return;
                 case ECallbackType.PreUpdate:
                     lock (CCallbackManager.m_PreUpdateCallbacks) { CCallbackManager.m_PreUpdateCallbacks.Add(this); }
                     return;
@@ -47,7 +47,7 @@ namespace SledgeLib
 
             }
 
-            Log.Error("Delegate does not match callback type");
+            Log.Error("Delegate {0} does not match callback type", Callback);
         }
 
         public CCallback(ECallbackType eType, dUIntCallback Callback, bool bActive = true)
@@ -63,7 +63,7 @@ namespace SledgeLib
                     return;
             }
 
-            Log.Error("Delegate does not match callback type");
+            Log.Error("Delegate {0} does not match callback type", Callback);
         }
 
 
