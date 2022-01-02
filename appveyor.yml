@@ -7,7 +7,6 @@ skip_commits:
     files:
         README.md
         .gitignore
-        .github/*
 
 # releases
 artifacts:
