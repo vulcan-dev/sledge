@@ -3,7 +3,7 @@ version: 1.0.{build}-{branch}
 
 branches:
     only:
-        - master
+        - main
 
 artifacts:
     - path: proj\Release\rel.zip
