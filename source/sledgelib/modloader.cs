@@ -168,7 +168,7 @@ internal class ModLoader
         string sModInfoPath = sModPath + "\\" + sModName + ".info.json";
         if (!File.Exists(sModInfoPath))
         {
-            Log.Warning("Mod {0} has no info, attempting to generate one", sModPath);
+            Log.Warning("Mod {0} has no info, attempting to generate one", sModName);
             if (!CModInfoGenerator.GenerateModInfo(RegModInfo.m_ModAsembly, sModInfoPath, sModName))
                 return false;
         }
