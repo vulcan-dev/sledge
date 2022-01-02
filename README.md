@@ -12,7 +12,7 @@ Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 * C++ and C# SDKs for visual studio
 * [.NET Desktop Runtime >6.0.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 * [Git](https://git-scm.com/downloads)
-* [OpenSSL](https://slproweb.com/products/Win32OpenSSL.html) (The full version, not the light version)
+* [OpenSSL](https://slproweb.com/products/Win32OpenSSL.html) (3.0.1+, full version)
 
 ## How to build
 1. Clone the repository somewhere using the following command:
