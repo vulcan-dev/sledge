@@ -10,6 +10,9 @@
 
 #include <imgui_internal.h>
 
+#include <filesystem>
+#include <sstream>
+
 float fTopBarHeight;
 float fTopBarPadding;
 float fIconPadding;
@@ -94,6 +97,20 @@ void Menu::Draw() {
 		case 0:
 			ImGui::SetCursorPos(ImVec2(fIconPadding, (fIconPadding / 4) + fTopBarHeight));
 			ImGui::Image((void*)(intptr_t)iIconTexture, vIconSize);
+			break;
+		case 1:
+			ImGui::Text("Downloaded mods:");
+
+			for (auto const& p : std::filesystem::directory_iterator("mods")) {
+				if (p.is_directory()) {
+					std::stringstream ss;
+
+					ss << "\t" << p.path().filename();
+
+					ImGui::Text(ss.str().c_str());
+				}
+			}
+
 			break;
 		}
 
