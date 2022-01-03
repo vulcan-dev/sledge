@@ -96,8 +96,9 @@ sledgelib_func void SpawnParticle(SParticleInfoNet NetParticleInfo, Vector3 vSpa
 }
 
 small_vector <SSoundInfo*> *SoundList;
-sledgelib_func unsigned int _LoadSound(char* sSoundPath) {
-	small_string ssFilePath(sSoundPath);
+small_vector <SLoopInfo*>* LoopsList;
+sledgelib_func unsigned int _LoadSound(char* cSoundPath) {
+	small_string ssFilePath(cSoundPath);
 	small_string ssType("snd");
 
 	SSoundInfo* SoundInfo = Teardown::LoadSound(g_Game->m_Sound, &ssFilePath, &ssType);
@@ -109,9 +110,19 @@ sledgelib_func unsigned int _LoadSound(char* sSoundPath) {
 	return SoundList->size();
 }
 
-sledgelib_func void _ResetSounds() {
-	SoundList = new small_vector<SSoundInfo*>(2);
+sledgelib_func unsigned int _LoadLoop(char* cLoopPath) {
+	small_string ssFilePath(cLoopPath);
+	small_string ssType("snd");
+
+	SLoopInfo* LoopInfo = Teardown::LoadLoop(g_Game->m_Sound, &ssFilePath, &ssType);
+
+	if (LoopInfo == nullptr)
+		return 0;
+	
+	LoopsList->push_back(LoopInfo);
+	return LoopsList->size();
 }
+
 
 sledgelib_func void PlaySound(unsigned int iSoundHandle, Vector3 vPosition, float fVolume, float fSpeed) {
 	SSoundInfo* Sound = SoundList->get_at(iSoundHandle - 1);
@@ -119,4 +130,17 @@ sledgelib_func void PlaySound(unsigned int iSoundHandle, Vector3 vPosition, floa
 		return;
 	
 	Teardown::PlaySound(Sound, &vPosition, fVolume, fSpeed);
+}
+
+sledgelib_func void PlayLoop(unsigned int iLoopHandle, Vector3 vPosition, float fVolume, bool bSomething) {
+	SLoopInfo* Loop = LoopsList->get_at(iLoopHandle - 1);
+	if (Loop == nullptr)
+		return;
+
+	Teardown::PlayLoop(Loop, &vPosition, fVolume, bSomething);
+}
+
+sledgelib_func void _ResetSounds() {
+	SoundList = new small_vector<SSoundInfo*>(2);
+	LoopsList = new small_vector<SLoopInfo*>(2);
 }

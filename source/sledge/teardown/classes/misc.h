@@ -61,3 +61,13 @@ struct SSoundInfo
 	char pad_0041[51]; //0x0041
 	unsigned int m_LastPlayedTime; //0x0074
 }; //Size: 0x0078
+
+struct SLoopInfo
+{
+	float m_Volume; //0x0004
+	float m_NominalDistance; //0x0008
+	class small_string m_SoundName; //0x00C
+	class small_string Type; //0x001C
+	class small_string m_SoundPath; //0x002C
+	char pad_003C[60]; // 0x003C
+}; //Size: 0x0078

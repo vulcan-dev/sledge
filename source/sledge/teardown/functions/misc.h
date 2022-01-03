@@ -34,4 +34,10 @@ namespace Teardown {
 
 	typedef void (*tPlaySound) (SSoundInfo* pSoundInfo, Vector3* vPosition, float fVolume, float fSpeed);
 	inline tPlaySound PlaySound;
+
+	typedef SLoopInfo* (*tLoadLoop) (void* pSound, small_string* ssFilePath, small_string* ssType);
+	inline tLoadLoop LoadLoop;
+
+	typedef void (*tPlayLoop) (SLoopInfo* pSoundInfo, Vector3* vPosition, float fVolume, bool bSomething);
+	inline tPlayLoop PlayLoop;
 }

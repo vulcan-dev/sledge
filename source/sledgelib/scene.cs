@@ -131,7 +131,18 @@ namespace SledgeLib
             return _LoadSound("RAW:" + sVerifiedPath.Replace("\\", "/"));
         }
 
+        [DllImport("sledge.dll")] private static extern uint _LoadLoop(string sLoopPath);
+        public static uint LoadLoop(string sLoopPath)
+        {
+            string? sVerifiedPath = CSledgeUtils.GetValidPath(sLoopPath, Assembly.GetCallingAssembly());
+            if (sVerifiedPath == null)
+                throw new Exception("unable to resolve path");
+
+            return _LoadLoop("RAW:" + sVerifiedPath.Replace("\\", "/"));
+        }
+
         [DllImport("sledge.dll")] public static extern void PlaySound(uint iSoundHandle, Vector3 vPosition, float fVolume, float fSpeed);
+        [DllImport("sledge.dll")] public static extern void PlayLoop(uint iLoopHandle, Vector3 vPosition, float fVolume, bool bSomething);
 
         [DllImport("sledge.dll")] internal static extern void _ResetSounds();
     }
