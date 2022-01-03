@@ -208,6 +208,8 @@ internal class CModLoader
                 Log.Error("Error while invoking unload method for mod {0}: {1}", ModInfo.m_Name, ex);
             }
 
+            ModInfo.m_LoadContext.Unload();
+
             lock (RegisteredMods) { RegisteredMods.Remove(ModInfo); }
 
             ModInfo = LoadMod(ModInfo.m_Name, ModInfo.m_Path);
