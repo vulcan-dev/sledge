@@ -1,6 +1,7 @@
 #include "teardown/functions/misc.h"
 #include "teardown/classes/entities.h"
 #include "teardown/classes/game.h"
+#include "teardown/classes/misc.h"
 
 #include "util/math.h"
 

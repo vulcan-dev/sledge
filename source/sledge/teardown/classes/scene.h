@@ -2,6 +2,7 @@
 
 #include "teardown/small_vector.h"
 #include "teardown/classes/entities.h"
+#include <teardown/classes/misc.h>
 
 class CScene
 {
