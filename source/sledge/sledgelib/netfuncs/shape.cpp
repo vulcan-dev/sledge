@@ -22,6 +22,12 @@ sledgelib_func unsigned int CreateShape(unsigned int iBodyHandle) {
 	return Shape->m_Id;
 }
 
+sledgelib_func void DestroyShape(unsigned int iShapeHandle) {
+	CShape* Shape = Teardown::Utils::GetEntityByIdx<CShape*>(iShapeHandle, EEntityType::Shape);
+	if (!Shape) return;
+	Shape->Destroy(true);
+}
+
 sledgelib_func bool _LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cObjectName, float fScale) {
 	CShape* Shape = Teardown::Utils::GetEntityByIdx<CShape*>(iShapeHandle, EEntityType::Shape);
 	if (!Shape) return false;

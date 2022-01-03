@@ -10,6 +10,10 @@ namespace SledgeLib
         public delegate uint dCreateShape(uint iBodyHandle);
         public static dCreateShape Create = CreateShape;
 
+        [DllImport("sledge.dll")] private static extern void DestroyShape(uint iShapeHandle);
+        public delegate void dDestroyShape(uint iShapeHandle);
+        public static dDestroyShape Destroy = DestroyShape;
+
         [DllImport("sledge.dll")] private static extern Transform GetShapeLocalTransform(uint iHandle);
         public static dGetTransformEntity GetLocalTransform = GetShapeLocalTransform;
         [DllImport("sledge.dll")] private static extern void SetShapeLocalTransform(uint iHandle, Transform tTransform);
@@ -88,6 +92,5 @@ namespace SledgeLib
             }
             return true;
         }
-
     }
 }

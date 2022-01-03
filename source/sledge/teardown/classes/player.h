@@ -63,7 +63,8 @@ public:
 	bool m_BlurEffect; //0x077C
 	char pad_077D[12371]; //0x077D
 	small_vector<CRegisteredTool> m_RegisteredTools; //0x37D0
-	char pad_37E0[32]; //0x37E0
+	Transform m_RegisteredToolTransform; // 0x37D0
+	float m_RegisteredToolSway; // 0x37E0
 	Vector3 m_GroundVelocity; //0x3800
 	char pad_380C[812]; //0x380C
 }; //Size: 0x3B38

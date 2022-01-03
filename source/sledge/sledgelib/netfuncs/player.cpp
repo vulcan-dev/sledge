@@ -79,3 +79,8 @@ sledgelib_func unsigned int GetToolBody() {
 
 	return g_Game->m_Player->m_ToolBody->m_Id;
 }
+
+sledgelib_func void SetToolTransform(Transform tTransform, float fToolSway) {
+	g_Game->m_Player->m_RegisteredToolTransform = tTransform;
+	g_Game->m_Player->m_RegisteredToolSway = fToolSway;
+}
