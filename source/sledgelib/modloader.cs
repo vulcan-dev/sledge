@@ -19,7 +19,7 @@ internal class CModLoader
     // struct that will be used internally for handling mods
     internal struct SRegisteredModInfo
     {
-        public Assembly m_ModAsembly;
+        public Assembly m_Assembly;
         public DateTime m_AssemblyLastWrite;
         public string m_Path;
         public string m_Name;
@@ -55,19 +55,19 @@ internal class CModLoader
 
         FileStream AssemblyStream = File.OpenRead(sModPath + "\\" + sModName + ".dll");
 
-        RegModInfo.m_ModAsembly = RegModInfo.m_LoadContext.LoadFromStream(AssemblyStream);
+        RegModInfo.m_Assembly = RegModInfo.m_LoadContext.LoadFromStream(AssemblyStream);
         AssemblyStream.Close();
 
         if (!File.Exists(sModPath + "\\" + sModName + ".info.json"))
         {
             Log.Warning("Mod {0} has no info, attempting to generate one", sModName);
-            CInfoGen.Generate(RegModInfo.m_ModAsembly, sModPath, sModName);
+            CInfoGen.Generate(RegModInfo.m_Assembly, sModPath, sModName);
         }
 
         string sConfig = File.ReadAllText(sModPath + "\\" + sModName + ".info.json");
         SModInfo ModInfo = JsonSerializer.Deserialize<SModInfo>(sConfig);
 
-        Type? ModType = RegModInfo.m_ModAsembly.GetType(ModInfo.sTypeName, true);
+        Type? ModType = RegModInfo.m_Assembly.GetType(ModInfo.sTypeName, true);
 
         if (ModType == null)
             throw new Exception("Mod type not found");
@@ -89,7 +89,6 @@ internal class CModLoader
             throw new Exception("Unable to instantiate mod type");
 
         RegModInfo.m_Instance = ModInstance;
-
         RegModInfo.m_Load = LoadMethod;
         RegModInfo.m_Unload = UnloadMethod;
         RegModInfo.m_Reload = ReloadMethod;
@@ -202,7 +201,7 @@ internal class CModLoader
 
             lock (RegisteredMods) { RegisteredMods.Remove(ModInfo); }
 
-           ModInfo = LoadMod(ModInfo.m_Name, ModInfo.m_Path);
+            ModInfo = LoadMod(ModInfo.m_Name, ModInfo.m_Path);
 
             MethodInfo MethodToCall;
             if (ModInfo.m_Reload != null)
@@ -228,6 +227,8 @@ internal class CModLoader
             {
                 Log.Error("Error while invoking load/reload method for mod {0}: {1}", ModInfo.m_Name, ex.Message);
             }
+
+            Log.General("reloaded mod at path: {0}", ModInfo.m_Path);
         }
         catch { } // we don't care about the exception, as it could be any file that gets updated
     }
