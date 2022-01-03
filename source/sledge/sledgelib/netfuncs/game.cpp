@@ -2,7 +2,6 @@
 #include "teardown/functions/misc.h"
 
 #include <wtypes.h>
-#include <oleauto.h>
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 

@@ -24,6 +24,7 @@ CGame* hGameCCtor(void* pAlloc, void* pMemory) {
 	return g_Game;
 }
 
+
 void Teardown::Hooks::Game() {
 	GameCCtor = reinterpret_cast<tGameCCtor>(Memory::dwFindPattern(Signatures::Game));
 	LogVerbose("CGame::CGame: {}", reinterpret_cast<void*>(GameCCtor));

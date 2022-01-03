@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using System.Runtime.InteropServices;
 
-
 public delegate void dVoid();
 
 public delegate bool dGetBool();

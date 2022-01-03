@@ -4,7 +4,7 @@ namespace SledgeLib
 {
     public delegate void dBindCallback();
     public delegate void dAdvancedBindCallback(bool bKeyDown);
-    public delegate void dInputReader(EKeyCode iKeyCode, bool bKeyDown); 
+    public delegate void dInputReader(EKeyCode iKeyCode, bool bKeyDown);
 
     internal class CBindManager
     {
@@ -14,7 +14,7 @@ namespace SledgeLib
 
         internal static void OnInput(EKeyCode iKeyCode, bool bKeyDown)
         {
-            foreach(CBind Bind in m_Binds)
+            foreach (CBind Bind in m_Binds)
             {
                 if (!Bind.m_Active)
                     continue;

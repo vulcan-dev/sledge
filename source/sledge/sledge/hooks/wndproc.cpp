@@ -24,7 +24,7 @@ LRESULT APIENTRY hWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 void Sledge::Hooks::Wnd() {
-	g_hWnd= FindWindow(0, "Teardown");
+	g_hWnd = FindWindow(0, "Teardown");
 
 	oWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtrA(reinterpret_cast<HWND>(g_hWnd), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hWndProc))); 
 }

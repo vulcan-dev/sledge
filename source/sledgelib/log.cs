@@ -23,7 +23,7 @@ namespace SledgeLib
             if (Caller != null && sAssemblyName != null)
                 sCallingAssembly = sAssemblyName;
 
-            string sMsg = "";
+            string sMsg;
             try
             {
                 sMsg = string.Format(sFormat, oArgs);

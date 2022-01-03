@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SledgeLib
 {
@@ -37,7 +38,8 @@ namespace SledgeLib
             try
             {
                 _DebugPrint(String.Format(sFormat, oArgs));
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Log.Error("Error ocurred while formatting string for DebugPrint: {0}", ex);
             }

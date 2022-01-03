@@ -38,7 +38,7 @@ sledgelib_func bool _LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cO
 	CVox* pPrevVox = Shape->m_Vox;
 	
 	Shape->m_Vox = Teardown::Entity::LoadVox(&ssPath, &ssObjectName, fScale);
-
+	
 	if (!Shape->m_Vox) {
 		Shape->m_Vox = pPrevVox;
 		return false;
@@ -46,7 +46,7 @@ sledgelib_func bool _LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cO
 	
 	Teardown::Entity::GenVoxTexture(Shape->m_Vox);
 	Teardown::Entity::GenVoxBuffers(Shape->m_Vox);
-
+	
 	Teardown::Entity::SetBodyDynamic(reinterpret_cast<CBody*>(Shape->m_Parent), true);
 	Teardown::Entity::InitializeBody(reinterpret_cast<CBody*>(Shape->m_Parent));
 	
