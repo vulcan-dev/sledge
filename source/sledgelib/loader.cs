@@ -16,6 +16,7 @@ internal class SledgeLoader
         CCallbackManager.RegisterCallback(ECallbackType.PrePlayerUpdate, CCallbackManager.PrePlayerUpdateCallback);
         CCallbackManager.RegisterCallback(ECallbackType.PostPlayerUpdate, CCallbackManager.PostPlayerUpdateCallback);
         CCallbackManager.RegisterCallback(ECallbackType.StateChange, CCallbackManager.StateChangeCallback);
+        CCallbackManager.RegisterCallback(ECallbackType.Tick, CCallbackManager.TickCallback);
 
         Log.Verbose("Loading mods");
         if (!ModLoader.Init())

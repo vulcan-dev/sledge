@@ -5,7 +5,8 @@ enum class ECallbackType : unsigned int {
 	PostUpdate,
 	PrePlayerUpdate,
 	PostPlayerUpdate,
-	StateChange
+	StateChange,
+	Tick
 };
 
 typedef void (*tCallback) ();
@@ -48,6 +49,12 @@ namespace _Callbacks {
 		void RegisterCallback(CCallback*);
 		void UnregisterCallback(CCallback*);
 	}
+
+	void OnTick();
+	namespace Tick {
+		void RegisterCallback(CCallback*);
+		void UnregisterCallback(CCallback*);
+	}
 }
 
 class CCallback {
@@ -81,6 +88,9 @@ public:
 		case ECallbackType::StateChange:
 			_Callbacks::StateChange::RegisterCallback(this);
 			break;
+		case ECallbackType::Tick:
+			_Callbacks::Tick::RegisterCallback(this);
+			break;
 		}
 	}
 
@@ -103,6 +113,9 @@ public:
 			break;
 		case ECallbackType::StateChange:
 			_Callbacks::StateChange::UnregisterCallback(this);
+			break;
+		case ECallbackType::Tick:
+			_Callbacks::Tick::UnregisterCallback(this);
 			break;
 		}
 	}

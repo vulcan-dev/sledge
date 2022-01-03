@@ -12,7 +12,8 @@ namespace SledgeLib
         PostUpdate,
         PrePlayerUpdate,
         PostPlayerUpdate,
-        StateChange
+        StateChange,
+        Tick
     }
 
     public class CCallback
@@ -43,6 +44,9 @@ namespace SledgeLib
                     return;
                 case ECallbackType.PostPlayerUpdate:
                     lock (CCallbackManager.m_PostPlayerUpdateCallbacks) { CCallbackManager.m_PostPlayerUpdateCallbacks.Add(this); }
+                    return;
+                case ECallbackType.Tick:
+                    lock (CCallbackManager.m_TickCallbacks) { CCallbackManager.m_TickCallbacks.Add(this); }
                     return;
 
             }
@@ -89,6 +93,9 @@ namespace SledgeLib
                 case ECallbackType.StateChange:
                     lock (CCallbackManager.m_StateChangeCallbacks) { CCallbackManager.m_StateChangeCallbacks.Remove(this); }
                     break;
+                case ECallbackType.Tick:
+                    lock (CCallbackManager.m_TickCallbacks) { CCallbackManager.m_TickCallbacks.Remove(this); }
+                    break;
             }
         }
     }
@@ -104,6 +111,7 @@ namespace SledgeLib
         internal static List<CCallback> m_PrePlayerUpdateCallbacks = new List<CCallback>();
         internal static List<CCallback> m_PostPlayerUpdateCallbacks = new List<CCallback>();
         internal static List<CCallback> m_StateChangeCallbacks = new List<CCallback>();
+        internal static List<CCallback> m_TickCallbacks = new List<CCallback>();
 
         internal static void IterateCallbacks(List<CCallback> CallbackList)
         {
@@ -157,5 +165,7 @@ namespace SledgeLib
         internal static void OnStateChange(uint iState) { IterateCallbacksOneArg(m_StateChangeCallbacks, iState); }
         internal static dUIntCallback StateChangeCallback = new dUIntCallback(OnStateChange);
 
+        internal static void OnTick() { IterateCallbacks(m_TickCallbacks); }
+        internal static dCallback TickCallback = new dCallback(OnTick);
     }
 }
