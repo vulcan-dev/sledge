@@ -130,7 +130,7 @@ internal class CModLoader
             }
             catch (Exception ex)
             {
-                Log.Error("Error ocurred while registering mod {0}: {1}", sModName, ex.Message);
+                Log.Error("Error ocurred while registering mod {0}: {1}", sModName, ex);
                 continue;
             }
 
@@ -139,7 +139,7 @@ internal class CModLoader
                 RegModInfo.m_Load.Invoke(RegModInfo.m_Instance, null);
             } catch(Exception ex)
             {
-                Log.Error("Error while invoking load method for mod {0}: {1}", RegModInfo.m_Name, ex.Message);
+                Log.Error("Error while invoking load method for mod {0}: {1}", RegModInfo.m_Name, ex);
                 continue;
             }
 
@@ -228,7 +228,7 @@ internal class CModLoader
             }
             catch (Exception ex)
             {
-                Log.Error("Error while invoking load/reload method for mod {0}: {1}", ModInfo.m_Name, ex.Message);
+                Log.Error("Error while invoking load/reload method for mod {0}: {1}", ModInfo.m_Name, ex);
             }
 
         }
