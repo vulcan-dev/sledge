@@ -31,6 +31,16 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern void QuickLoad();
 
         [DllImport("sledge.dll")] public static extern float GetUpdateDelta();
-        [DllImport("sledge.dll")] public static extern void DebugPrint(string sMessage);
+        [DllImport("sledge.dll")] private static extern void _DebugPrint(string sMessage);
+        public static void DebugPrint(string sFormat, params object[] oArgs)
+        {
+            try
+            {
+                _DebugPrint(String.Format(sFormat, oArgs));
+            } catch (Exception ex)
+            {
+                Log.Error("Error ocurred while formatting string for DebugPrint: {0}", ex);
+            }
+        }
     }
 }

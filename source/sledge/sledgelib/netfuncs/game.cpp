@@ -19,7 +19,7 @@ sledgelib_func void QuickLoad() { g_Game->m_QuickLoad = true; }
 
 sledgelib_func float GetUpdateDelta() { return g_Game->m_UpdateDelta; }
 
-sledgelib_func void DebugPrint(char* sMessage) {
+sledgelib_func void _DebugPrint(char* sMessage) {
 	small_string ssMessage(sMessage);
 
 	Teardown::DebugPrint(g_Game->m_Debug, &ssMessage);
