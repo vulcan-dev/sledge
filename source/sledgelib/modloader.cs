@@ -199,36 +199,36 @@ internal class CModLoader
             if (ModInfo.m_AssemblyLastWrite == File.GetLastWriteTime(Args.FullPath))
                 return;
 
+            try
+            {
+                ModInfo.m_Unload.Invoke(ModInfo.m_Instance, null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while invoking unload method for mod {0}: {1}", ModInfo.m_Name, ex);
+            }
+
             lock (RegisteredMods) { RegisteredMods.Remove(ModInfo); }
 
             ModInfo = LoadMod(ModInfo.m_Name, ModInfo.m_Path);
 
-            MethodInfo MethodToCall;
+            MethodInfo RestartMethod;
+
+
             if (ModInfo.m_Reload != null)
-                MethodToCall = ModInfo.m_Reload;
+                RestartMethod = ModInfo.m_Reload;
             else
-            {
-                try
-                {
-                    ModInfo.m_Unload.Invoke(ModInfo.m_Instance, null);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error while invoking unload method for mod {0}: {1}", ModInfo.m_Name, ex);
-                }
-                MethodToCall = ModInfo.m_Load;
-            }
-            
+                RestartMethod = ModInfo.m_Load;
+
             try
             {
-                MethodToCall.Invoke(ModInfo.m_Instance, null);
+                RestartMethod.Invoke(ModInfo.m_Instance, null);
             }
             catch (Exception ex)
             {
                 Log.Error("Error while invoking load/reload method for mod {0}: {1}", ModInfo.m_Name, ex.Message);
             }
 
-            Log.General("reloaded mod at path: {0}", ModInfo.m_Path);
         }
         catch { } // we don't care about the exception, as it could be any file that gets updated
     }
