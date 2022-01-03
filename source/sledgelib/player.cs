@@ -46,37 +46,22 @@ namespace SledgeLib
         public static void RegisterTool(string sId, string sName, string sFile, int iGroup = 6, bool bEnabled = false)
         {
             if (!Game.IsPlaying())
-            {
-                Log.Warning("Attempted to register tool {0} while not in-game", sName);
-                return;
-            }
+                throw new Exception("can't register tools while not playing");
 
             if (!sFile.EndsWith(".vox"))
-                Log.Warning("RegisterTool called with file name that does not end in .vox");
+                Log.Warning("LoadVox called with path that does not end in .vox");
 
-            if (!File.Exists(sFile))
-            {
-                Assembly Caller = Assembly.GetCallingAssembly(); ;
-                string? sModPath = ModLoader.GetPathByAssembly(Caller);
-
-                if (sModPath == null) return;
-                if (!File.Exists(sModPath + "/" + sFile))
-                {
-                    Log.General("unable to find vox at: {0}", sModPath + "/" + sFile);
-                    return;
-                }
-                sFile = "RAW:" + sModPath + "/" + sFile;
-            }
-
-            sFile = sFile.Replace("\\", "/");
+            string? sVerifiedPath = CSledgeUtils.GetValidPath(sFile, Assembly.GetCallingAssembly());
+            if (sVerifiedPath == null)
+                throw new Exception("unable to resolve path");
 
             if (iGroup < 1 || iGroup > 6)
                 iGroup = 6;
 
             int iIdx = _GetLastToolIdx() + 1;
 
-            _RegisterTool(sId, sName, sFile, (uint)iGroup);
-            
+            _RegisterTool(sId, sName, "RAW:" + sVerifiedPath.Replace("\\", "/"), (uint)iGroup);
+
             Registry.SetString("game.tool." + sId + ".name", sName);
             Registry.SetInt("game.tool." + sId + ".index", iIdx);
             Registry.SetInt("game.tool." + sId + ".group", iGroup);

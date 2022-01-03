@@ -124,45 +124,11 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern uint _LoadSound(string sSoundPath);
         public static uint LoadSound(string sSoundPath)
         {
-            if (Game.GetState() != EGameState.Playing)
-            {
-                Log.Error("Attempted to invoke LoadSound while not in-game");
-                return 0;
-            }
+            string? sVerifiedPath = CSledgeUtils.GetValidPath(sSoundPath, Assembly.GetCallingAssembly());
+            if (sVerifiedPath == null)
+                throw new Exception("unable to resolve path");
 
-            if (!Path.IsPathRooted(sSoundPath))
-            {
-                if (File.Exists(Path.GetFullPath(sSoundPath)))
-                {
-                    sSoundPath = Path.GetFullPath(sSoundPath);
-                }
-                else
-                {
-                    Assembly Caller = Assembly.GetCallingAssembly(); ;
-                    string? sModPath = ModLoader.GetPathByAssembly(Caller);
-
-                    if (sModPath == null)
-                    {
-                        Log.Error("Assembly ModPath is null");
-                        return 0;
-                    }
-
-                    if (!File.Exists(sModPath + "/" + sSoundPath))
-                    {
-                        Log.Error("Unable to find sound file: {0}", sModPath + "/" + sSoundPath);
-                        return 0;
-                    }
-
-                    sSoundPath = sModPath + "/" + sSoundPath;
-                }
-            }
-            else if (!File.Exists(sSoundPath))
-            {
-                Log.Error("Unable to find sound file: {0}", sSoundPath);
-                return 0;
-            }
-
-            return _LoadSound("RAW:" + sSoundPath);
+            return _LoadSound("RAW:" + sVerifiedPath.Replace("\\", "/"));
         }
 
         [DllImport("sledge.dll")] public static extern void PlaySound(uint iSoundHandle, Vector3 vPosition, float fVolume);

@@ -46,51 +46,14 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern bool _LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
         public static bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale)
         {
-            if (iHandle == 0)
-            {
-                Log.Error("Invalid handle passed to LoadVox");
-                return false;
-            }
-
             if (!sVoxPath.EndsWith(".vox"))
                 Log.Warning("LoadVox called with path that does not end in .vox");
 
-            if (!Path.IsPathRooted(sVoxPath))
-            {
-                if (File.Exists(Path.GetFullPath(sVoxPath)))
-                {
-                    sVoxPath = Path.GetFullPath(sVoxPath);
-                } else
-                {
-                    Assembly Caller = Assembly.GetCallingAssembly(); ;
-                    string? sModPath = ModLoader.GetPathByAssembly(Caller);
+            string? sVerifiedPath = CSledgeUtils.GetValidPath(sVoxPath, Assembly.GetCallingAssembly());
+            if (sVerifiedPath == null)
+                throw new Exception("unable to resolve path");
 
-                    if (sModPath == null)
-                    {
-                        Log.Error("Assembly ModPath is null");
-                        return false;
-                    }
-
-                    if (!File.Exists(sModPath + "/" + sVoxPath))
-                    {
-                        Log.Error("Unable to find vox file: {0}", sModPath + "/" + sVoxPath);
-                        return false;
-                    }
-
-                    sVoxPath = sModPath + "/" + sVoxPath;
-                }
-            } else if (!File.Exists(sVoxPath))
-            {
-                Log.Error("Unable to find vox file: {0}", sVoxPath);
-                return false;
-            }
-
-            if (!_LoadVox(iHandle, sVoxPath.Replace("\\", "/"), sVoxName, fScale))
-            {
-                Log.Error("Failed to load vox: {0}", sVoxPath);
-                return false;
-            }
-            return true;
+            return _LoadVox(iHandle, sVerifiedPath.Replace("\\", "/"), sVoxName, fScale);
         }
     }
 }
