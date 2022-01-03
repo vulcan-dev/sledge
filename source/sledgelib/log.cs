@@ -23,8 +23,6 @@ namespace SledgeLib
             if (Caller != null && sAssemblyName != null)
                 sCallingAssembly = sAssemblyName;
 
-            string sStackTrace = Environment.StackTrace;
-
             string sMsg = "";
             try
             {
@@ -37,8 +35,6 @@ namespace SledgeLib
             }
 
             _WriteLog(eType, "[" + sCallingAssembly + "] - " + sMsg);
-            if (eType == ELogType.Error)
-                _WriteLog(eType, "Stack trace: " + sStackTrace);
         }
 
         public static void General(string sFormat, params object[] oArgs) { _Log(ELogType.General, Assembly.GetCallingAssembly(), sFormat, oArgs); }
