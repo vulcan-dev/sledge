@@ -50,16 +50,19 @@ internal class ModLoader
         lock (RegisteredMods) { RegisteredMods.Add(Mod); }
         Log.General("Registered mod: {0}", Mod.m_Name);
     }
-    internal static void UnregisterLoadedMod(SRegisteredModInfo Mod)
+    internal static void UnregisterLoadedMod(SRegisteredModInfo Mod, bool bInvokeUnload = true)
     {
         lock (RegisteredMods) { RegisteredMods.Remove(Mod); }
         
-        try
+        if (bInvokeUnload)
         {
-            Mod.m_Unload.Invoke(Mod.m_Instance, null);
-        } catch (Exception ex)
-        {
-            Log.Error("Error ocurred while invoking unload method for mod {0}: {1}", Mod.m_Name, ex.Message);
+            try
+            {
+                Mod.m_Unload.Invoke(Mod.m_Instance, null);
+            } catch (Exception ex)
+            {
+                Log.Error("Error ocurred while invoking unload method for mod {0}: {1}", Mod.m_Name, ex.Message);
+            }
         }
 
         try
@@ -274,7 +277,7 @@ internal class ModLoader
 
     internal static void ReloadMod(SRegisteredModInfo ModInfo)
     {
-        UnregisterLoadedMod(ModInfo);
+        UnregisterLoadedMod(ModInfo, false);
 
         RegisterMod(ModInfo.m_Path, ModInfo.m_Name);
 
@@ -296,7 +299,7 @@ internal class ModLoader
             catch (Exception ex)
             {
                 Log.Error("Error ocurred while invoking loader function for mod {0}: {1}", RegisteredMod.m_Name, ex.Message);
-                UnregisterLoadedMod(RegisteredMod);
+                UnregisterLoadedMod(RegisteredMod, false);
             }
 
             break;
