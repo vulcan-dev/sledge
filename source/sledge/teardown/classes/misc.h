@@ -3,7 +3,6 @@
 
 struct SProjectile
 {
-public:
 	Vector3 m_Position; //0x0000
 	Vector3 m_Velocity; //0x000C
 	float m_LifeTime; //0x0018
@@ -12,10 +11,8 @@ public:
 	float m_DamageRadius; //0x0024
 }; //Size: 0x0028
 
-
 struct SParticleParamV4
 {
-public:
 	unsigned int m_InterpolationType; //0x0000 0 - linear | 1 - smooth | 2 - easein | 3 - constant | 4 - easeout
 	float m_FadeIn; //0x0004
 	float m_FadeOut; //0x0008
@@ -25,7 +22,6 @@ public:
 
 struct SParticleParamF
 {
-public:
 	unsigned int m_InterpolationType; //0x0000 0 - linear | 1 - smooth | 2 - easein | 3 - constant | 4 - easeout
 	float m_FadeIn; //0x0004
 	float m_FadeOut; //0x0008
@@ -33,10 +29,8 @@ public:
 	float m_End; //0x0010
 }; //Size: 0x0014
 
-
 struct SParticleInfo
 {
-public:
 	SParticleParamV4 m_Color;
 	SParticleParamF m_Alpha; //0x002C
 	SParticleParamF m_Radius; //0x0040
@@ -53,3 +47,12 @@ public:
 	unsigned int m_Flags; //0x0100
 	char pad_0104[4]; //0x0104
 }; //Size: 0x0108
+
+struct SSoundInfo
+{
+	char pad_0000[16]; //0x0000
+	class small_string m_SoundName; //0x0010
+	class small_string N0000196C; //0x0020
+	class small_string m_SoundPath; //0x0030
+	char pad_0040[56]; //0x0040
+}; //Size: 0x0078

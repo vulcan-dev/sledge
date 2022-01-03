@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Numerics;
 
 namespace SledgeLib
@@ -10,7 +11,7 @@ namespace SledgeLib
         public Vector3 m_HitNormal;
         public uint m_HitShape;
     }
-    
+
     public enum EProjectileType
     {
         Normal = 0,
@@ -111,7 +112,7 @@ namespace SledgeLib
             m_Flags = 0;
         }
     }
-    
+
     public class Scene
     {
         [DllImport("sledge.dll")] public static extern SRaycastReturn QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist);
@@ -119,5 +120,53 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern void DrawLine(Vector3 vPoint0, Vector3 vPoint1, Vector4 vColor, bool bIgnoreDepth);
 
         [DllImport("sledge.dll")] public static extern void SpawnParticle(SParticleInfo ParticleInfo, Vector3 vSpawnPos, Vector3 vVelocity, float fLifeTime);
+
+        [DllImport("sledge.dll")] private static extern uint _LoadSound(string sSoundPath);
+        public static uint LoadSound(string sSoundPath)
+        {
+            if (Game.GetState() != EGameState.Playing)
+            {
+                Log.Error("Attempted to invoke LoadSound while not in-game");
+                return 0;
+            }
+
+            if (!Path.IsPathRooted(sSoundPath))
+            {
+                if (File.Exists(Path.GetFullPath(sSoundPath)))
+                {
+                    sSoundPath = Path.GetFullPath(sSoundPath);
+                }
+                else
+                {
+                    Assembly Caller = Assembly.GetCallingAssembly(); ;
+                    string? sModPath = ModLoader.GetPathByAssembly(Caller);
+
+                    if (sModPath == null)
+                    {
+                        Log.Error("Assembly ModPath is null");
+                        return 0;
+                    }
+
+                    if (!File.Exists(sModPath + "/" + sSoundPath))
+                    {
+                        Log.Error("Unable to find sound file: {0}", sModPath + "/" + sSoundPath);
+                        return 0;
+                    }
+
+                    sSoundPath = sModPath + "/" + sSoundPath;
+                }
+            }
+            else if (!File.Exists(sSoundPath))
+            {
+                Log.Error("Unable to find sound file: {0}", sSoundPath);
+                return 0;
+            }
+
+            return _LoadSound("RAW:" + sSoundPath);
+        }
+
+        [DllImport("sledge.dll")] public static extern void PlaySound(uint iSoundHandle, Vector3 vPosition, float fVolume);
+
+        [DllImport("sledge.dll")] internal static extern void _ResetSounds();
     }
 }

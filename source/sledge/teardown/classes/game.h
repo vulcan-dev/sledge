@@ -30,7 +30,7 @@ public:
 	void* N00000055; //0x0038
 	void* m_Renderer; //0x0040
 	class CScene* m_Scene; //0x0048
-	void* N00000078; //0x0050
+	void* m_Sound; //0x0050
 	class CCameraController* m_CameraController; //0x0058
 	class CEditor* m_Editor; //0x0060
 	char pad_0068[8]; //0x0068

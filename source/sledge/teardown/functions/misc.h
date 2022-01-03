@@ -28,4 +28,10 @@ namespace Teardown {
 
 	typedef void (*tSpawnParticle) (void* pParticleSystem, SParticleInfo* pInfo, Vector3* vPos, Vector3* vVelocity, float fLifeTime);
 	inline tSpawnParticle SpawnParticle;
+
+	typedef SSoundInfo* (*tLoadSound) (void* pSound, small_string* ssFilePath, small_string* ssType);
+	inline tLoadSound LoadSound;
+
+	typedef void (*tPlaySound) (SSoundInfo* pSoundInfo, Vector3* vPosition, float fVolume);
+	inline tPlaySound PlaySound;
 }
