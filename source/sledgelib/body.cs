@@ -8,6 +8,10 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern uint CreateBody();
         public static dGetUInt Create = CreateBody;
 
+        [DllImport("sledge.dll")] private static extern void DestroyBody(uint iBodyHandle);
+        public delegate void dDestroyBody(uint iBodyHandle);
+        public static dDestroyBody Destroy = DestroyBody;
+
         [DllImport("sledge.dll")] private static extern Transform GetBodyTransform(uint iHandle);
         public static dGetTransformEntity GetTransform = GetBodyTransform;
         [DllImport("sledge.dll")] private static extern void SetBodyTransform(uint iHandle, Transform tTransform);

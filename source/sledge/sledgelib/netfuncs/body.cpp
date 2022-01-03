@@ -16,6 +16,12 @@ sledgelib_func unsigned int CreateBody() {
 	return Body->m_Id;
 }
 
+sledgelib_func void DestroyBody(unsigned int iBodyHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+	if (!Body) return;
+	Body->Destroy(true);
+}
+
 sledgelib_func Transform GetBodyTransform(unsigned int iBodyHandle) {
 	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
 	if (!Body) return Transform();
