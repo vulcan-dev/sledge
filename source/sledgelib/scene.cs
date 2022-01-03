@@ -27,13 +27,14 @@ namespace SledgeLib
         EaseOut = 4
     }
 
+    [StructLayout(LayoutKind.Explicit)]
     public struct SParticleParamV4
     {
-        public EParticleInterpolation m_InterpolationType;
-        public float m_FadeIn;
-        public float m_FadeOut;
-        public Vector4 m_Start;
-        public Vector4 m_End;
+        [FieldOffset(0x0)] public EParticleInterpolation m_InterpolationType;
+        [FieldOffset(0x4)] public float m_FadeIn;
+        [FieldOffset(0x8)] public float m_FadeOut;
+        [FieldOffset(0xC)] public Vector4 m_Start;
+        [FieldOffset(0x1C)] public Vector4 m_End;
         public SParticleParamV4()
         {
             m_InterpolationType = 0;
@@ -45,13 +46,15 @@ namespace SledgeLib
 
     }
 
+    [StructLayout(LayoutKind.Explicit)]
     public struct SParticleParamF
     {
-        public EParticleInterpolation m_InterpolationType;
-        public float m_FadeIn;
-        public float m_FadeOut;
-        public float m_Start;
-        public float m_End;
+
+        [FieldOffset(0x0)] public EParticleInterpolation m_InterpolationType;
+        [FieldOffset(0x4)] public float m_FadeIn;
+        [FieldOffset(0x8)] public float m_FadeOut;
+        [FieldOffset(0xC)] public float m_Start;
+        [FieldOffset(0x10)] public float m_End;
         public SParticleParamF()
         {
             m_InterpolationType = 0;
@@ -62,20 +65,21 @@ namespace SledgeLib
         }
     }
 
+    [StructLayout(LayoutKind.Explicit)]
     public struct SParticleInfo
     {
-        public SParticleParamV4 m_Color;
-        public SParticleParamF m_Alpha;
-        public SParticleParamF m_Radius;
-        public SParticleParamF m_Gravity;
-        public SParticleParamF m_Drag;
-        public SParticleParamF m_Emissive;
-        public SParticleParamF m_Rotation;
-        public SParticleParamF m_Collide;
-        public SParticleParamF m_Stretch;
-        public SParticleParamF m_Sticky;
-        public uint m_Tile;
-        public uint m_Flags;
+        [FieldOffset(0x0)] public SParticleParamV4 m_Color;
+        [FieldOffset(0x2C)] public SParticleParamF m_Alpha;
+        [FieldOffset(0x40)] public SParticleParamF m_Radius;
+        [FieldOffset(0x54)] public SParticleParamF m_Gravity;
+        [FieldOffset(0x68)] public SParticleParamF m_Drag;
+        [FieldOffset(0x7C)] public SParticleParamF m_Emissive;
+        [FieldOffset(0x90)] public SParticleParamF m_Rotation;
+        [FieldOffset(0xA4)] public SParticleParamF m_Collide;
+        [FieldOffset(0xB8)] public SParticleParamF m_Stretch;
+        [FieldOffset(0xCC)] public SParticleParamF m_Sticky;
+        [FieldOffset(0xE0)] public uint m_Tile;
+        [FieldOffset(0xE4)] public uint m_Flags;
 
         public SParticleInfo()
         {
@@ -95,6 +99,7 @@ namespace SledgeLib
 
             m_Radius.m_Start = 0.5f;
             m_Radius.m_End = 0.5f;
+
 
             m_Collide.m_Start = 1.0f;
             m_Collide.m_End = 1.0f;
