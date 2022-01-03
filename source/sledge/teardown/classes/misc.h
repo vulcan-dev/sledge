@@ -50,9 +50,14 @@ struct SParticleInfo
 
 struct SSoundInfo
 {
-	char pad_0000[16]; //0x0000
+	char pad_0000[4]; //0x0000
+	float m_Volume; //0x0004
+	float m_NominalDistance; //0x0008
+	char pad_000C[4]; //0x000C
 	class small_string m_SoundName; //0x0010
-	class small_string N0000196C; //0x0020
+	class small_string Type; //0x0020
 	class small_string m_SoundPath; //0x0030
-	char pad_0040[56]; //0x0040
+	bool m_Ready; //0x0040
+	char pad_0041[51]; //0x0041
+	unsigned int m_LastPlayedTime; //0x0074
 }; //Size: 0x0078

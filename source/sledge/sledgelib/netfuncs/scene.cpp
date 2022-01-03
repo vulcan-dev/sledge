@@ -95,6 +95,7 @@ sledgelib_func void SpawnParticle(SParticleInfoNet NetParticleInfo, Vector3 vSpa
 	Teardown::SpawnParticle(g_Game->m_Scene->m_SmokeParticles, ParticleInfo, &vSpawnPos, &vVelocity, fLifeTime);
 }
 
+
 small_vector <SSoundInfo*> *SoundList;
 sledgelib_func unsigned int _LoadSound(char* sSoundPath) {
 	small_string ssFilePath(sSoundPath);
@@ -110,18 +111,13 @@ sledgelib_func unsigned int _LoadSound(char* sSoundPath) {
 }
 
 sledgelib_func void _ResetSounds() {
-	if (SoundList == nullptr)
-		SoundList = new small_vector<SSoundInfo*>(0);
-	
-	SoundList->clear();
-	SSoundInfo* DummySoundInfo = reinterpret_cast<SSoundInfo*>(Teardown::alloc(sizeof(SSoundInfo)));
-	SoundList->push_back(DummySoundInfo);
+	SoundList = new small_vector<SSoundInfo*>(2);
 }
 
-sledgelib_func void PlaySound(unsigned int iSoundHandle, Vector3 vPosition, float fVolume) {
-	SSoundInfo* Sound = SoundList->get_at(iSoundHandle);
+sledgelib_func void PlaySound(unsigned int iSoundHandle, Vector3 vPosition, float fVolume, float fSpeed) {
+	SSoundInfo* Sound = SoundList->get_at(iSoundHandle - 1);
 	if (Sound == nullptr)
 		return;
 	
-	Teardown::PlaySound(Sound, &vPosition, fVolume);
+	Teardown::PlaySound(Sound, &vPosition, fVolume, fSpeed);
 }
