@@ -70,4 +70,5 @@ namespace Signatures {
 	inline CSignature QueryRaycast("\xE8\x00\x00\x00\x00\x84\xC0\x75\x5A", "x????xxxx");
 	inline CSignature DebugPrint("\x44\x8B\x81\x00\x00\x00\x00\x4C\x8B\xD2", "xxx????xxx", false);
 	inline CSignature DrawLine("\xE8\x00\x00\x00\x00\xFF\xC3\x48\x83\xC6\x0C", "x????xxxxxx");
+	inline CSignature SpawnParticle("\xE8\x00\x00\x00\x00\x8B\x75\xEC", "x????xxx");
 }

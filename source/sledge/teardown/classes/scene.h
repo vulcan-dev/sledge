@@ -7,7 +7,12 @@
 class CScene
 {
 public:
-	char pad_0008[136]; //0x0008
+	char pad_0008[96]; //0x0008
+	void* m_SmokeParticles; //0x0068
+	char pad_0070[8]; //0x0070
+	void* m_WaterParticles; //0x0078 used for old particle system
+	void* m_PlainParticles; //0x0080 used for old particle system
+	void* m_FireSystem; //0x0088
 	small_vector<SProjectile> m_Projectiles; //0x0090
 	class CEnvironment* m_Environment; //0x00A0
 	char pad_00A8[32]; //0x00A8
