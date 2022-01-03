@@ -21,7 +21,6 @@ template<typename T>
 			if (m_Capacity <= m_Size)
 				reserve(2 * m_Capacity + 1);
 
-			//m_Data[m_Size] = value;
 			unsigned __int64 dwWritePos = reinterpret_cast<unsigned __int64>(m_Data) + (m_Size * sizeof(T));
 
 			memcpy(reinterpret_cast<void*>(dwWritePos), &value, sizeof(T));
@@ -29,7 +28,7 @@ template<typename T>
 		}
 
 		T get_at(unsigned int iIdx) {
-			if (iIdx == 0 || iIdx > m_Size)
+			if (iIdx < 0 || iIdx > m_Size)
 				return nullptr;
 			return m_Data[iIdx];
 		}
