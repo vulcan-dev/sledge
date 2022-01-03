@@ -145,5 +145,7 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern void PlayLoop(uint iLoopHandle, Vector3 vPosition, float fVolume, bool bSomething);
 
         [DllImport("sledge.dll")] internal static extern void _ResetSounds();
+
+        [DllImport("sledge.dll")] public static extern void SpotLight(Vector3 vStartPos, Vector3 vColor, float fRayDispersion, float fRadius, float fFog);
     }
 }

@@ -144,3 +144,7 @@ sledgelib_func void _ResetSounds() {
 	SoundList = new small_vector<SSoundInfo*>(2);
 	LoopsList = new small_vector<SLoopInfo*>(2);
 }
+
+sledgelib_func void SpotLight(Vector3 vStartPos, Vector3 vColor, float fRayDispersion, float fRadius, float fFog) {
+	Teardown::SpotLight(g_Game->m_Renderer, &vStartPos, &vColor, fRayDispersion, 1, fRadius, fFog);
+}
