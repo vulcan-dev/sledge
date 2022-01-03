@@ -131,7 +131,7 @@ namespace SledgeLib
             return _LoadSound("RAW:" + sVerifiedPath.Replace("\\", "/"));
         }
 
-        [DllImport("sledge.dll")] public static extern void PlaySound(uint iSoundHandle, Vector3 vPosition, float fVolume);
+        [DllImport("sledge.dll")] public static extern void PlaySound(uint iSoundHandle, Vector3 vPosition, float fVolume, float fSpeed);
 
         [DllImport("sledge.dll")] internal static extern void _ResetSounds();
     }
