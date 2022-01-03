@@ -1,6 +1,6 @@
 ﻿using SledgeLib;
 
-internal class SledgeLoader
+internal class CSledgeLoader
 {
     public delegate bool dInit();
 
@@ -18,14 +18,19 @@ internal class SledgeLoader
         CCallbackManager.RegisterCallback(ECallbackType.StateChange, CCallbackManager.StateChangeCallback);
         CCallbackManager.RegisterCallback(ECallbackType.Tick, CCallbackManager.TickCallback);
 
+        Log.Verbose("Registering internal callbacks");
+        InternalCallbacks.cb_StateChange = new CCallback(ECallbackType.StateChange, InternalCallbacks.cb_StateChangeFunc);
+
         Log.Verbose("Loading mods");
-        if (!ModLoader.Init())
+        try
         {
-            Log.Error("ModLoader failed to initialize");
+            CModLoader.Init();
+        }
+        catch (Exception e)
+        {
+            Log.General("CModLoader.Init() failed: {0}", e.Message);
             return false;
         }
-
-        ModLoader.LoadMods();
 
         Log.General("Sledgelib succesfully initialized");
         return true;

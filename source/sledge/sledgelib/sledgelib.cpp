@@ -19,7 +19,7 @@ bool SledgeLib::Load() {
 	
 	typedef bool (*tSledgeLibInit) ();
 	tSledgeLibInit SledgeLibInit;
-	unsigned int iReturn = NetHost::hostfxr_load_assembly(wsLibPath.c_str(), L"SledgeLoader, sledgelib", L"Init", L"SledgeLoader+dInit, sledgelib", nullptr, (void**)&SledgeLibInit);
+	unsigned int iReturn = NetHost::hostfxr_load_assembly(wsLibPath.c_str(), L"CSledgeLoader, sledgelib", L"Init", L"CSledgeLoader+dInit, sledgelib", nullptr, (void**)&SledgeLibInit);
 	if (iReturn != 0 || SledgeLibInit == nullptr) {
 		LogError("hostfxr_load_assembly failed while loading sledgelib ({0:#x})", iReturn);
 		return false;
