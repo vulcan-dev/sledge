@@ -5,7 +5,7 @@
 
 template<typename T>
 T Teardown::Utils::GetEntityByIdx(unsigned int iIndex, EEntityType eType) {
-	CEntity* Entity =g_Scene->m_Entities.get_at(iIndex);
+	CEntity* Entity = g_Scene->m_Entities.get_at(iIndex);
 
 	if (Entity == nullptr || Entity->m_Type != eType)
 		return nullptr;

@@ -95,7 +95,6 @@ sledgelib_func void SpawnParticle(SParticleInfoNet NetParticleInfo, Vector3 vSpa
 	Teardown::SpawnParticle(g_Game->m_Scene->m_SmokeParticles, ParticleInfo, &vSpawnPos, &vVelocity, fLifeTime);
 }
 
-
 small_vector <SSoundInfo*> *SoundList;
 sledgelib_func unsigned int _LoadSound(char* sSoundPath) {
 	small_string ssFilePath(sSoundPath);
