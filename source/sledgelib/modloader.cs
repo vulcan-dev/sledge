@@ -41,7 +41,7 @@ internal class CModLoader
         if (DependencyName.ToString() == ThisAssembly.GetName().ToString())
             return ThisAssembly;
         SRegisteredModInfo ModInfo = RegisteredMods.Find(Info => Info.m_LoadContext == LoadContext);
-        return ModInfo.m_LoadContext.LoadFromAssemblyPath(ModInfo.m_Path + "\\dependencies\\" + DependencyName + ".dll");
+        return ModInfo.m_LoadContext.LoadFromAssemblyPath(ModInfo.m_Path + "\\dependencies\\" + DependencyName.Name + ".dll");
     }
 
     private static SRegisteredModInfo LoadMod(string sModName, string sModPath)
