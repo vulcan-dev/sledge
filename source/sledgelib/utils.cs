@@ -15,7 +15,7 @@ internal class CSledgeUtils
             if (Caller.FullName == null)
                 return null;
 
-            CModLoader.SRegisteredModInfo ModInfo = CModLoader.RegisteredMods.Find(Info => Info.m_Assembly.FullName == Caller.FullName);
+            CModLoader.CModContext ModInfo = CModLoader.RegisteredMods.Find(Info => Info.m_Assembly.FullName == Caller.FullName);
 
             if (File.Exists(ModInfo.m_Path + "\\" + sPath))
                 return ModInfo.m_Path + "\\" + sPath;

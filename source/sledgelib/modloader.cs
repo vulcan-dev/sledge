@@ -1,5 +1,6 @@
 ﻿using SledgeLib;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Text.Json;
 
@@ -17,20 +18,78 @@ internal class CModLoader
     }
 
     // struct that will be used internally for handling mods
-    internal struct SRegisteredModInfo
+    internal class CModContext : AssemblyLoadContext
     {
         public Assembly m_Assembly;
         public DateTime m_AssemblyLastWrite;
         public string m_Path;
         public string m_Name;
-        public object m_Instance;
+        public object? m_Instance;
+        public Type? m_Type;
         public MethodInfo m_Load;
         public MethodInfo m_Unload;
         public MethodInfo? m_Reload;
-        public AssemblyLoadContext m_LoadContext;
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public CModContext(string sModName, string sModPath) : base(isCollectible: true)
+        {
+            m_Name = sModName;
+            m_Path = sModPath;
+            Resolving += ModDependencyResolver;
+            m_AssemblyLastWrite = File.GetLastWriteTime(sModPath + "\\" + sModName + ".dll");
+
+            FileStream AssemblyStream = File.OpenRead(sModPath + "\\" + sModName + ".dll");
+            m_Assembly = LoadFromStream(AssemblyStream);
+            AssemblyStream.Close();
+
+            if (!File.Exists(sModPath + "\\" + sModName + ".info.json"))
+            {
+                Log.Warning("Mod {0} has no info, attempting to generate one", sModName);
+                CInfoGen.Generate(m_Assembly, sModPath, sModName);
+            }
+
+            string sConfig = File.ReadAllText(sModPath + "\\" + sModName + ".info.json");
+            SModInfo ModInfo = JsonSerializer.Deserialize<SModInfo>(sConfig);
+
+            if (String.IsNullOrEmpty(ModInfo.sTypeName))
+                throw new Exception("sTypeName was null");
+
+            m_Type = m_Assembly.GetType(ModInfo.sTypeName, true);
+
+            if (m_Type == null)
+                throw new Exception("Mod type not found");
+
+            MethodInfo? LoadMethod = m_Type.GetMethod(ModInfo.sLoadMethodName);
+            if (LoadMethod == null)
+                throw new Exception("Mod load method not found");
+
+            MethodInfo? UnloadMethod = m_Type.GetMethod(ModInfo.sUnloadMethodName);
+            if (UnloadMethod == null)
+                throw new Exception("Mod unload method not found");
+
+            MethodInfo? ReloadMethod = null;
+            if (!string.IsNullOrEmpty(ModInfo.sReloadMethodName))
+                ReloadMethod = m_Type.GetMethod(ModInfo.sReloadMethodName);
+
+            object? ModInstance = Activator.CreateInstance(m_Type);
+            if (ModInstance == null)
+                throw new Exception("Unable to instantiate mod type");
+
+            m_Instance = ModInstance;
+            m_Load = LoadMethod;
+            m_Unload = UnloadMethod;
+            m_Reload = ReloadMethod;
+
+            lock (RegisteredMods) { RegisteredMods.Add(this); }
+        }
+
+        ~CModContext()
+        {
+            Log.General("Context destructor got called");
+        }
     }
 
-    internal static List<SRegisteredModInfo> RegisteredMods = new List<SRegisteredModInfo>();
+    internal static List<CModContext> RegisteredMods = new List<CModContext>();
     internal static string? ModsPath = null;
     internal static FileSystemWatcher? Watcher = null;
     internal static Assembly ThisAssembly = typeof(CModLoader).Assembly;
@@ -40,61 +99,13 @@ internal class CModLoader
     {
         if (DependencyName.ToString() == ThisAssembly.GetName().ToString())
             return ThisAssembly;
-        SRegisteredModInfo ModInfo = RegisteredMods.Find(Info => Info.m_LoadContext.Name == LoadContext.Name);
-        return ModInfo.m_LoadContext.LoadFromAssemblyPath(ModInfo.m_Path + "\\dependencies\\" + DependencyName.Name + ".dll");
-    }
 
-    private static SRegisteredModInfo LoadMod(string sModName, string sModPath)
-    {
-        SRegisteredModInfo RegModInfo = new SRegisteredModInfo();
-        RegModInfo.m_Name = sModName;
-        RegModInfo.m_Path = sModPath;
-        RegModInfo.m_LoadContext = new AssemblyLoadContext(sModName, true);
-        RegModInfo.m_LoadContext.Resolving += ModDependencyResolver;
-        RegModInfo.m_AssemblyLastWrite = File.GetLastWriteTime(sModPath + "\\" + sModName + ".dll");
+        CModContext? ModCtx = RegisteredMods.Find(Ctx => { return Ctx.Name == LoadContext.Name; });
+        
+        if (ModCtx == null)
+            return null;
 
-        FileStream AssemblyStream = File.OpenRead(sModPath + "\\" + sModName + ".dll");
-
-        RegModInfo.m_Assembly = RegModInfo.m_LoadContext.LoadFromStream(AssemblyStream);
-        AssemblyStream.Close();
-
-        if (!File.Exists(sModPath + "\\" + sModName + ".info.json"))
-        {
-            Log.Warning("Mod {0} has no info, attempting to generate one", sModName);
-            CInfoGen.Generate(RegModInfo.m_Assembly, sModPath, sModName);
-        }
-
-        string sConfig = File.ReadAllText(sModPath + "\\" + sModName + ".info.json");
-        SModInfo ModInfo = JsonSerializer.Deserialize<SModInfo>(sConfig);
-
-        Type? ModType = RegModInfo.m_Assembly.GetType(ModInfo.sTypeName, true);
-
-        if (ModType == null)
-            throw new Exception("Mod type not found");
-
-        MethodInfo? LoadMethod = ModType.GetMethod(ModInfo.sLoadMethodName);
-        if (LoadMethod == null)
-            throw new Exception("Mod load method not found");
-
-        MethodInfo? UnloadMethod = ModType.GetMethod(ModInfo.sUnloadMethodName);
-        if (UnloadMethod == null)
-            throw new Exception("Mod unload method not found");
-
-        MethodInfo? ReloadMethod = null;
-        if (!string.IsNullOrEmpty(ModInfo.sReloadMethodName))
-            ReloadMethod = ModType.GetMethod(ModInfo.sReloadMethodName);
-
-        object? ModInstance = Activator.CreateInstance(ModType);
-        if (ModInstance == null)
-            throw new Exception("Unable to instantiate mod type");
-
-        RegModInfo.m_Instance = ModInstance;
-        RegModInfo.m_Load = LoadMethod;
-        RegModInfo.m_Unload = UnloadMethod;
-        RegModInfo.m_Reload = ReloadMethod;
-
-        lock (RegisteredMods) { RegisteredMods.Add(RegModInfo); }
-        return RegModInfo;
+        return ModCtx.LoadFromAssemblyPath(ModCtx.m_Path + "\\dependencies\\" + DependencyName.Name + ".dll");
     }
 
     internal static void Init()
@@ -123,10 +134,10 @@ internal class CModLoader
             if (Path.GetFileName(sModPath) == "dependencies")
                 continue;
 
-            SRegisteredModInfo RegModInfo;
+            CModContext ModCtx;
             try
             {
-                RegModInfo = LoadMod(sModName, sModPath);
+                ModCtx = new CModContext(sModName, sModPath);
             }
             catch (Exception ex)
             {
@@ -136,10 +147,10 @@ internal class CModLoader
 
             try
             {
-                RegModInfo.m_Load.Invoke(RegModInfo.m_Instance, null);
+                ModCtx.m_Load.Invoke(ModCtx.m_Instance, null);
             } catch(Exception ex)
             {
-                Log.Error("Error while invoking load method for mod {0}: {1}", RegModInfo.m_Name, ex);
+                Log.Error("Error while invoking load method for mod {0}: {1}", ModCtx.m_Name, ex);
                 continue;
             }
 
@@ -172,63 +183,109 @@ internal class CModLoader
         if (Path.GetFileName(sModPath) == "dependencies")
             return;
 
-        LoadMod(sModName, sModPath);
+        new CModContext(sModName, sModPath);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     internal static void OnModDeleted(object Sender, FileSystemEventArgs Args)
     {
         try
         {
-            SRegisteredModInfo ModInfo = RegisteredMods.Find(Mod => (Mod.m_Path + "\\" + Mod.m_Name) + ".dll" == Args.FullPath.ToString());
-            lock (RegisteredMods) { RegisteredMods.Remove(ModInfo); }
+            CModContext? ModCtx = RegisteredMods.Find(Mod => (Mod.m_Path + "\\" + Mod.m_Name) + ".dll" == Args.FullPath.ToString());
+            if (ModCtx == null)
+                return;
+
+            lock (RegisteredMods) { RegisteredMods.Remove(ModCtx); }
             try
             {
-                ModInfo.m_Unload.Invoke(ModInfo.m_Instance, null);
+                ModCtx.m_Unload.Invoke(ModCtx.m_Instance, null);
             } catch (Exception ex)
             {
-                Log.Error("Error while invoking unload method for mod {0}: {1}", ModInfo.m_Name, ex);
+                Log.Error("Error while invoking unload method for mod {0}: {1}", ModCtx.m_Name, ex);
             }
-        } catch { } // we don't care about the exception, as it could be any file that gets deleted
+
+            ModCtx.Unload();
+            GC.Collect();
+        }
+        catch { } // we don't care about the exception, as it could be any file that gets deleted
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     internal static void OnModChanged(object Sender, FileSystemEventArgs Args)
     {
         try
         {
-            SRegisteredModInfo ModInfo = RegisteredMods.Find(Mod => (Mod.m_Path + "\\" + Mod.m_Name) + ".dll" == Args.FullPath.ToString());
-            if (ModInfo.m_AssemblyLastWrite == File.GetLastWriteTime(Args.FullPath))
+            CModContext? ModCtx = RegisteredMods.Find(Ctx => { return Ctx.m_Path + "\\" + Ctx.m_Name + ".dll" == Args.FullPath.ToString(); });
+
+            if (ModCtx == null)
                 return;
 
-            try
+            if (string.IsNullOrEmpty(ModCtx.m_Name))
+                return;
+
+            if (ModCtx.m_AssemblyLastWrite == File.GetLastWriteTime(Args.FullPath))
+                return;
+
+            WeakReference OldModCtx = new WeakReference(ModCtx);
+
+            lock (RegisteredMods) { RegisteredMods.Remove(ModCtx); }
+
+            if (ModCtx.m_Instance == null)
             {
-                ModInfo.m_Unload.Invoke(ModInfo.m_Instance, null);
-            }
-            catch (Exception ex)
+                ModCtx.Unload();
+                GC.Collect();
+                Log.Error("Mod has no load context");
+            } else
             {
-                Log.Error("Error while invoking unload method for mod {0}: {1}", ModInfo.m_Name, ex);
+                try
+                {
+                    ModCtx.m_Unload.Invoke(ModCtx.m_Instance, null);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error while invoking unload method for mod {0}: {1}", ModCtx.m_Name, ex);
+                    ModCtx.Unload();
+                    ModCtx = null;
+
+                    for (int i=0; OldModCtx.IsAlive && (i < 10); i++)
+                    {
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+                    }
+
+                    return;
+                }
+            }
+            ModCtx.Unload();
+            ModCtx = null;
+
+            for (int i = 0; OldModCtx.IsAlive && (i < 10); i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
 
-            ModInfo.m_LoadContext.Unload();
+            string? sModPath = Path.GetDirectoryName(Args.FullPath);
+            string sModName = Path.GetFileNameWithoutExtension(Args.FullPath);
 
-            lock (RegisteredMods) { RegisteredMods.Remove(ModInfo); }
+            if (sModPath == null)
+                return;
 
-            ModInfo = LoadMod(ModInfo.m_Name, ModInfo.m_Path);
-
+            ModCtx = new CModContext(sModName, sModPath);
             MethodInfo RestartMethod;
 
-
-            if (ModInfo.m_Reload != null)
-                RestartMethod = ModInfo.m_Reload;
+            if (ModCtx.m_Reload != null)
+                RestartMethod = ModCtx.m_Reload;
             else
-                RestartMethod = ModInfo.m_Load;
+                RestartMethod = ModCtx.m_Load;
 
             try
             {
-                RestartMethod.Invoke(ModInfo.m_Instance, null);
+                RestartMethod.Invoke(ModCtx.m_Instance, null);
             }
             catch (Exception ex)
             {
-                Log.Error("Error while invoking load/reload method for mod {0}: {1}", ModInfo.m_Name, ex);
+                Log.Error("Error while invoking load/reload method for mod {0}: {1}", ModCtx.m_Name, ex);
             }
 
         }
