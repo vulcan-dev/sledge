@@ -68,7 +68,11 @@ sledgelib_func void SetShapeLocalTransform(unsigned int iShapeHandle, Transform 
 sledgelib_func Transform GetShapeWorldTransform(unsigned int iShapeHandle) {
 	CShape* Shape = Teardown::Utils::GetEntityByIdx<CShape*>(iShapeHandle, EEntityType::Shape);
 	if (!Shape) return Transform();
-	return Transform(Shape->m_Position, Shape->m_Rotation);
+
+	CBody* Body = reinterpret_cast<CBody*>(Shape->m_Parent);
+	if (!Body) return Transform();
+
+	return TrAdd(Transform(Body->m_Position, Body->m_Rotation), Shape->m_LocalTransform);
 }
 
 sledgelib_func unsigned int GetShapeBody(unsigned int iShapeHandle) {

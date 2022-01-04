@@ -89,16 +89,16 @@ sledgelib_func void SetBodyPosition(unsigned int iBodyHandle, Vector3 vValue) {
 	Body->m_Position = vValue;
 }
 
-sledgelib_func Vector4 GetBodyRotation(unsigned int iBodyHandle) {
+sledgelib_func Quaternion GetBodyRotation(unsigned int iBodyHandle) {
 	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
-	if (!Body) return Vector4();
+	if (!Body) return Quaternion();
 	return Body->m_Rotation;
 }
 
-sledgelib_func void SetBodyRotation(unsigned int iBodyHandle, Vector4 vValue) {
+sledgelib_func void SetBodyRotation(unsigned int iBodyHandle, Quaternion qValue) {
 	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
 	if (!Body) return;
-	Body->m_Rotation = vValue;
+	Body->m_Rotation = qValue;
 }
 
 sledgelib_func unsigned int GetBodySibling(unsigned int iBodyHandle) {
