@@ -20,5 +20,5 @@ CGPUContext::CGPUContext() {
 	gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 	glfwSwapInterval(0);
 
-	//m_Driver.reset(new CGPUDriver(this));
+	m_Driver.reset(new CGPUDriver(this));
 }

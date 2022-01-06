@@ -83,11 +83,10 @@ GLuint LoadShaderFromSource(GLenum eShaderType, const char* cSource, const char*
 /*
 	CGPUDriver
 */
-CGPUDriver::CGPUDriver(CGPUContext* Context) : m_BatchCount(0), m_Context(Context) {}
+CGPUDriver::CGPUDriver(CGPUContext* Context) : m_Context(Context) {}
 
 // texture
-unsigned int CGPUDriver::NextTextureId() { return m_NextTextureId++; }
-void CGPUDriver::CreateTexture(GLuint iTextureId, ultralight::RefPtr<ultralight::Bitmap> Bitmap) {
+void CGPUDriver::CreateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap) {
 	if (Bitmap->IsEmpty()) {
 		CreateFBOTexture(iTextureId, Bitmap);
 		return;
@@ -120,7 +119,7 @@ void CGPUDriver::CreateTexture(GLuint iTextureId, ultralight::RefPtr<ultralight:
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void CGPUDriver::UpdateTexture(GLuint iTextureId, ultralight::RefPtr<ultralight::Bitmap> Bitmap) {
+void CGPUDriver::UpdateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap) {
 	glActiveTexture(GL_TEXTURE0);
 
 	STextureEntry& Entry = m_TextureMap[iTextureId];
@@ -146,7 +145,7 @@ void CGPUDriver::UpdateTexture(GLuint iTextureId, ultralight::RefPtr<ultralight:
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void CGPUDriver::BindTexture(unsigned char cTextureUnit, unsigned int iTextureId) {
+void CGPUDriver::BindTexture(unsigned char cTextureUnit, GLuint iTextureId) {
 	glActiveTexture(GL_TEXTURE0 + cTextureUnit);
 	BindUltralightTexture(iTextureId);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -167,7 +166,6 @@ void CGPUDriver::BindUltralightTexture(GLuint iTextureId) {
 }
 
 // renderbuffer
-unsigned int CGPUDriver::NextRenderBufferId() { return m_NextRenderBufferId++; }
 void CGPUDriver::CreateRenderBuffer(GLuint iRenderBufferId, const ultralight::RenderBuffer& Buffer) {
 	if (iRenderBufferId == 0)
 		return;
@@ -226,7 +224,6 @@ void CGPUDriver::DestroyRenderBuffer(GLuint iRenderBufferId) {
 }
 
 // geometry
-unsigned int CGPUDriver::NextGeometryId() { return m_NextGeometryId++; }
 void CGPUDriver::CreateGeometry(GLuint iGeometryId, const ultralight::VertexBuffer& Vertices, const::ultralight::IndexBuffer& Indices) {
 	SGeometryEntry Geometry;
 	Geometry.m_VertexFormat = Vertices.format;
@@ -314,7 +311,6 @@ void CGPUDriver::DestroyGeometry(GLuint iGeometryId) {
 }
 
 // commands
-bool CGPUDriver::HasCommandsPending() { return !m_CommandList.empty(); }
 void CGPUDriver::DrawCommandList() {
 	if (m_CommandList.empty())
 		return;
@@ -345,12 +341,6 @@ void CGPUDriver::DrawCommandList() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void CGPUDriver::UpdateCommandList(const ultralight::CommandList& List) {
-	if (List.size) {
-		m_CommandList.resize(List.size);
-		memcpy(&m_CommandList[0], List.commands, sizeof(ultralight::Command) * List.size);
-	}
-}
 
 // programs
 void CGPUDriver::LoadPrograms() {
@@ -590,9 +580,3 @@ ultralight::Matrix CGPUDriver::ApplyProjection(const ultralight::Matrix4x4& Tran
 	return Result;
 }
 
-int CGPUDriver::batch_count() const {
-	return m_BatchCount;
-}
-
-void CGPUDriver::BeginSynchronize() {}
-void CGPUDriver::EndSynchronize() {}

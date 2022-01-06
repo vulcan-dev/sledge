@@ -13,7 +13,7 @@ public:
 	CGPUContext();
 	virtual ~CGPUContext() {}
 
-	ultralight::GPUDriver* driver() const { return m_Driver.get(); }
+	class CGPUDriver* driver() const { return m_Driver.get(); }
 
 	ultralight::FaceWinding face_winding() const { return ultralight::FaceWinding::kFaceWinding_CounterClockwise; }
 
@@ -25,8 +25,8 @@ public:
 	virtual void set_active_window(GLFWwindow* Window) { m_ActiveWindow = Window; };
 	virtual GLFWwindow* active_window() { return m_ActiveWindow; }
 
-private:
+protected:
 	GLFWwindow* m_Window;
 	GLFWwindow* m_ActiveWindow = nullptr;
-	std::unique_ptr<ultralight::GPUDriver> m_Driver;
+	std::unique_ptr<class CGPUDriver> m_Driver;
 };
