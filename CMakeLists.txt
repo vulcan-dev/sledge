@@ -27,7 +27,8 @@ target_link_libraries(sledge_shared_dependencies INTERFACE
 	fmt::fmt
 	libglew_static
 	imgui
-	spng_static)
+	spng_static
+	glfw)
 
 # globs for shared files
 file(GLOB_RECURSE shared_sources CONFIGURE_DEPENDS "source/shared/*.cpp")
@@ -44,7 +45,12 @@ add_library(sledge SHARED ${sledge_sources} ${shared_sources} ${sledge_headers} 
 target_link_libraries(sledge PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
-	steamworks)
+	steamworks
+	UltralightCore
+	Ultralight
+	AppCore
+	WebCore
+	glad)
 target_include_directories(sledge PRIVATE "source/sledge" "source/shared")
 target_compile_definitions(sledge PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
 add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)mods\" mkdir \"$(OutDir)mods\")
@@ -81,7 +87,6 @@ add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${
 target_link_libraries(sledge_loader PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
-	glfw
 	ws2_32
 	crypt32
 	OpenSSL::Crypto)

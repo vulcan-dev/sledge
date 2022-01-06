@@ -19,3 +19,6 @@
 [submodule "submodules/miniz"]
 	path = submodules/miniz
 	url = https://github.com/richgel999/miniz
+[submodule "submodules/glad"]
+	path = submodules/glad
+	url = https://github.com/Dav1dde/glad
