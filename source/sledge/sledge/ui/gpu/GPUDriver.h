@@ -31,7 +31,7 @@ struct SProgramEntry {
 	GLuint m_FragId;
 };
 
-class CGPUDriver : CGPUDriverImpl {
+class CGPUDriver : public CGPUDriverImpl {
 public:
 	CGPUDriver(class CGPUContext* Context);
 	virtual ~CGPUDriver() {};
