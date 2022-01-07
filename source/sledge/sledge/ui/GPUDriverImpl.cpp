@@ -23,13 +23,6 @@ void CGPUDriverImpl::DrawCommandList() {
 	}
 }
 
-int CGPUDriverImpl::batch_count() const {
-	return m_BatchCount;
-}
-
-void CGPUDriverImpl::BeginSynchronize() {}
-void CGPUDriverImpl::EndSynchronize() {}
-
 void CGPUDriverImpl::UpdateCommandList(const ultralight::CommandList& List) {
 	if (List.size) {
 		m_CommandList.resize(List.size);

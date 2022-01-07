@@ -28,10 +28,8 @@ public:
 	virtual void DrawCommandList();
 	virtual void UpdateCommandList(const ultralight::CommandList& List) override;
 
-	virtual int batch_count() const;
-
-	virtual void BeginSynchronize() override;
-	virtual void EndSynchronize() override;
+	virtual void BeginSynchronize() override {};
+	virtual void EndSynchronize() override {};
 	virtual unsigned int NextTextureId() override { return m_NextTextureId++; };
 	virtual unsigned int NextRenderBufferId() override { return m_NextRenderBufferId++; };
 	virtual unsigned int NextGeometryId() override { return m_NextGeometryId++; };
