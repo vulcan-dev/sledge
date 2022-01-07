@@ -74,12 +74,15 @@ void Loader::Init(void* hModule) {
 		(primarily used for loading libraries / mods)
 */
 void Loader::LateInit() {
+	LogVerbose("Hooking wndproc");
 	Sledge::Hooks::Wnd();
 
 	if (bLateLateInitAlreadyCalled)
 		return;
 	bLateLateInitAlreadyCalled = true;
 
+	LogVerbose("Hooking swapbuffers");
+	Sledge::Hooks::SB();
 
 	LogVerbose("hooking active window check");
 	Teardown::Hooks::ActiveWindow();
