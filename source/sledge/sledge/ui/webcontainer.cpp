@@ -36,6 +36,9 @@ void CWebContainer::Draw() {
 	glLoadIdentity();
 
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	CSledgeUI::Instance()->Driver()->BindTexture(0, RTInfo.texture_id);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
