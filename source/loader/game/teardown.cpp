@@ -10,6 +10,7 @@
 #include <windef.h>
 #include <winreg.h>
 #include <WinUser.h>
+#include <WinBase.h>
 
 #include <handleapi.h>
 #include <synchapi.h>
@@ -105,6 +106,10 @@ void Teardown::Launch() {
 	/*
 		launch unpacked exe
 	*/
+	char cUltralightDir[MAX_PATH];
+	sprintf(cUltralightDir, "%s\\ultralight", cCurrentPath);
+	SetDllDirectory(cUltralightDir);
+
 	SetEnvironmentVariableA("SteamAppId", "1167630"); // Set SteamAppId var to initialize SteamAPI
 
 	PROCESS_INFORMATION ProcInfo;
