@@ -49,8 +49,7 @@ target_link_libraries(sledge PRIVATE
 	UltralightCore
 	Ultralight
 	AppCore
-	WebCore
-	glad)
+	WebCore)
 target_include_directories(sledge PRIVATE "source/sledge" "source/shared")
 target_compile_definitions(sledge PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
 add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)mods\" mkdir \"$(OutDir)mods\")

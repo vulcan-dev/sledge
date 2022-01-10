@@ -138,10 +138,3 @@ target_include_directories(WebCore INTERFACE "${WEBCORE_DIR}include")
 add_library(AppCore SHARED IMPORTED GLOBAL)
 set_property(TARGET AppCore PROPERTY IMPORTED_IMPLIB "${APPCORE_DIR}lib/AppCore.lib")
 target_include_directories(AppCore INTERFACE "${APPCORE_DIR}include")
-
-# ---------------------------
-# glad
-# ---------------------------
-file(GLOB_RECURSE GLAD_SOURCES CONFIGURE_DEPENDS "glad/src/glad.c" "glad/include/glad/glad.h" "glad/include/KHR/khrplatform.h")
-add_library(glad STATIC ${GLAD_SOURCES})
-target_include_directories(glad PUBLIC "glad/include")
