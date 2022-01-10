@@ -12,15 +12,16 @@ tCreateWindowExA oCreateWindowExA;
 
 HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
 {
+	HWND hWnd = oCreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+
 	if (!strcmp(lpWindowName, "Teardown"))
 	{
 		g_WindowWidth = nWidth; g_WindowHeight = nHeight;
-		g_hWnd = oCreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+		g_hWnd = hWnd;
 		Sledge::Hooks::WndProc();
-		return reinterpret_cast<HWND>(g_hWnd);
 	}
 
-	return oCreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+	return hWnd;
 }
 
 void Sledge::Hooks::CW() {

@@ -9,16 +9,16 @@ CWebContainer::CWebContainer(int iWidth, int iHeight, int iX, int iY) {
 
 	ultralight::ViewConfig Config;
 
-	//Config.is_transparent = true;
+	Config.is_transparent = true;
 	Config.is_accelerated = true;
 
-	m_View = g_UI->Renderer()->CreateView(iWidth, iHeight, Config, nullptr);
-	g_UI->_RegisterWebContainer(this);
+	m_View = CSledgeUI::Instance()->Renderer()->CreateView(iWidth, iHeight, Config, nullptr);
+	CSledgeUI::Instance()->_RegisterWebContainer(this);
 }
 
 CWebContainer::~CWebContainer() {
 	m_View->Release();
-	g_UI->_UnregisterWebContainer(this);
+	CSledgeUI::Instance()->_UnregisterWebContainer(this);
 }
 
 void CWebContainer::LoadURL(const char* cURL) { m_View->LoadURL(cURL); }
@@ -36,7 +36,7 @@ void CWebContainer::Draw() {
 	glLoadIdentity();
 
 	glEnable(GL_TEXTURE_2D);
-	g_UI->Driver()->BindTexture(0, RTInfo.texture_id);
+	CSledgeUI::Instance()->Driver()->BindTexture(0, RTInfo.texture_id);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	glBegin(GL_QUADS);

@@ -8,6 +8,7 @@
 #include <mutex>
 
 std::mutex ContainerMutex;
+CSledgeUI* CSledgeUI::m_Instance = 0;
 
 /*
 	to-do:
@@ -40,8 +41,6 @@ CSledgeUI::CSledgeUI() {
 	Platform.set_logger(this);
 
 	m_Renderer = ultralight::Renderer::Create();
-
-	g_UI = this;
 }
 
 CSledgeUI::~CSledgeUI() {

@@ -16,8 +16,11 @@
 
 class CSledgeUI : public ultralight::Logger {
 public:
-	CSledgeUI();
-	~CSledgeUI();
+	static CSledgeUI* Instance() {
+		if (!m_Instance)
+			m_Instance = new CSledgeUI();
+		return m_Instance;
+	}
 
 	void Update();
 	void Draw();
@@ -29,10 +32,13 @@ public:
 	ultralight::RefPtr<ultralight::Renderer> Renderer() { return m_Renderer; }
 
 	virtual void LogMessage(ultralight::LogLevel eLogLevel, const ultralight::String16& Message) override;
+
 private:
+	CSledgeUI();
+	~CSledgeUI();
+
+	static CSledgeUI* m_Instance;
 	CGPUDriver* m_Driver;;
 	ultralight::RefPtr<ultralight::Renderer> m_Renderer;
 	std::vector<CWebContainer*> m_Containers;
 };
-
-inline CSledgeUI* g_UI;
