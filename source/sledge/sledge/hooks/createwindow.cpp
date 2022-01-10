@@ -3,6 +3,7 @@
 #include "globals.h"
 
 #include <windef.h>
+#include <WinUser.h>
 #include <libloaderapi.h>
 #include <processthreadsapi.h>
 #include <detours.h>
@@ -18,6 +19,7 @@ HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, 
 	{
 		g_WindowWidth = nWidth; g_WindowHeight = nHeight;
 		g_hWnd = hWnd;
+		SetForegroundWindow(hWnd); // if this is not called, certain WndProc functions get omitted, which skips the setting of some window flags (ends up messing up the rendering / window borders)
 		Sledge::Hooks::WndProc();
 	}
 
