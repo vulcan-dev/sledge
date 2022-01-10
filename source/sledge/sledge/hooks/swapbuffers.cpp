@@ -25,9 +25,6 @@ twglSwapBuffers wglSwapBuffers;
 
 CSledgeUI* UI;
 
-#include "sledge/ui/webcontainer.h"
-CWebContainer* Test;
-
 void InitUI(HDC hDc) {
 	TDContext = wglGetCurrentContext();
 	ULContext = wglCreateContext(hDc);
