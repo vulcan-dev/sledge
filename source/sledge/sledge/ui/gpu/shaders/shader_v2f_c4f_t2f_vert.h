@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 static std::string shader_v2f_c4f_t2f_vert() {

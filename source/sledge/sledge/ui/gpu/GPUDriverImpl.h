@@ -5,12 +5,13 @@
 #include <Ultralight/platform/GPUDriver.h>
 #pragma warning (pop)
 
-#include <GLFW/glfw3.h>
+#include <GL/glew.h>
+#include <vector>
 
 class CGPUDriverImpl : public ultralight::GPUDriver {
 public:
-	CGPUDriverImpl();
-	virtual ~CGPUDriverImpl();
+	CGPUDriverImpl() {};
+	virtual ~CGPUDriverImpl() {};
 
 	virtual const char* name() = 0;
 
@@ -24,16 +25,19 @@ public:
 
 	virtual void DrawGeometry(GLuint iGeometryId, unsigned int iIdxCount, unsigned int iIdxOffset, const ultralight::GPUState& State) = 0;
 
-	virtual bool HasCommandsPending();
-	virtual void DrawCommandList();
-	virtual void UpdateCommandList(const ultralight::CommandList& List) override;
+	virtual void DrawCommandList() = 0;
+	virtual void UpdateCommandList(const ultralight::CommandList& List) override {
+		if (List.size) {
+			m_CommandList.resize(List.size);
+			memcpy(&m_CommandList[0], List.commands, sizeof(ultralight::Command) * List.size);
+		}
+	};
 
 	virtual void BeginSynchronize() override {};
 	virtual void EndSynchronize() override {};
 	virtual unsigned int NextTextureId() override { return m_NextTextureId++; };
 	virtual unsigned int NextRenderBufferId() override { return m_NextRenderBufferId++; };
 	virtual unsigned int NextGeometryId() override { return m_NextGeometryId++; };
-
 protected:
 	unsigned int m_NextTextureId = 1;
 	unsigned int m_NextRenderBufferId = 1;

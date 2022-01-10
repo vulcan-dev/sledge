@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 static std::string shader_fill_path_frag() {

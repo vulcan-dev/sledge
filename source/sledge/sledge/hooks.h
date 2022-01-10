@@ -2,7 +2,8 @@
 
 namespace Sledge {
 	namespace Hooks {
-		void Wnd();
+		void WndProc();
 		void SB();
+		void CW();
 	}
 }

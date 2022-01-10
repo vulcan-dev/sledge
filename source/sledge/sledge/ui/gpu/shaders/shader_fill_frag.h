@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 static const std::string shader_fill_frag1 = R"(

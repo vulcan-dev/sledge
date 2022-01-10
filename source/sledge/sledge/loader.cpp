@@ -66,29 +66,26 @@ void Loader::Init(void* hModule) {
 	Teardown::Hooks::CallbackHooks();
 	LogVerbose("hooking log function");
 	Teardown::Hooks::Log();
+	LogVerbose("hooking active window check");
+	Teardown::Hooks::ActiveWindow();
+	LogVerbose("hooking cursor capture function");
+	Teardown::Hooks::Cursor();
+
+	LogVerbose("hooking CreateWindowExA");
+	Sledge::Hooks::CW();
+	LogVerbose("Hooking swapbuffers");
+	Sledge::Hooks::SB();
 }
 
 /*
 	LateInit:
 		At this point CGame has been created, and all the classes within it as well (CScene, CEditor, CPlayer, etc).
-		(primarily used for loading libraries / mods)
+		(used for setting up hostfxr and loading sledgelib)
 */
 void Loader::LateInit() {
-	LogVerbose("Hooking wndproc");
-	Sledge::Hooks::Wnd();
-
 	if (bLateLateInitAlreadyCalled)
 		return;
 	bLateLateInitAlreadyCalled = true;
-
-	LogVerbose("Hooking swapbuffers");
-	Sledge::Hooks::SB();
-
-	LogVerbose("hooking active window check");
-	Teardown::Hooks::ActiveWindow();
-
-	LogVerbose("hooking cursor capture function");
-	Teardown::Hooks::Cursor();
 
 	LogVerbose("setting up hostfxr");
 	if (!NetHost::Init()) {
