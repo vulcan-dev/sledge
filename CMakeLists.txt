@@ -52,11 +52,28 @@ target_link_libraries(sledge PRIVATE
 	WebCore)
 target_include_directories(sledge PRIVATE "source/sledge" "source/shared")
 target_compile_definitions(sledge PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
+
+# sledgelib
 add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)mods\" mkdir \"$(OutDir)mods\")
 add_custom_command(TARGET sledge POST_BUILD COMMAND dotnet build --configuration Release \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib\")
 add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib/sledgelib.dll\" \"$(OutDir)mods/sledgelib.dll\")
 add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib/sledgelib.runtimeconfig.json\" \"$(OutDir)mods/sledgelib.runtimeconfig.json\")
+
+# mod project script
 add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/scripts/mod.ps1\" \"$(OutDir)mod.ps1\")
+
+# ultralight dlls
+add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ultralight\" mkdir \"$(OutDir)ultralight\")
+add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/UltraLightCore/bin/UltraLightCore.dll\" \"$(OutDir)ultralight/UltraLightCore.dll\") 
+add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/UltraLight/bin/UltraLight.dll\" \"$(OutDir)ultralight/UltraLight.dll\") 
+add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/AppCore/bin/AppCore.dll\" \"$(OutDir)ultralight/AppCore.dll\") 
+add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/*\" \"$(OutDir)ultralight\") 
+
+# ultralight resources
+add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ui\" mkdir \"$(OutDir)ui\")
+add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ui/resources\" mkdir \"$(OutDir)ui/resources\")
+add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/resources/*\" \"$(OutDir)ui/resources\") 
+
 
 # ------------------------------------------------------
 # precompiled libs for dll
