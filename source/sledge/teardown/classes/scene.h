@@ -7,7 +7,8 @@
 class CScene
 {
 public:
-	char pad_0008[96]; //0x0008
+	void* m_Physics; //0x0008
+	char pad_0010[88]; //0x0010
 	void* m_SmokeParticles; //0x0068
 	char pad_0070[8]; //0x0070
 	void* m_WaterParticles; //0x0078 used for old particle system

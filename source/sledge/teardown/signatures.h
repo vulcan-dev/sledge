@@ -47,7 +47,8 @@ namespace Signatures {
 	inline CSignature LoadVox("\xE8\x00\x00\x00\x00\x49\x89\x86\x00\x00\x00\x00", "x????xxx????");
 
 	inline CSignature InitializeBody("\xE8\x00\x00\x00\x00\x48\x85\xF6\x74\x2B", "x????xxxxx");
-	inline CSignature SetBodyDynamic("\x88\x91\x00\x00\x00\x00\x4C\x8B\xC1", "xx????xxx", false);
+	inline CSignature UpdateBodyDynamic("\xE8\x00\x00\x00\x00\x4C\x8D\x9C\x24\x00\x00\x00\x00\x49\x8B\x73\x30", "x????xxxx????xxxx");
+	inline CSignature UnknownBodyFunction("\x48\x8B\xC4\x44\x88\x40\x18\x55", "xxxxxxxx", true);
 
 	/*
 		registry sigs
