@@ -10,17 +10,15 @@ HHOOK Hook;
 LRESULT CBTProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam) {
 	if (nCode == HCBT_CREATEWND) {
 		HWND hWnd = reinterpret_cast<HWND>(wParam);
-		CHAR cWindowName[256];
-		GetClassName(hWnd, cWindowName, sizeof(cWindowName));
-		if (!strcmp(cWindowName, "OpenGL")) {
+		char* cClassName = new char[512];
+		GetClassName(hWnd, cClassName, sizeof(cClassName));
+		if (!strcmp(cClassName, "OpenGL")) {
 			g_hWnd = hWnd;
 			Sledge::Hooks::WndProc();
 		}
+		delete[] cClassName;
 	}
-
 	return CallNextHookEx(Hook, nCode, wParam, lParam);
 }
 
-void Sledge::Hooks::CW() {
-	Hook = SetWindowsHookEx(WH_CBT, reinterpret_cast<HOOKPROC>(CBTProc), reinterpret_cast<HINSTANCE>(g_hMod), NULL);
-}
+void Sledge::Hooks::CW() { Hook = SetWindowsHookEx(WH_CBT, reinterpret_cast<HOOKPROC>(CBTProc), reinterpret_cast<HINSTANCE>(g_hMod), NULL); }

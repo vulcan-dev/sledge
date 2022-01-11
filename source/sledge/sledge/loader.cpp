@@ -68,9 +68,10 @@ void Loader::Init(void* hModule) {
 	LogVerbose("hooking cursor capture function");
 	Teardown::Hooks::Cursor();
 
-	LogVerbose("hooking CreateWindowExA");
+	LogVerbose("hooking createwindow");
 	Sledge::Hooks::CW();
-	LogVerbose("Hooking swapbuffers");
+
+	LogVerbose("hooking swapbuffers");
 	Sledge::Hooks::SB();
 }
 
