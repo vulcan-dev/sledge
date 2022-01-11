@@ -13,6 +13,11 @@ T Teardown::Utils::GetEntityByIdx(unsigned int iIndex, EEntityType eType) {
 	return reinterpret_cast<T>(Entity);
 }
 
+CEntity* Teardown::Utils::GetEntityByIdx(unsigned int iIndex) {
+	CEntity* Entity = g_Scene->m_Entities.get_at(iIndex);
+	return Entity;
+}
+
 template CEntity* Teardown::Utils::GetEntityByIdx(unsigned int, EEntityType);
 template CBody* Teardown::Utils::GetEntityByIdx(unsigned int, EEntityType);
 template CShape* Teardown::Utils::GetEntityByIdx(unsigned int, EEntityType);
