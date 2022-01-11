@@ -46,4 +46,7 @@ namespace Teardown {
 	
 	typedef void (*tCreateExplosion) (CScene* pScene, Vector3* vPosition, float fIntensity);
 	inline tCreateExplosion CreateExplosion;
+
+	typedef void (*tMakeHole) (void* pUnknown, void* pUnknown2, Vector3* vPosition, float fSoftRadius, float fMidRadius, float fHardRadius, bool bSilent, void* pUnknown3);
+	inline tMakeHole MakeHole;
 }
