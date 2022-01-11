@@ -65,7 +65,8 @@ static const SScanneable aFunctions[] = {
 	{ Signatures::PlaySound, &Teardown::PlaySound, "PlaySound" },
 	{ Signatures::LoadLoop, &Teardown::LoadLoop, "LoadLoop" },
 	{ Signatures::PlayLoop, &Teardown::PlayLoop, "PlayLoop" },
-	{ Signatures::SpotLight, &Teardown::SpotLight, "SpotLight" }
+	{ Signatures::SpotLight, &Teardown::SpotLight, "SpotLight" },
+	{ Signatures::CreateExplosion, &Teardown::CreateExplosion, "CreateExplosion" }
 };
 
 void Teardown::GetFunctionAddresses() {

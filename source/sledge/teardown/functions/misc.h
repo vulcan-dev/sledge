@@ -41,6 +41,9 @@ namespace Teardown {
 	typedef void (*tPlayLoop) (SLoopInfo* pSoundInfo, Vector3* vPosition, float fVolume, bool bSomething);
 	inline tPlayLoop PlayLoop;
 
-	typedef void (*tSpotLight) (void* pRenderer, Vector3* StartPos, Vector3* a3, float a4, float a5, float a6, float a7);
+	typedef void (*tSpotLight) (void* pRenderer, Vector3* StartPos, Vector3* vColor, float fRayDispertion, float a5, float fRadius, float fFog);
 	inline tSpotLight SpotLight;
+	
+	typedef void (*tCreateExplosion) (CScene* pScene, Vector3* vPosition, float fIntensity);
+	inline tCreateExplosion CreateExplosion;
 }

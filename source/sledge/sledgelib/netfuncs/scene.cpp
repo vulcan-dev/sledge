@@ -72,7 +72,6 @@ struct SParticleInfoNet {
 	SParticleParamF m_Sticky;
 	unsigned int m_Tile;
 	unsigned int m_Flags;
-
 };
 
 sledgelib_func void SpawnParticle(SParticleInfoNet NetParticleInfo, Vector3 vSpawnPos, Vector3 vVelocity, float fLifeTime) {
@@ -145,6 +144,6 @@ sledgelib_func void _ResetSounds() {
 	LoopsList = new small_vector<SLoopInfo*>(2);
 }
 
-sledgelib_func void SpotLight(Vector3 vStartPos, Vector3 vColor, float fRayDispersion, float fRadius, float fFog) {
-	Teardown::SpotLight(g_Game->m_Renderer, &vStartPos, &vColor, fRayDispersion, 1, fRadius, fFog);
-}
+sledgelib_func void SpotLight(Vector3 vStartPos, Vector3 vColor, float fRayDispersion, float fRadius, float fFog) { Teardown::SpotLight(g_Game->m_Renderer, &vStartPos, &vColor, fRayDispersion, 1, fRadius, fFog); }
+
+sledgelib_func void Explosion(Vector3 vPosition, float fIntensity) { Teardown::CreateExplosion(g_Game->m_Scene, &vPosition, fIntensity); }
