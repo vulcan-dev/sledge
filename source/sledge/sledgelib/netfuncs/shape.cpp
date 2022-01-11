@@ -28,7 +28,7 @@ sledgelib_func void DestroyShape(unsigned int iShapeHandle) {
 	Shape->Destroy(true);
 }
 
-sledgelib_func bool _LoadVox(unsigned int iShapeHandle, char* cVoxPath, char* cObjectName, float fScale) {
+sledgelib_func bool LoadShapeVox(unsigned int iShapeHandle, char* cVoxPath, char* cObjectName, float fScale) {
 	CShape* Shape = Teardown::Utils::GetEntityByIdx<CShape*>(iShapeHandle, EEntityType::Shape);
 	if (!Shape) return false;
 	if (Shape->m_Parent == NULL || Shape->m_Parent->m_Type != EEntityType::Body) return false;
