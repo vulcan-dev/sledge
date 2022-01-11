@@ -49,7 +49,7 @@ sledgelib_func int _GetLastToolIdx() {
 	return 17 + g_Game->m_Player->m_RegisteredTools.size();
 }
 
-sledgelib_func void _RegisterTool(char* cId, char* cName, char* cFile, unsigned int iGroup) {
+sledgelib_func void RegisterPlayerTool(char* cId, char* cName, char* cFile, unsigned int iGroup) {
 	if (iGroup < 1 || iGroup > 6)
 		iGroup = 6;
 
