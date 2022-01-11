@@ -65,9 +65,13 @@ sledgelib_func void SetShapeLocalTransform(unsigned int iShapeHandle, Transform 
 	Shape->m_LocalTransform = tLocalTransform;
 }
 
-sledgelib_func unsigned int GetShapeBody(unsigned int iShapeHandle) {
+sledgelib_func unsigned int GetShapeParent(unsigned int iShapeHandle) {
 	CShape* Shape = Teardown::Utils::GetEntityByIdx<CShape*>(iShapeHandle, EEntityType::Shape);
 	if (!Shape) return 0;
+
+	if (!Shape->m_Parent)
+		return 0;
+
 	return Shape->m_Parent->m_Id;
 }
 
