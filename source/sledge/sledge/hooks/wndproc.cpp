@@ -22,6 +22,4 @@ LRESULT APIENTRY hWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
 }
 
-void Sledge::Hooks::WndProc() {
-	oWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtrA(reinterpret_cast<HWND>(g_hWnd), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hWndProc))); 
-}
+void Sledge::Hooks::WndProc() { oWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtrA(reinterpret_cast<HWND>(g_hWnd), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hWndProc))); }

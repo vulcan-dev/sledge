@@ -4,21 +4,27 @@
 
 #include <windef.h>
 #include <WinUser.h>
+#include <WinBase.h>
+
+#include <processthreadsapi.h>
 
 HHOOK Hook;
 
 LRESULT CBTProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam) {
+	if (nCode != HCBT_CREATEWND)
+		return CallNextHookEx(Hook, nCode, wParam, lParam);
+
 	if (nCode == HCBT_CREATEWND) {
-		HWND hWnd = reinterpret_cast<HWND>(wParam);
-		char* cClassName = new char[512];
-		GetClassName(hWnd, cClassName, sizeof(cClassName));
-		if (!strcmp(cClassName, "OpenGL")) {
-			g_hWnd = hWnd;
+		CBT_CREATEWNDA* CWArguments = reinterpret_cast<CBT_CREATEWNDA*>(lParam);
+		if (!CWArguments)
+			return CallNextHookEx(Hook, nCode, wParam, lParam);
+
+		if (!strcmp(CWArguments->lpcs->lpszName, "Teardown")) {
+			g_hWnd = reinterpret_cast<HWND>(wParam);;
 			Sledge::Hooks::WndProc();
 		}
-		delete[] cClassName;
 	}
-	return CallNextHookEx(Hook, nCode, wParam, lParam);
+	return 0;
 }
 
-void Sledge::Hooks::CW() { Hook = SetWindowsHookEx(WH_CBT, reinterpret_cast<HOOKPROC>(CBTProc), reinterpret_cast<HINSTANCE>(g_hMod), NULL); }
+void Sledge::Hooks::CW() { Hook = SetWindowsHookExA(WH_CBT, reinterpret_cast<HOOKPROC>(CBTProc), reinterpret_cast<HINSTANCE>(g_hMod), NULL); }
