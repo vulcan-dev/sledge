@@ -15,14 +15,7 @@ LRESULT APIENTRY hWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		break;
 	case WM_KEYDOWN:
 		break;
-	default:
-		if (GetForegroundWindow() != g_hWnd)
-			return true;
-		return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
 	}
-
-	if (GetForegroundWindow() != g_hWnd)
-		return true;
 
 	Binds::OnInput(uMsg, wParam);
 
