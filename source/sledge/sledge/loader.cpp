@@ -20,9 +20,6 @@
 // from: WinBase.h
 #define STD_OUTPUT_HANDLE ((DWORD)-11)
 
-bool bLateInitCalled = false;
-bool bLateLateInitAlreadyCalled = false;
-
 /*
 	Init:
 		Called the moment the DLL is injected
@@ -57,7 +54,6 @@ void Loader::Init(void* hModule) {
 		return;
 	}
 
-	bLateInitCalled = true;
 	LogVerbose("getting func addresses");
 	Teardown::GetFunctionAddresses();
 	LogVerbose("hooking game cctor");
@@ -83,10 +79,6 @@ void Loader::Init(void* hModule) {
 		(used for setting up hostfxr and loading sledgelib)
 */
 void Loader::LateInit() {
-	if (bLateLateInitAlreadyCalled)
-		return;
-	bLateLateInitAlreadyCalled = true;
-
 	LogVerbose("setting up hostfxr");
 	if (!NetHost::Init()) {
 		LogError("failed to init hostfxr");
