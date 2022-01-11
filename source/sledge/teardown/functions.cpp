@@ -6,6 +6,7 @@
 #include "teardown/functions/registry.h"
 #include "teardown/functions/entity.h"
 #include "teardown/functions/misc.h"
+#include "teardown/functions/tags.h"
 
 #include "util/memory.h"
 #include "util/log.h"
@@ -55,6 +56,12 @@ static const SScanneable aFunctions[] = {
 	{ Signatures::Screen, &Teardown::Constructors::Screen, "CScreen::CScreen" },
 	{ Signatures::Trigger, &Teardown::Constructors::Trigger, "CTrigger::CTrigger" },
 	{ Signatures::Script, &Teardown::Constructors::Script, "CScript::CScript" },
+
+	// tags
+	{ Signatures::GetTag, &Teardown::GetTag, "GetTag" },
+	{ Signatures::SetTag, &Teardown::SetTag, "SetTag" },
+	{ Signatures::HasTag, &Teardown::HasTag, "HasTag" },
+	{ Signatures::RemoveTag, &Teardown::RemoveTag, "RemoveTag" },
 
 	// misc
 	{ Signatures::QueryRaycast, &Teardown::QueryRaycast, "QueryRaycast" },
