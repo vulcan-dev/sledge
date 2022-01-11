@@ -45,7 +45,7 @@ sledgelib_func void ReleaseGrab() {
 	g_Game->m_Player->m_GrabbedShape = nullptr;
 }
 
-sledgelib_func int _GetLastToolIdx() {
+sledgelib_func int GetLastToolIndex() {
 	return 17 + g_Game->m_Player->m_RegisteredTools.size();
 }
 
