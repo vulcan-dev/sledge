@@ -11,7 +11,7 @@ skip_commits:
 # releases
 artifacts:
     - path: proj\Release\Sledge.zip
-      name: SledgeRel
+      name: SledgeRelease
       type: zip
 
 deploy:
@@ -20,7 +20,7 @@ deploy:
     auth_token:
         secure: pAR0F1856OJePIBpQOxEe7xxWOVsNkF/T33PV5Z4YIU0qOGdIWOzcj0oqdtp4UCn
     repository: 44lr/sledge
-    artifact: SledgeRel
+    artifact: SledgeRelease
     on:
         branch: main
 
@@ -48,4 +48,4 @@ build:
 
 after_build:
     - cmd: cd C:/sledge/proj/Release/
-    - cmd: 7z a Sledge.zip sledge.dll mod.ps1 sledge.exe mods
+    - cmd: 7z a Sledge.zip sledge.dll mod.ps1 sledge.exe mods ui ultralight
