@@ -21,6 +21,8 @@ inline std::string FormatLog(const char* cFmt, Args&&... Arguments) {
 
 void Log(ELogType eLogType, std::string sMessage, bool bNewline = true);
 
+void LogInit(const char* cLogName, const char* cLogLocation);
+
 template<typename... Args>
 inline void LogVerbose(const char* cFmt, Args... Arguments) { Log(ELogType::Verbose, FormatLog(cFmt, std::forward<Args>(Arguments)...)); }
 

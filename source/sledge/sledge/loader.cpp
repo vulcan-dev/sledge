@@ -37,8 +37,6 @@ void Loader::Init(void* hModule) {
 	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(hConsole, dwMode);
 
-	LogInfo("Slegde Mod Loader - {} build", g_Build);
-
 	g_Module = GetModuleHandle(NULL);
 	g_hMod = hModule;
 
@@ -50,6 +48,11 @@ void Loader::Init(void* hModule) {
 	memcpy(g_ModulePath, sModulePath.c_str(), sModulePath.length());
 	g_ModulePath[sModulePath.length()] = '\0';
 	
+	std::string sLogPath = sModulePath + "\\logs\\";
+	LogInit("sledge", sLogPath.c_str());
+
+	LogInfo("Slegde Mod Loader - {} build", g_Build);
+
 	if (!Steam::Init()) {
 		LogError("failed to initialize steam");
 		return;
