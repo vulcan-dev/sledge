@@ -11,6 +11,7 @@ namespace SledgeLib
         [DllImport("sledge.dll")] private static extern void ContainerSetSize(uint iHandle, Vector2 vPosition);
         [DllImport("sledge.dll")] private static extern void ContainerSetPos(uint iHandle, Vector2 vPosition);
         [DllImport("sledge.dll")] private static extern void ContainerLoadURL(uint iHandle, string sURL);
+        [DllImport("sledge.dll")] private static extern void ContainerRunJS(uint iHandle, string sJS);
 
         internal uint m_Handle = 0;
 
@@ -29,6 +30,8 @@ namespace SledgeLib
         }
 
         public void LoadURL(string sURL) { ContainerLoadURL(m_Handle, sURL); }
+
+        public void RunJS(string sJS) { ContainerRunJS(m_Handle, sJS); }
 
         public CWebContainer(uint iWidth, uint iHeight, int iX = 0, int iY = 0)
         {
