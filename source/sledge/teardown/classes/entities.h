@@ -41,12 +41,9 @@ public:
 class CBody : public CEntity
 {
 public:
-	Vector3 m_Position; //0x0028
-	Quaternion m_Rotation; //0x0034
-	Vector3 m_Position2; //0x0044
-	Quaternion m_Rotation2; //0x0050
-	Vector3 m_Position3; //0x0060
-	Quaternion m_Rotation3; //0x006C
+	Transform m_Transform; //0x0028
+	Transform m_Transform2; //0x0044
+	Transform m_Transform3; //0x0060
 	Vector3 m_Velocity; //0x007C
 	Vector3 m_AngularVelocity; //0x0088
 	char pad_0094[12]; //0x0094
