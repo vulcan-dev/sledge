@@ -115,7 +115,7 @@ namespace SledgeLib
 
         internal static void IterateCallbacks(List<CCallback> CallbackList)
         {
-            foreach (dynamic Callback in CallbackList)
+            foreach (dynamic Callback in CallbackList.ToList())
             {
                 if (!Callback.m_Active)
                     continue;
@@ -127,14 +127,14 @@ namespace SledgeLib
                 catch (Exception e)
                 {
                     Log.Error("Callback error: {0}", e.Message);
-                    Callback.m_Active = false;
+                    lock (CallbackList) { CallbackList.Remove(Callback); }
                 }
             }
         }
 
         internal static void IterateCallbacksOneArg(List<CCallback> CallbackList, dynamic Arg)
         {
-            foreach (dynamic Callback in CallbackList)
+            foreach (dynamic Callback in CallbackList.ToList())
             {
                 if (!Callback.m_Active)
                     continue;
@@ -146,7 +146,7 @@ namespace SledgeLib
                 catch (Exception e)
                 {
                     Log.Error("Callback error: {0}", e.Message);
-                    Callback.m_Active = false;
+                    lock (CallbackList) { CallbackList.Remove(Callback); }
                 }
             }
         }

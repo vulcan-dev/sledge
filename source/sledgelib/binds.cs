@@ -14,7 +14,7 @@ namespace SledgeLib
 
         internal static void OnInput(EKeyCode iKeyCode, bool bKeyDown)
         {
-            foreach (CBind Bind in m_Binds)
+            foreach (CBind Bind in m_Binds.ToList())
             {
                 if (!Bind.m_Active)
                     continue;
@@ -34,7 +34,7 @@ namespace SledgeLib
                     catch (Exception ex)
                     {
                         Log.Error("Error while executing bind: {0}", ex.Message);
-                        Bind.m_Active = false;
+                        lock (m_Binds) { m_Binds.Remove(Bind); }
                     }
                     continue;
                 }
@@ -48,7 +48,7 @@ namespace SledgeLib
                     catch (Exception ex)
                     {
                         Log.Error("Error while executing bind: {0}", ex.Message);
-                        Bind.m_Active = false;
+                        lock (m_Binds) { m_Binds.Remove(Bind); }
                     }
                     continue;
                 }
