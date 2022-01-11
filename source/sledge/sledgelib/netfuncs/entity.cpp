@@ -19,3 +19,16 @@ sledgelib_func unsigned int Entity_GetParent(unsigned int iHandle) {
 	if (!Entity || !Entity->m_Parent) return 0;
 	return Entity->m_Parent->m_Id;
 }
+
+sledgelib_func void Entity_Destroy(unsigned int iHandle) {
+	CEntity* Entity = Teardown::Utils::GetEntityByIdx(iHandle);
+	if (!Entity) return;
+	Entity->Destroy(true);
+}
+
+sledgelib_func void Entity_SetParent(unsigned int iHandle, unsigned int iParentHandle) {
+	CEntity* Child = Teardown::Utils::GetEntityByIdx(iHandle);
+	CEntity* Parent = Teardown::Utils::GetEntityByIdx(iParentHandle);
+	if (!Child || !Parent) return;
+	Child->SetParent(Parent);
+}

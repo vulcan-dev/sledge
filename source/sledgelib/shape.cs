@@ -44,6 +44,9 @@ namespace SledgeLib
         public uint GetSibling() { return CEntity.Entity_GetSibling(m_Handle); }
         public uint GetChild() { return CEntity.Entity_GetChild(m_Handle); }
 
+        public void Destroy() { CEntity.Entity_Destroy(m_Handle); }
+        public void SetParent(uint iParent) { CEntity.Entity_SetParent(m_Handle, iParent); }
+
         public bool m_Broken {  get { return Shape_IsBroken(m_Handle); } }
 
         public void SetCollisionFilter(sbyte CollisionLayer, sbyte CollisionMask) { Shape_SetCollisionFilter(m_Handle, CollisionLayer, CollisionMask); }

@@ -82,6 +82,9 @@ namespace SledgeLib
         public uint GetSibling() { return CEntity.Entity_GetSibling(m_Handle); }
         public uint GetChild() { return CEntity.Entity_GetChild(m_Handle); }
 
+        public void Destroy() { CEntity.Entity_Destroy(m_Handle); }
+        public void SetParent(uint iParent) { CEntity.Entity_SetParent(m_Handle, iParent); }
+
         public List<CShape> GetChildren()
         {
             uint iLastHandle = GetChild();
