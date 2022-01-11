@@ -47,7 +47,6 @@ CSledgeUI::~CSledgeUI() {
 	//m_Renderer->Release();
 }
 
-
 void CSledgeUI::Update() {
 	WebContainers::CallFutures();
 
@@ -63,5 +62,5 @@ void CSledgeUI::Draw() {
 
 void CSledgeUI::LogMessage(ultralight::LogLevel, const ultralight::String16& Message) {
 	ultralight::String String(Message);
-	LogInfo("Ultralight log: {}", String.utf8().data());
+	LogVerbose("Ultralight log: {}", String.utf8().data());
 }
