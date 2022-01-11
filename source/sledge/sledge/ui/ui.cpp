@@ -5,9 +5,7 @@
 #include <AppCore/Platform.h>
 
 #include <string>
-#include <mutex>
 
-std::mutex ContainerMutex;
 CSledgeUI* CSledgeUI::m_Instance = 0;
 
 /*
@@ -30,13 +28,13 @@ CSledgeUI::CSledgeUI() {
 		Config.force_repaint = false;
 	#endif
 
-	std::string sPlatformPath(g_ModulePath);
-	sPlatformPath.append("\\ui");
+	std::string sFSPath(g_ModulePath);
+	sFSPath.append("\\ui");
 
 	ultralight::Platform& Platform = ultralight::Platform::instance();
 	Platform.set_gpu_driver(m_Driver);
 	Platform.set_config(Config);
-	Platform.set_file_system(ultralight::GetPlatformFileSystem(sPlatformPath.c_str()));
+	Platform.set_file_system(ultralight::GetPlatformFileSystem(sFSPath.c_str()));
 	Platform.set_font_loader(ultralight::GetPlatformFontLoader());
 	Platform.set_logger(this);
 
@@ -44,36 +42,26 @@ CSledgeUI::CSledgeUI() {
 }
 
 CSledgeUI::~CSledgeUI() {
-	//m_Containers.empty();
 	//delete m_Driver;
 	//m_Renderer->PurgeMemory();
 	//m_Renderer->Release();
 }
 
+
 void CSledgeUI::Update() {
+	WebContainers::CallFutures();
+
 	m_Renderer->Update();
 	m_Renderer->Render();
+
 	m_Driver->DrawCommandList();
 }
 
 void CSledgeUI::Draw() {
-	for (CWebContainer* Container : m_Containers) {
-		Container->Draw();
-	}
+	for (CWebContainer* Container : WebContainers::RegisteredContainers) { Container->Draw(); }
 }
 
 void CSledgeUI::LogMessage(ultralight::LogLevel, const ultralight::String16& Message) {
 	ultralight::String String(Message);
 	LogInfo("Ultralight log: {}", String.utf8().data());
-}
-
-void CSledgeUI::_UnregisterWebContainer(CWebContainer* Container) {
-	ContainerMutex.lock();
-	m_Containers.erase(std::remove(m_Containers.begin(), m_Containers.end(), Container), m_Containers.end());
-	ContainerMutex.unlock();
-}
-void CSledgeUI::_RegisterWebContainer(CWebContainer* Container) {
-	ContainerMutex.lock();
-	m_Containers.push_back(Container);
-	ContainerMutex.unlock();
 }

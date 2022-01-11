@@ -12,8 +12,6 @@
 #include <Ultralight/platform/Logger.h>
 #pragma warning (pop)
 
-#include <vector>
-
 class CSledgeUI : public ultralight::Logger {
 public:
 	static CSledgeUI* Instance() {
@@ -25,14 +23,10 @@ public:
 	void Update();
 	void Draw();
 
-	void _RegisterWebContainer(CWebContainer* Container);
-	void _UnregisterWebContainer(CWebContainer* Container);
-
 	CGPUDriver* Driver() { return m_Driver; }
 	ultralight::RefPtr<ultralight::Renderer> Renderer() { return m_Renderer; }
 
 	virtual void LogMessage(ultralight::LogLevel eLogLevel, const ultralight::String16& Message) override;
-
 private:
 	CSledgeUI();
 	~CSledgeUI();
@@ -40,5 +34,4 @@ private:
 	static CSledgeUI* m_Instance;
 	CGPUDriver* m_Driver;;
 	ultralight::RefPtr<ultralight::Renderer> m_Renderer;
-	std::vector<CWebContainer*> m_Containers;
 };
