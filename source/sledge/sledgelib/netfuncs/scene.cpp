@@ -147,3 +147,7 @@ sledgelib_func void _ResetSounds() {
 sledgelib_func void SpotLight(Vector3 vStartPos, Vector3 vColor, float fRayDispersion, float fRadius, float fFog) { Teardown::SpotLight(g_Game->m_Renderer, &vStartPos, &vColor, fRayDispersion, 1, fRadius, fFog); }
 
 sledgelib_func void Explosion(Vector3 vPosition, float fIntensity) { Teardown::CreateExplosion(g_Game->m_Scene, &vPosition, fIntensity); }
+
+sledgelib_func void MakeHole(Vector3 vPosition, float fSoftRadius, float fMidRadius, float fHardRadius, bool bSilent) {
+	Teardown::MakeHole(g_Scene->m_Unknown, 0, &vPosition, fSoftRadius, fMidRadius, fHardRadius, bSilent, 0);
+}

@@ -149,5 +149,6 @@ namespace SledgeLib
         [DllImport("sledge.dll")] public static extern void SpotLight(Vector3 vStartPos, Vector3 vColor, float fRayDispersion, float fRadius, float fFog);
 
         [DllImport("sledge.dll")] public static extern void Explosion(Vector3 vPosition, float fIntensity);
+        [DllImport("sledge.dll")] public static extern void MakeHole(Vector3 vPosition, float fSoftRadius, float fMidRadius, float fHardRadius, bool bSilent);
     }
 }
