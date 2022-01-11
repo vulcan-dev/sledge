@@ -18,11 +18,13 @@ sledgelib_func void SetString(char* cKeyName, char* cValue) { Teardown::SetStrin
 sledgelib_func void _GetString(char* cKeyName, char* cReturn, unsigned int iReturnBufferSize) {
 	small_string ssReturn("null");
 	Teardown::GetString(g_Game->m_Registry, &ssReturn, new small_string(cKeyName));
-	if (ssReturn.len() > iReturnBufferSize) {
-		cReturn[0] = '\0';
-		return;
-	}
 
-	memcpy(cReturn, ssReturn.c_str(), ssReturn.len());
-	cReturn[ssReturn.len()] = '\0';
+	if (ssReturn.len() > iReturnBufferSize) {
+		memcpy(cReturn, ssReturn.c_str(), iReturnBufferSize);
+		cReturn[iReturnBufferSize] = '\0';
+	}
+	else {
+		memcpy(cReturn, ssReturn.c_str(), ssReturn.len());
+		cReturn[ssReturn.len()] = '\0';
+	}
 }
