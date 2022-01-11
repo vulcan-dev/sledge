@@ -40,6 +40,7 @@ void Loader::Init(void* hModule) {
 	LogInfo("Slegde Mod Loader - {} build", g_Build);
 
 	g_Module = GetModuleHandle(NULL);
+	g_hMod = hModule;
 
 	char cModuleName[MAX_PATH];
 	GetModuleFileNameA(reinterpret_cast<HMODULE>(hModule), cModuleName, MAX_PATH);

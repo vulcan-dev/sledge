@@ -1,42 +1,26 @@
 #include "sledge/hooks.h"
-#include "util/log.h"
+
 #include "globals.h"
 
 #include <windef.h>
 #include <WinUser.h>
-#include <libloaderapi.h>
-#include <processthreadsapi.h>
-#include <detours.h>
 
-typedef HWND(*tCreateWindowExA)	(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam);
-tCreateWindowExA oCreateWindowExA;
+HHOOK Hook;
 
-HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
-{
-	HWND hWnd = oCreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
-
-	if (!strcmp(lpWindowName, "Teardown"))
-	{
-		g_WindowWidth = nWidth; g_WindowHeight = nHeight;
-		g_hWnd = hWnd;
-		SetForegroundWindow(hWnd); // if this is not called, certain WndProc functions get omitted, which skips the setting of some window flags (ends up messing up the rendering / window borders)
-		Sledge::Hooks::WndProc();
+LRESULT CBTProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam) {
+	if (nCode == HCBT_CREATEWND) {
+		HWND hWnd = reinterpret_cast<HWND>(wParam);
+		CHAR cWindowName[256];
+		GetClassName(hWnd, cWindowName, sizeof(cWindowName));
+		if (!strcmp(cWindowName, "OpenGL")) {
+			g_hWnd = hWnd;
+			Sledge::Hooks::WndProc();
+		}
 	}
 
-	return hWnd;
+	return CallNextHookEx(Hook, nCode, wParam, lParam);
 }
 
 void Sledge::Hooks::CW() {
-	HMODULE USER32 = GetModuleHandle("USER32.dll");
-	if (USER32 == NULL)
-		return;
-
-	oCreateWindowExA = (tCreateWindowExA)GetProcAddress(USER32, "CreateWindowExA");
-
-	LogVerbose("CreateWindowExA: {}", reinterpret_cast<void*>(oCreateWindowExA));
-
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&(PVOID&)oCreateWindowExA, hCreateWindowExA);
-	DetourTransactionCommit();
+	Hook = SetWindowsHookEx(WH_CBT, reinterpret_cast<HOOKPROC>(CBTProc), reinterpret_cast<HINSTANCE>(g_hMod), NULL);
 }
