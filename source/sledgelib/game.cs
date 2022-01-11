@@ -22,7 +22,6 @@ namespace SledgeLib
         public static EGameState GetState() { return (EGameState)_GetState(); }
         public static void SetState(EGameState eState) { _SetState((uint)eState); }
 
-
         [DllImport("sledge.dll")] public static extern bool IsPlaying();
 
         [DllImport("sledge.dll")] public static extern bool GetMapOpen();

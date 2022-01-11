@@ -1,122 +1,124 @@
-#include "teardown/classes/entities.h"
-#include "teardown/utils.h"
-
-#include "teardown/functions/memory.h"
 #include "teardown/functions/constructors.h"
+#include "teardown/functions/entity.h"
+#include "teardown/classes/scene.h"
+#include "teardown/utils.h"
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
-sledgelib_func unsigned int CreateBody() {
-	void* pBodyBuffer = Teardown::alloc(sizeof(CBody));
-	if (pBodyBuffer == NULL)
+sledgelib_func unsigned int Body_Create() {
+	void* pBuffer = Teardown::alloc(sizeof(CBody));
+	if (pBuffer == NULL)
 		return 0;
 
-	Teardown::Constructors::Body(pBodyBuffer, nullptr);
-	CBody* Body = reinterpret_cast<CBody*>(pBodyBuffer);
+	Teardown::Constructors::Body(pBuffer, nullptr);
+	CBody* Body = reinterpret_cast<CBody*>(pBuffer);
 	return Body->m_Id;
 }
 
-sledgelib_func void DestroyBody(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func void Body_Destroy(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return;
 	Body->Destroy(true);
 }
 
-sledgelib_func Transform GetBodyTransform(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func Transform Body_GetTransform(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return Transform();
-	return Transform(Body->m_Position, Body->m_Rotation);
+	return Body->m_Transform;
 }
 
-sledgelib_func void SetBodyTransform(unsigned int iBodyHandle, Transform tNewTransform) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func void Body_SetTransform(unsigned int iHandle, Transform tTransform) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return;
-	Body->m_Position = tNewTransform.m_Position;
-	Body->m_Rotation = tNewTransform.m_Rotation;
+	Body->m_Transform = tTransform;
 }
 
-sledgelib_func float GetBodyMass(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
-	if (!Body) return 0;
-	return Body->m_Mass;
+sledgelib_func Vector3 Body_GetPosition(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
+	if (!Body) return Vector3();
+	return Body->m_Transform.m_Position;
 }
 
-sledgelib_func bool GetBodyDynamic(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
-	if (!Body) return false;
-	return Body->m_Dynamic;
-}
-
-sledgelib_func void SetBodyDynamic(unsigned int iBodyHandle, bool bDynamic) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func void Body_SetPosition(unsigned int iHandle, Vector3 vValue) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return;
-	Body->m_Dynamic = bDynamic;
+	Body->m_Transform.m_Position = vValue;
 }
 
-sledgelib_func void SetBodyVelocity(unsigned int iBodyHandle, Vector3 vVelocity) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func Quaternion Body_GetRotation(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
+	if (!Body) return Quaternion();
+	return Body->m_Transform.m_Rotation;
+}
+
+sledgelib_func void Body_SetRotation(unsigned int iHandle, Quaternion qValue) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return;
-	Body->m_Velocity = vVelocity;
+	Body->m_Transform.m_Rotation = qValue;
 }
 
-sledgelib_func Vector3 GetBodyVelocity(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func Vector3 Body_GetVelocity(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return Vector3();
 	return Body->m_Velocity;
 }
 
-sledgelib_func Vector3 GetBodyAngularVelocity(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func void Body_SetVelocity(unsigned int iHandle, Vector3 vVelocity) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
+	if (!Body) return;
+	Body->m_Velocity = vVelocity;
+}
+
+sledgelib_func Vector3 Body_GetAngularVelocity(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return Vector3();
 	return Body->m_AngularVelocity;
 }
 
-sledgelib_func void SetBodyAngularVelocity(unsigned int iBodyHandle, Vector3 vVelocity) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func void Body_SetAngularVelocity(unsigned int iHandle, Vector3 vVelocity) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return;
 	Body->m_AngularVelocity = vVelocity;
 }
 
-sledgelib_func Vector3 GetBodyPosition(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
-	if (!Body) return Vector3();
-	return Body->m_Position;
+sledgelib_func bool Body_GetDynamic(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
+	if (!Body) return false;
+	return Body->m_Dynamic;
 }
 
-sledgelib_func void SetBodyPosition(unsigned int iBodyHandle, Vector3 vValue) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func void Body_SetDynamic(unsigned int iHandle, bool bDynamic) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return;
-	Body->m_Position = vValue;
+	Body->m_Dynamic = bDynamic;
 }
 
-sledgelib_func Quaternion GetBodyRotation(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
-	if (!Body) return Quaternion();
-	return Body->m_Rotation;
+sledgelib_func bool Body_GetActive(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
+	if (!Body) return false;
+	return (Body->m_Dynamic && Body->m_ActiveTimeLeft != 0);
 }
 
-sledgelib_func void SetBodyRotation(unsigned int iBodyHandle, Quaternion qValue) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func void Body_SetActive(unsigned int iHandle, bool bActive) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return;
-	Body->m_Rotation = qValue;
+
+	if (!Body->m_Dynamic)
+		return;
+
+	if (bActive) {
+		Body->m_ActiveTimeLeft = 0;
+		Teardown::Entity::UpdateBodyDynamic(g_Scene->m_Physics, Body);
+		Teardown::Entity::UnknownBodyFunction(g_Scene->m_Physics, Body, true);
+	}
+	else {
+		Body->m_ActiveTimeLeft = 60;
+		Teardown::Entity::UpdateBodyDynamic(g_Scene->m_Physics, Body);
+	};
 }
 
-sledgelib_func unsigned int GetBodySibling(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
+sledgelib_func float GetBodyMass(unsigned int iHandle) {
+	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iHandle, EEntityType::Body);
 	if (!Body) return 0;
-
-	if (!Body->m_Sibling)
-		return 0;
-
-	return Body->m_Sibling->m_Id;
-}
-
-sledgelib_func unsigned int GetBodyChild(unsigned int iBodyHandle) {
-	CBody* Body = Teardown::Utils::GetEntityByIdx<CBody*>(iBodyHandle, EEntityType::Body);
-	if (!Body) return 0;
-
-	if (!Body->m_Child)
-		return 0;
-	
-	return Body->m_Child->m_Id;
+	return Body->m_Mass;
 }

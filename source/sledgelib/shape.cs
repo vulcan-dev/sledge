@@ -4,46 +4,50 @@ using System.Reflection;
 
 namespace SledgeLib
 {
-    public class Shape
+    public class CShape
     {
-        [DllImport("sledge.dll")] private static extern uint CreateShape(uint iBodyHandle);
-        public delegate uint dCreateShape(uint iBodyHandle);
-        public static dCreateShape Create = CreateShape;
+        [DllImport("sledge.dll")] private static extern uint Shape_Create(uint iBodyHandle);
+        [DllImport("sledge.dll")] private static extern void Shape_Destroy(uint iHandle);
 
-        [DllImport("sledge.dll")] private static extern void DestroyShape(uint iShapeHandle);
-        public delegate void dDestroyShape(uint iShapeHandle);
-        public static dDestroyShape Destroy = DestroyShape;
+        [DllImport("sledge.dll")] private static extern Transform Shape_GetLocalTransform(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Shape_SetLocalTransform(uint iHandle, Transform tTransform);
 
-        [DllImport("sledge.dll")] private static extern Transform GetShapeLocalTransform(uint iHandle);
-        public static dGetTransformEntity GetLocalTransform = GetShapeLocalTransform;
-        [DllImport("sledge.dll")] private static extern void SetShapeLocalTransform(uint iHandle, Transform tTransform);
-        public static dSetTransformEntity SetLocalTransform = SetShapeLocalTransform;
+        [DllImport("sledge.dll")] private static extern float Shape_GetEmissiveScale(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Shape_SetEmissiveScale(uint iHandle, float fValue);
 
-        [DllImport("sledge.dll")] private static extern Transform GetShapeWorldTransform(uint iHandle);
-        public static dGetTransformEntity GetWorldTransform = GetShapeWorldTransform;
+        [DllImport("sledge.dll")] private static extern Bounds Shape_GetBounds(uint iHandle);
 
-        [DllImport("sledge.dll")] private static extern uint GetShapeBody(uint iHandle);
-        public static dGetUIntEntity GetBody = GetShapeBody;
+        [DllImport("sledge.dll")] private static extern bool Shape_IsBroken(uint iHandle);
 
-        [DllImport("sledge.dll")] private static extern uint GetShapeSibling(uint iHandle);
-        public static dGetUIntEntity GetSibling = GetShapeSibling;
+        [DllImport("sledge.dll")] private static extern void Shape_SetCollisionFilter(uint iHandle, sbyte CollisionLayer, sbyte CollisionMask);
 
-        [DllImport("sledge.dll")] private static extern Bounds GetShapeBounds(uint iHandle);
-        public static dGetBoundsEntity GetBounds = GetShapeBounds;
+        [DllImport("sledge.dll")] private static extern bool Shape_LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
 
-        [DllImport("sledge.dll")] private static extern float GetShapeEmissiveScale(uint iHandle);
-        public static dGetFloatEntity GetEmissiveScale = GetShapeEmissiveScale;
-        [DllImport("sledge.dll")] private static extern void SetShapeEmissiveScale(uint iHandle, float fValue);
-        public static dSetFloatEntity SetEmissiveScale = SetShapeEmissiveScale;
+        public readonly uint m_Handle = 0;
+        public Transform m_LocalTransform
+        {
+            get { return Shape_GetLocalTransform(m_Handle); }
+            set { Shape_SetLocalTransform(m_Handle, value); }
+        } 
 
-        [DllImport("sledge.dll")] private static extern bool GetShapeBroken(uint iHandle);
-        public static dGetBoolEntity IsBroken = GetShapeBroken;
+        public CBody m_Body { get { return new CBody(GetParent()); } }
+        public CShape m_Sibling { get { return new CShape(CEntity.Entity_GetSibling(m_Handle)); } }
+        
+        public Bounds m_Bounds { get { return Shape_GetBounds(m_Handle); } }
 
-        [DllImport("sledge.dll")] private static extern void SetShapeCollisionFilter(uint iHandle, sbyte CollisionLayer, sbyte CollisionMask);
-        public delegate void dSetShapeCollisionFilter(uint iHandle, sbyte CollisionLayer, sbyte CollisionMask);
-        public static dSetShapeCollisionFilter SetCollisionFilter = SetShapeCollisionFilter;
+        public float m_Emissive {
+            get { return Shape_GetEmissiveScale(m_Handle); }
+            set { Shape_SetEmissiveScale(m_Handle, value); }
+        }
 
-        [DllImport("sledge.dll")] private static extern bool _LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale);
+        public uint GetParent() { return CEntity.Entity_GetParent(m_Handle); }
+        public uint GetSibling() { return CEntity.Entity_GetSibling(m_Handle); }
+        public uint GetChild() { return CEntity.Entity_GetChild(m_Handle); }
+
+        public bool m_Broken {  get { return Shape_IsBroken(m_Handle); } }
+
+        public void SetCollisionFilter(sbyte CollisionLayer, sbyte CollisionMask) { Shape_SetCollisionFilter(m_Handle, CollisionLayer, CollisionMask); }
+
         public static bool LoadVox(uint iHandle, string sVoxPath, string sVoxName, float fScale)
         {
             if (!sVoxPath.EndsWith(".vox"))
@@ -51,9 +55,12 @@ namespace SledgeLib
 
             string? sVerifiedPath = CSledgeUtils.GetValidPath(sVoxPath, Assembly.GetCallingAssembly());
             if (sVerifiedPath == null)
-                throw new Exception("unable to resolve path");
+                throw new Exception("invalid path passed to LoadVox");
 
-            return _LoadVox(iHandle, sVerifiedPath.Replace("\\", "/"), sVoxName, fScale);
+            return Shape_LoadVox(iHandle, sVerifiedPath.Replace("\\", "/"), sVoxName, fScale);
         }
+
+        public CShape(CBody Body) { m_Handle = Shape_Create(Body.m_Handle); }
+        public CShape(uint iShapeHandle) { m_Handle = iShapeHandle; }
     }
 }

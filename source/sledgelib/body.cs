@@ -3,62 +3,95 @@ using System.Numerics;
 
 namespace SledgeLib
 {
-    public class Body
+    public class CBody
     {
-        [DllImport("sledge.dll")] private static extern uint CreateBody();
-        public static dGetUInt Create = CreateBody;
+        [DllImport("sledge.dll")] private static extern uint Body_Create();
+        [DllImport("sledge.dll")] private static extern void Body_Destroy(uint iBodyHandle);
 
-        [DllImport("sledge.dll")] private static extern void DestroyBody(uint iBodyHandle);
-        public delegate void dDestroyBody(uint iBodyHandle);
-        public static dDestroyBody Destroy = DestroyBody;
+        [DllImport("sledge.dll")] private static extern Transform Body_GetTransform(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Body_SetTransform(uint iHandle, Transform tTransform);
 
-        [DllImport("sledge.dll")] private static extern Transform GetBodyTransform(uint iHandle);
-        public static dGetTransformEntity GetTransform = GetBodyTransform;
-        [DllImport("sledge.dll")] private static extern void SetBodyTransform(uint iHandle, Transform tTransform);
-        public static dSetTransformEntity SetTransform = SetBodyTransform;
+        [DllImport("sledge.dll")] private static extern Vector3 Body_GetPosition(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Body_SetPosition(uint iHandle, Vector3 vVelocity);
 
-        [DllImport("sledge.dll")] private static extern bool GetBodyDynamic(uint iHandle);
-        public static dGetBoolEntity IsDynamic = GetBodyDynamic;
-        [DllImport("sledge.dll")] private static extern void SetBodyDynamic(uint iHandle, bool bDynamic);
-        public static dSetBoolEntity SetDynamic = SetBodyDynamic;
+        [DllImport("sledge.dll")] private static extern Quaternion Body_GetRotation(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Body_SetRotation(uint iHandle, Quaternion vRotation);
 
-        [DllImport("sledge.dll")] private static extern void SetBodyVelocity(uint iHandle, Vector3 vVelocity);
-        public static dSetVector3Entity SetVelocity = SetBodyVelocity;
-        [DllImport("sledge.dll")] private static extern Vector3 GetBodyVelocity(uint iHandle);
-        public static dGetVector3Entity GetVelocity = GetBodyVelocity;
+        [DllImport("sledge.dll")] private static extern Vector3 Body_GetVelocity(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Body_SetVelocity(uint iHandle, Vector3 vVelocity);
 
-        [DllImport("sledge.dll")] private static extern Vector3 GetBodyAngularVelocity(uint iHandle);
-        public static dGetVector3Entity GetAngularVelocity = GetBodyAngularVelocity;
-        [DllImport("sledge.dll")] private static extern void SetBodyAngularVelocity(uint iHandle, Vector3 vVelocity);
-        public static dSetVector3Entity SetAngularVelocity = SetBodyAngularVelocity;
+        [DllImport("sledge.dll")] private static extern Vector3 Body_GetAngularVelocity(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Body_SetAngularVelocity(uint iHandle, Vector3 vVelocity);
 
-        [DllImport("sledge.dll")] private static extern Vector3 GetBodyPosition(uint iHandle);
-        public static dGetVector3Entity GetPosition = GetBodyPosition;
-        [DllImport("sledge.dll")] private static extern void SetBodyPosition(uint iHandle, Vector3 vVelocity);
-        public static dSetVector3Entity SetPosition = SetBodyPosition;
+        [DllImport("sledge.dll")] private static extern bool Body_GetDynamic(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Body_SetDynamic(uint iHandle, bool bDynamic);
 
-        [DllImport("sledge.dll")] private static extern Quaternion GetBodyRotation(uint iHandle);
-        public static dGetQuaternionEntity GetRotation = GetBodyRotation;
-        [DllImport("sledge.dll")] private static extern void SetBodyRotation(uint iHandle, Quaternion vRotation);
-        public static dSetQuaternionEntity SetRotation = SetBodyRotation;
+        [DllImport("sledge.dll")] private static extern bool Body_GetActive(uint iHandle);
+        [DllImport("sledge.dll")] private static extern void Body_SetActive(uint iHandle, bool bDynamic);
 
         [DllImport("sledge.dll")] private static extern float GetBodyMass(uint iHandle);
-        public static dGetFloatEntity GetMass = GetBodyMass;
 
-        [DllImport("sledge.dll")] private static extern uint GetBodySibling(uint iHandle);
-        public static dGetUIntEntity GetSibling = GetBodySibling;
-        [DllImport("sledge.dll")] private static extern uint GetBodyChild(uint iHandle);
-        public static dGetUIntEntity GetChild = GetBodyChild;
+        public readonly uint m_Handle;
 
-        public static List<uint> GetChildren(uint iHandle)
+        public Transform m_Transform
         {
-            uint iLastHandle = Body.GetChild(iHandle);
+            get { return Body_GetTransform(m_Handle); }
+            set { Body_SetTransform(m_Handle, value); }
+        }
 
-            List<uint> ChildrenList = new List<uint>();
+        public Vector3 m_Position
+        {
+            get { return Body_GetPosition(m_Handle); }
+            set { Body_SetPosition(m_Handle, value); }
+        }
+
+        public Quaternion m_Rotation
+        {
+            get { return Body_GetRotation(m_Handle); }
+            set { Body_SetRotation(m_Handle, value); }
+
+        }
+
+        public Vector3 m_Velocity
+        {
+            get { return Body_GetVelocity(m_Handle); }
+            set { Body_SetVelocity(m_Handle, value); }
+        }
+
+        public Vector3 m_AngularVelocity
+        {
+            get { return Body_GetAngularVelocity(m_Handle); }
+            set { Body_SetAngularVelocity(m_Handle, value); }
+        }
+
+        public bool m_Active
+        {
+            get { return Body_GetActive(m_Handle); }
+            set { Body_SetActive(m_Handle, value); }
+
+        }
+
+        public float m_Mass { get { return GetBodyMass(m_Handle); } }
+
+        public CBody() { m_Handle = Body_Create(); }
+        public CBody(uint iHandle) { m_Handle = iHandle; }
+
+        ~CBody() { Body_Destroy(m_Handle); }
+
+        public uint GetParent() { return CEntity.Entity_GetParent(m_Handle); }
+        public uint GetSibling() { return CEntity.Entity_GetSibling(m_Handle); }
+        public uint GetChild() { return CEntity.Entity_GetChild(m_Handle); }
+
+        public List<CShape> GetChildren()
+        {
+            uint iLastHandle = GetChild();
+
+            List<CShape> ChildrenList = new List<CShape>();
             while (iLastHandle != 0)
             {
-                ChildrenList.Add(iLastHandle);
-                iLastHandle = Shape.GetSibling(iLastHandle);
+                CShape Shape = new CShape(iLastHandle);
+                ChildrenList.Add(Shape);
+                iLastHandle = Shape.m_Sibling.m_Handle;
             }
 
             return ChildrenList;

@@ -8,7 +8,7 @@ public struct Transform
     public Transform()
     {
         Position = new Vector3();
-        Rotation = new Quaternion();
+        Rotation = new Quaternion(0, 0, 0, 1);
     }
     public Transform(Vector3 vPosition, Quaternion qRotation)
     {
