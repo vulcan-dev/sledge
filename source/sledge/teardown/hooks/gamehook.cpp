@@ -9,6 +9,8 @@
 #include "util/memory.h"
 #include "util/log.h"
 
+#include <mutex>
+
 #include <windef.h>
 #include <processthreadsapi.h>
 #include <detours.h>
@@ -16,11 +18,19 @@
 typedef CGame* (*tGameCCtor) (void*, void*);
 tGameCCtor GameCCtor;
 
+std::once_flag fLateInitCalled;
+
 CGame* hGameCCtor(void* pAlloc, void* pMemory) {
 	g_Game = GameCCtor(pAlloc, pMemory);
-	LogVerbose("g_Game: {}", reinterpret_cast<void*>(g_Game));
 	g_Scene = g_Game->m_Scene;
-	Loader::LateInit();
+	
+	LogVerbose("g_Game: {}", reinterpret_cast<void*>(g_Game));
+	
+	std::call_once(fLateInitCalled, [] {
+		std::thread LateInitThread(Loader::LateInit);
+		LateInitThread.detach();
+	});
+	
 	return g_Game;
 }
 
