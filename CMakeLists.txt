@@ -26,7 +26,6 @@ target_link_libraries(sledge_shared_dependencies INTERFACE
 	detours
 	fmt::fmt
 	libglew_static
-	imgui
 	spng_static
 	glfw)
 
@@ -74,7 +73,6 @@ add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ui\"
 add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ui/resources\" mkdir \"$(OutDir)ui/resources\")
 add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/resources/*\" \"$(OutDir)ui/resources\") 
 
-
 # ------------------------------------------------------
 # precompiled libs for dll
 # ------------------------------------------------------
@@ -103,6 +101,7 @@ add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${
 target_link_libraries(sledge_loader PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
+	imgui
 	ws2_32
 	crypt32
 	OpenSSL::Crypto)
