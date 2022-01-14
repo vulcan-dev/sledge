@@ -70,6 +70,8 @@ void Loader::Init(void* hModule) {
 	Teardown::Hooks::ActiveWindow();
 	LogVerbose("hooking cursor capture function");
 	Teardown::Hooks::Cursor();
+	LogVerbose("hooking applydisplay");
+	Teardown::Hooks::Display();
 
 	LogVerbose("hooking createwindow");
 	Sledge::Hooks::CW();

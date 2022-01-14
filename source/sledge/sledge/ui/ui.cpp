@@ -3,27 +3,18 @@
 #include "globals.h"
 
 #include <AppCore/Platform.h>
-
 #include <string>
 
-CSledgeUI* CSledgeUI::m_Instance = 0;
+CSledgeUI* CSledgeUI::m_Instance = nullptr;
 
-/*
-	to-do:
-		implement custom filesystem for ultralight
-		implement destructor
-		make platform things like logger and driver be outside of this, to allow for multiple instances of CSledgeUI
-*/
 CSledgeUI::CSledgeUI() {
 	m_Driver = new CGPUDriver();
 
 	ultralight::Config Config;
-	Config.animation_timer_delay = 1 / REFRESH_RATE;
-	Config.scroll_timer_delay = 1 / REFRESH_RATE;
-
-	// force repaint on debug builds to facilitate troubleshooting on renderdoc
+	Config.animation_timer_delay = 1 / UI_REFRESH_RATE;
+	Config.scroll_timer_delay = 1 / UI_REFRESH_RATE;
 	#ifdef _DEBUG
-		Config.force_repaint = true;
+		Config.force_repaint = true; // repaint on debug for easier troubleshooting
 	#else
 		Config.force_repaint = false;
 	#endif
@@ -41,14 +32,15 @@ CSledgeUI::CSledgeUI() {
 	m_Renderer = ultralight::Renderer::Create();
 }
 
-CSledgeUI::~CSledgeUI() {
-	//delete m_Driver;
-	//m_Renderer->PurgeMemory();
-	//m_Renderer->Release();
-}
+CSledgeUI::~CSledgeUI() {};
+
+GLint iReadFBO, iPrevVertexArray;
 
 void CSledgeUI::Update() {
-	WebContainers::CallFutures();
+	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &iReadFBO);
+	glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &iPrevVertexArray);
+
+	WebContainers::InvokeFutures();
 
 	m_Renderer->Update();
 	m_Renderer->Render();
@@ -56,8 +48,35 @@ void CSledgeUI::Update() {
 	m_Driver->DrawCommandList();
 }
 
+void CSledgeUI::Reset() {
+	m_Renderer->PurgeMemory();
+	m_Driver->Clear();
+
+	std::thread ContainerWaiterThread(WebContainers::BeginReset);
+	ContainerWaiterThread.detach();
+
+	std::thread WindowWaiterThread([] {
+		while (!g_WindowReady) { std::this_thread::sleep_for(std::chrono::milliseconds(50)); }
+
+		std::shared_future Reset = std::async(std::launch::deferred, [] {
+				WebContainers::EndReset();
+
+				WebContainers::RegisteredMutex.lock();
+				for (auto Pair = WebContainers::RegisteredContainers.begin(); Pair != WebContainers::RegisteredContainers.end(); Pair++) { Pair->second->Reload(); }
+				WebContainers::RegisteredMutex.unlock();
+
+			});
+		WebContainers::AddFuture(&Reset);
+		WebContainers::WaitForFutures();
+	});
+	WindowWaiterThread.detach();
+
+}
+
 void CSledgeUI::Draw() {
-	for (CWebContainer* Container : WebContainers::RegisteredContainers) { Container->Draw(); }
+	WebContainers::Draw();
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, iReadFBO);
+	glBindVertexArray(iPrevVertexArray);
 }
 
 void CSledgeUI::LogMessage(ultralight::LogLevel, const ultralight::String16& Message) {

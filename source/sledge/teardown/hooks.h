@@ -7,5 +7,6 @@ namespace Teardown {
 		void Log();
 		void ActiveWindow();
 		void Cursor();
+		void Display();
 	}
 }

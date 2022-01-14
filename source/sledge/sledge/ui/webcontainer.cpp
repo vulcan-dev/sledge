@@ -1,74 +1,51 @@
 #include "webcontainer.h"
-
 #include "globals.h"
+
 #include "sledge/ui.h"
 
 CWebContainer::CWebContainer(unsigned int iWidth, unsigned int iHeight, int iX, int iY) {
 	m_Width = iWidth; m_Height = iHeight;
 	m_X = iX; m_Y = iY;
 
-	ultralight::ViewConfig Config;
+	ultralight::ViewConfig VConfig;
+	VConfig.is_transparent = true;
+	VConfig.is_accelerated = true;
+	VConfig.enable_javascript = true;
 
-	Config.is_transparent = true;
-	Config.is_accelerated = true;
-	Config.enable_javascript = true;
+	m_View = CSledgeUI::Instance()->Renderer()->CreateView(m_Width, m_Height, VConfig, nullptr);
 
-	m_View = CSledgeUI::Instance()->Renderer()->CreateView(iWidth, iHeight, Config, nullptr);
-
-	WebContainers::RegisterMutex.lock();
-	WebContainers::RegisteredContainers.push_back(this);
-	WebContainers::RegisterMutex.unlock();
+	WebContainers::RegisterContainer(this);
 }
 
 CWebContainer::~CWebContainer() {
 	m_View = nullptr;
-
-	WebContainers::RegisterMutex.lock();
-	WebContainers::RegisteredContainers.erase(std::remove(WebContainers::RegisteredContainers.begin(), WebContainers::RegisteredContainers.end(), this), WebContainers::RegisteredContainers.end());
-	WebContainers::RegisterMutex.unlock();
+	WebContainers::UnregisterContainer(this);
 }
 
-void CWebContainer::LoadURL(const char* cURL) { m_View->LoadURL(cURL); }
+void CWebContainer::LoadURL(const char* cURL) {
+	m_View->LoadURL(cURL);
+	cLastURL = new char[strlen(cURL)];
+	memcpy(cLastURL, cURL, strlen(cURL) + 1);
+}
 
-void CWebContainer::Resize(int iWidth, int iHeight) {
-	m_View->Resize(iWidth, iHeight);
+void CWebContainer::Resize(unsigned int iWidth, unsigned int iHeight) {
 	m_Width = iWidth; m_Height = iHeight;
+	m_View->Resize(m_Width, m_Height);
+}
+
+void CWebContainer::Reload() {
+	m_View = nullptr;
+
+	ultralight::ViewConfig VConfig;
+	VConfig.is_transparent = true;
+	VConfig.is_accelerated = true;
+	VConfig.enable_javascript = true;
+	m_View = CSledgeUI::Instance()->Renderer()->CreateView(m_Width, m_Height, VConfig, nullptr);
+	m_View->LoadURL(cLastURL);
 }
 
 void CWebContainer::Draw() {
-	ultralight::RenderTarget RTInfo = m_View->render_target();
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(0, g_WindowWidth, g_WindowHeight, 0, -1, 1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	CSledgeUI::Instance()->Driver()->BindTexture(0, RTInfo.texture_id);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0);
-	glVertex3f(static_cast<GLfloat>(m_X), static_cast<GLfloat>(m_Y), 0); // TL
-	glTexCoord2f(1, 0);
-	glVertex3f(static_cast<GLfloat>(m_X + m_Width), static_cast<GLfloat>(m_Y), 0); // TR
-	glTexCoord2f(1, 1);
-	glVertex3f(static_cast<GLfloat>(m_X + m_Width), static_cast<GLfloat>(m_Y + m_Height), 0); // BR
-	glTexCoord2f(0, 1);
-	glVertex3f(static_cast<GLfloat>(m_X), static_cast<GLfloat>(m_Y + m_Height), 0); // BL
-	glEnd();
-
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
+	CSledgeUI::Instance()->Driver()->BindReadRenderBuffer(m_View->render_target().render_buffer_id);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	glBlitFramebuffer(0, 0, m_Width, m_Height, m_X, g_WindowHeight - m_Y , m_X + m_Width, g_WindowHeight - (m_Height + m_Y), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 }

@@ -9,7 +9,6 @@
 #include <processthreadsapi.h>
 
 HHOOK Hook;
-
 LRESULT CBTProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam) {
 	if (nCode != HCBT_CREATEWND)
 		return CallNextHookEx(Hook, nCode, wParam, lParam);
@@ -21,7 +20,12 @@ LRESULT CBTProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam) {
 
 		if (!strcmp(CWArguments->lpcs->lpszName, "Teardown")) {
 			g_hWnd = reinterpret_cast<HWND>(wParam);;
+			g_WindowWidth = CWArguments->lpcs->cx - 16;
+			g_WindowHeight = CWArguments->lpcs->cy - 39;
+
 			Sledge::Hooks::WndProc();
+
+			g_WindowReady = true;
 		}
 	}
 	return 0;

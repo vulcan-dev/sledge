@@ -10,6 +10,7 @@
 #include "util/log.h"
 
 #include <mutex>
+#include <thread>
 
 #include <windef.h>
 #include <processthreadsapi.h>
@@ -25,12 +26,13 @@ CGame* hGameCCtor(void* pAlloc, void* pMemory) {
 	g_Scene = g_Game->m_Scene;
 	
 	LogVerbose("g_Game: {}", reinterpret_cast<void*>(g_Game));
-	
+	LogVerbose("g_Scene: {}", reinterpret_cast<void*>(g_Scene));
+
 	std::call_once(fLateInitCalled, [] {
 		std::thread LateInitThread(Loader::LateInit);
 		LateInitThread.detach();
 	});
-	
+
 	return g_Game;
 }
 

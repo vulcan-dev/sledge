@@ -23,15 +23,15 @@
 */
 const char* glErrorString(GLenum err) {
 	switch (err) {
-	case GL_NO_ERROR: return "GL_NO_ERROR";
-	case GL_INVALID_ENUM: return "GL_INVALID_ENUM";
-	case GL_INVALID_VALUE: return "GL_INVALID_VALUE";
-	case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
-	case GL_STACK_OVERFLOW: return "GL_STACK_OVERFLOW";
-	case GL_STACK_UNDERFLOW: return "GL_STACK_UNDERFLOW";
-	case GL_OUT_OF_MEMORY: return "GL_OUT_OF_MEMORY";
-	case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
-	default: return "UNKNOWN ERROR";
+		case GL_NO_ERROR: return "GL_NO_ERROR";
+		case GL_INVALID_ENUM: return "GL_INVALID_ENUM";
+		case GL_INVALID_VALUE: return "GL_INVALID_VALUE";
+		case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
+		case GL_STACK_OVERFLOW: return "GL_STACK_OVERFLOW";
+		case GL_STACK_UNDERFLOW: return "GL_STACK_UNDERFLOW";
+		case GL_OUT_OF_MEMORY: return "GL_OUT_OF_MEMORY";
+		case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
+		default: return "UNKNOWN ERROR";
 	}
 }
 
@@ -61,8 +61,25 @@ GLuint LoadShaderFromSource(GLenum eShaderType, const char* cSource, const char*
 	CGPUDriver
 */
 
+CGPUDriver::CGPUDriver() {}
+CGPUDriver::~CGPUDriver() {}
+
+void CGPUDriver::Clear() {
+	m_CurrentProgram = 0;
+
+	m_TextureMap.clear();
+	m_RenderBufferMap.clear();
+	m_GeometryMap.clear();
+	m_ProgramMap.clear();
+}
+
 // texture
 void CGPUDriver::CreateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap) {
+	if (Bitmap->IsEmpty()) {
+		CreateFBOTexture(iTextureId, Bitmap);
+		return;
+	}
+	
 	STextureEntry Entry;
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -73,7 +90,6 @@ void CGPUDriver::CreateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bi
 	glGenTextures(1, &Entry.m_TextureId);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, Entry.m_TextureId);
-
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, Bitmap->row_bytes() / Bitmap->bpp());
@@ -91,10 +107,40 @@ void CGPUDriver::CreateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bi
 	}
 
 	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
 	m_TextureMap[iTextureId] = Entry;
 }
 
+void CGPUDriver::CreateFBOTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap) {
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	STextureEntry Texture;
+	Texture.m_Width = Bitmap->width();
+	Texture.m_Height = Bitmap->height();
+
+	glGenTextures(1, &Texture.m_TextureId);
+	glActiveTexture(GL_TEXTURE0 + 0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, Texture.m_TextureId);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, Texture.m_Width, Texture.m_Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	m_TextureMap[iTextureId] = Texture;
+}
+
 void CGPUDriver::UpdateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap) {
+	if (!m_TextureMap.count(iTextureId))
+		return;
+
 	glActiveTexture(GL_TEXTURE0);
 
 	STextureEntry& Entry = m_TextureMap[iTextureId];
@@ -122,6 +168,9 @@ void CGPUDriver::UpdateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bi
 }
 
 void CGPUDriver::BindTexture(unsigned char cTextureUnit, GLuint iTextureId) {
+	if (!m_TextureMap.count(iTextureId))
+		return;
+
 	STextureEntry& Texture = m_TextureMap[iTextureId];
 	glActiveTexture(GL_TEXTURE0 + cTextureUnit);
 	glBindTexture(GL_TEXTURE_2D, Texture.m_TextureId);
@@ -133,13 +182,18 @@ void CGPUDriver::BindTexture(unsigned char cTextureUnit, GLuint iTextureId) {
 }
 
 void CGPUDriver::DestroyTexture(GLuint iTextureId) {
+	if (!m_TextureMap.count(iTextureId))
+		return;
+
 	glDeleteTextures(1, &m_TextureMap[iTextureId].m_TextureId);
+	m_TextureMap.erase(iTextureId);
 }
 
-// renderbuffer
+ //renderbuffer
 void CGPUDriver::CreateRenderBuffer(GLuint iRenderBufferId, const ultralight::RenderBuffer& Buffer) {
 	if (iRenderBufferId == 0)
 		return;
+
 	GLuint iFrameBufferId;
 	glGenFramebuffers(1, &iFrameBufferId);
 	glBindFramebuffer(GL_FRAMEBUFFER, iFrameBufferId);
@@ -166,10 +220,24 @@ void CGPUDriver::BindRenderBuffer(GLuint iRenderBufferId) {
 		return;
 	}
 
+	if (!m_RenderBufferMap.count(iRenderBufferId))
+		return;
+
 	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderBufferMap[iRenderBufferId]);
 }
 
+void CGPUDriver::BindReadRenderBuffer(GLuint iRenderBufferId) {
+	if (!m_RenderBufferMap.count(iRenderBufferId))
+		return;
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RenderBufferMap[iRenderBufferId]);
+	return;
+}
+
 void CGPUDriver::ClearRenderBuffer(GLuint iRenderBufferId) {
+	if (!m_RenderBufferMap.count(iRenderBufferId))
+		return;
+
 	BindRenderBuffer(iRenderBufferId);
 	glDisable(GL_SCISSOR_TEST);
 	glClearColor(0, 0, 0, 0);
@@ -179,7 +247,12 @@ void CGPUDriver::ClearRenderBuffer(GLuint iRenderBufferId) {
 void CGPUDriver::DestroyRenderBuffer(GLuint iRenderBufferId) {
 	if (iRenderBufferId == 0)
 		return;
+	
+	if (!m_RenderBufferMap.count(iRenderBufferId))
+		return;
+
 	glDeleteFramebuffers(1, &m_RenderBufferMap[iRenderBufferId]);
+	m_RenderBufferMap.erase(iRenderBufferId);
 }
 
 // geometry
@@ -240,11 +313,13 @@ void CGPUDriver::CreateGeometry(GLuint iGeometryId, const ultralight::VertexBuff
 		return;
 	}
 
-	glBindVertexArray(0);
 	m_GeometryMap[iGeometryId] = Geometry;
 }
 
 void CGPUDriver::UpdateGeometry(GLuint iGeometryId, const ultralight::VertexBuffer& Vertices, const::ultralight::IndexBuffer& Indices) {
+	if (!m_GeometryMap.count(iGeometryId))
+		return;
+
 	SGeometryEntry Geometry = m_GeometryMap[iGeometryId];
 
 	glBindVertexArray(Geometry.m_VAO);
@@ -254,11 +329,12 @@ void CGPUDriver::UpdateGeometry(GLuint iGeometryId, const ultralight::VertexBuff
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Geometry.m_VBOIndices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size, Indices.data, GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
 }
 
 void CGPUDriver::DrawGeometry(GLuint iGeometryId, unsigned int iIdxCount, unsigned int iIdxOffset, const ultralight::GPUState& State) {
+	if (!m_GeometryMap.count(iGeometryId))
+		return;
+
 	if (m_ProgramMap.empty())
 		LoadPrograms();
 
@@ -298,6 +374,9 @@ void CGPUDriver::DrawGeometry(GLuint iGeometryId, unsigned int iIdxCount, unsign
 }
 
 void CGPUDriver::DestroyGeometry(GLuint iGeometryId) {
+	if (!m_GeometryMap.count(iGeometryId))
+		return;
+
 	SGeometryEntry& Geometry = m_GeometryMap[iGeometryId];
 
 	glDeleteBuffers(1, &Geometry.m_VBOIndices);
@@ -309,6 +388,7 @@ void CGPUDriver::DestroyGeometry(GLuint iGeometryId) {
 }
 
 // commands
+
 void CGPUDriver::DrawCommandList() {
 	if (m_CommandList.empty())
 		return;
@@ -318,8 +398,10 @@ void CGPUDriver::DrawCommandList() {
 	glEnable(GL_BLEND);
 	glDisable(GL_SCISSOR_TEST);
 	glDisable(GL_DEPTH_TEST);
+
 	glDepthFunc(GL_NEVER);
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	for (auto i = m_CommandList.begin(); i != m_CommandList.end(); i++) {
 		switch (i->command_type) {
@@ -333,8 +415,10 @@ void CGPUDriver::DrawCommandList() {
 	}
 
 	m_CommandList.clear();
-	glDisable(GL_SCISSOR_TEST);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// restore functions teardown uses
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LESS);
 }
 
 // programs

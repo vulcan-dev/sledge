@@ -9,3 +9,4 @@ inline void* g_hMod;
 inline void* g_hWnd;
 inline int g_WindowWidth;
 inline int g_WindowHeight;
+inline bool g_WindowReady = false;

@@ -10,6 +10,8 @@
 struct STextureEntry {
 	GLuint m_TextureId = 0;
 	GLuint m_RenderBufferId = 0;
+	int m_Width;
+	int m_Height;
 };
 
 struct SGeometryEntry {
@@ -26,8 +28,10 @@ struct SProgramEntry {
 
 class CGPUDriver : public CGPUDriverImpl {
 public:
-	CGPUDriver() {};
-	~CGPUDriver() {};
+	CGPUDriver();
+	~CGPUDriver();
+
+	void Clear();
 
 	virtual const char* name() { return "sledge"; }
 
@@ -35,12 +39,14 @@ public:
 	virtual void EndDrawing() override {};
 
 	virtual void CreateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap) override;
+	virtual void CreateFBOTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap);
 	virtual void UpdateTexture(GLuint iTextureId, ultralight::Ref<ultralight::Bitmap> Bitmap) override;
 	virtual void BindTexture(unsigned char cTextureUnit, GLuint iTextureId) override;
 	virtual void DestroyTexture(GLuint iTextureId) override;
 
 	virtual void CreateRenderBuffer(GLuint iRenderBufferId, const ultralight::RenderBuffer& Buffer) override;
 	void BindRenderBuffer(GLuint iRenderBufferId);
+	void BindReadRenderBuffer(GLuint iRenderBufferId);
 	virtual void DestroyRenderBuffer(GLuint iRenderBufferId) override;
 	void ClearRenderBuffer(GLuint iRenderBufferId);
 

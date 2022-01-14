@@ -3,8 +3,6 @@
 
 #include "util/log.h"
 
-#include <GL/glew.h>
-
 #include <windef.h>
 #include <wingdi.h>
 #include <libloaderapi.h>
@@ -14,36 +12,36 @@
 
 #include <mutex>
 
-std::once_flag fUIInitialized;
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-HGLRC TDContext; // Context where the game draws everything
-HGLRC ULContext; // Context where ultralight's drawcalls occur
-HGLRC UIContext; // Context where the UI is drawn
+#include "globals.h"
+
+std::once_flag fUIInitialized;
 
 typedef BOOL (*twglSwapBuffers)(_In_ HDC hDc);
 twglSwapBuffers wglSwapBuffers;
 
-void InitUI(HDC hDc) {
+double dLastUIUpdateTime;
+void InitUI() {
+	glfwInit();
 	glewInit();
-
-	TDContext = wglGetCurrentContext();
-	ULContext = wglCreateContext(hDc);
-	UIContext = wglCreateContext(hDc);
-
-	wglShareLists(ULContext, UIContext); // share textures from ultralight context to the ui context
+	dLastUIUpdateTime = glfwGetTime();
+	CSledgeUI::CreateInstance();
 }
 
 BOOL hwglSwapBuffers(_In_ HDC hDc) {
-	std::call_once(fUIInitialized, InitUI, hDc);
+	if (!g_WindowReady)
+		return wglSwapBuffers(hDc);
 
-	wglMakeCurrent(hDc, ULContext);
-	CSledgeUI::Instance()->Update();
+	std::call_once(fUIInitialized, InitUI);
 
-	wglMakeCurrent(hDc, UIContext);
-	CSledgeUI::Instance()->Draw();
-
-	wglMakeCurrent(hDc, TDContext);
-
+	double dDelta = glfwGetTime() - dLastUIUpdateTime;
+	if (dDelta >= 1 / UI_REFRESH_RATE) {
+		CSledgeUI::Instance()->Update();
+		CSledgeUI::Instance()->Draw();
+	}
+	
 	return wglSwapBuffers(hDc);
 }
 
