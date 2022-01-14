@@ -45,6 +45,7 @@ namespace SledgeLib
         public uint GetChild() { return CEntity.Entity_GetChild(m_Handle); }
 
         public void Destroy() { CEntity.Entity_Destroy(m_Handle); }
+
         public void SetParent(uint iParent) { CEntity.Entity_SetParent(m_Handle, iParent); }
 
         public bool m_Broken {  get { return Shape_IsBroken(m_Handle); } }

@@ -50,7 +50,6 @@ public:
 	virtual void DestroyRenderBuffer(GLuint iRenderBufferId) override;
 	void ClearRenderBuffer(GLuint iRenderBufferId);
 
-
 	virtual void CreateGeometry(GLuint iGeometryId, const ultralight::VertexBuffer& Vertices, const::ultralight::IndexBuffer& Indices) override;
 	virtual void DrawGeometry(GLuint iGeometryId, unsigned int iIdxCount, unsigned int iIdxOffset, const ultralight::GPUState& State) override;
 	virtual void UpdateGeometry(GLuint iGeometryId, const ultralight::VertexBuffer& Vertices, const::ultralight::IndexBuffer& Indices) override;

@@ -388,7 +388,6 @@ void CGPUDriver::DestroyGeometry(GLuint iGeometryId) {
 }
 
 // commands
-
 void CGPUDriver::DrawCommandList() {
 	if (m_CommandList.empty())
 		return;
