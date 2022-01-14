@@ -71,6 +71,12 @@ namespace SledgeLib
 
         }
 
+        public bool m_Dynamic
+        {
+            get { return Body_GetDynamic(m_Handle); }
+            set { Body_SetDynamic(m_Handle, value); }
+        }
+
         public float m_Mass { get { return GetBodyMass(m_Handle); } }
 
         public CBody() { m_Handle = Body_Create(); }
