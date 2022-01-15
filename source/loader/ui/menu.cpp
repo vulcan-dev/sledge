@@ -49,7 +49,6 @@ void ApplyStyle() {
 }
 
 void Init() {
-
 	sprintf(cBuildText, "Build %s", __DATE__);
 
 	vTitleSize = ImGui::CalcTextSize("sledge");
@@ -118,24 +117,24 @@ void Menu::Draw() {
 		ImGui::SetCursorPosY(Window::iSizeH - fPadding - vButtonSize.y);
 		ImGui::SetCursorPosX(fPadding);
 
-		if (ImGui::Button("play", vButtonSize))
+		if (ImGui::Button("Play", vButtonSize))
 			std::thread(Teardown::Launch).detach();
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX((fPadding * 2) + vButtonSize.x);
-		if (ImGui::Button("mods", vButtonSize)) {
+		if (ImGui::Button("Mods", vButtonSize)) {
 			iCurrentTab = 1;
 		}
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX((fPadding * 3) + (vButtonSize.x * 2));
-		if (ImGui::Button("settings", vButtonSize)) {
+		if (ImGui::Button("Settings", vButtonSize)) {
 			iCurrentTab = 2;
 		}
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX((fPadding * 4) + (vButtonSize.x * 3));
-		if (ImGui::Button("discord", vButtonSize))
+		if (ImGui::Button("Discord", vButtonSize))
 			system("start https://www.discord.gg/SAAmJ3VSAS");
 
 		if (bPopupInQueue) {
