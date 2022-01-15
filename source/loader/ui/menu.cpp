@@ -44,9 +44,10 @@ void ApplyStyle() {
 	ImGuiStyle& Style = ImGui::GetStyle();
 	//ImGuiIO& io = ImGui::GetIO();
 
-	Style.Colors[ImGuiCol_Button] = Menu::Colors::LightBlue;
-	Style.Colors[ImGuiCol_ButtonHovered] = Menu::Colors::LighterBlue;
-	Style.Colors[ImGuiCol_ButtonActive] = Menu::Colors::DarkBlue;
+	Style.Colors[ImGuiCol_Button] = Menu::Colors::FromRGB(255, 118, 117);
+	Style.Colors[ImGuiCol_ButtonHovered] = Menu::Colors::FromRGB(255, 138, 137);
+	Style.Colors[ImGuiCol_ButtonActive] = Menu::Colors::FromRGB(255, 88, 87);
+	Style.Colors[ImGuiCol_WindowBg] = Menu::Colors::FromRGB(45, 52, 54);
 }
 
 void Menu::InitFonts() {
@@ -73,7 +74,8 @@ void Menu::Draw() {
 		fTopBarHeight = (vTitleSize.y + vBuildTextSize.y) + (fTopBarPadding * 3.f);
 		fIconPadding = fPadding * 15;
 
-		vButtonSize = ImVec2((Window::iSizeW - (fPadding * 5)) / 4.f, Window::iSizeH / 10.f);
+		//vButtonSize = ImVec2((Window::iSizeW - (fPadding * 5)) / 4.f, Window::iSizeH / 10.f);
+		vButtonSize = ImVec2(100, fTopBarHeight);
 		vIconSize = ImVec2(Window::iSizeW - (fIconPadding * 2), Window::iSizeW - (fIconPadding * 2));
 	});
 
@@ -88,7 +90,7 @@ void Menu::Draw() {
 
 		static ImDrawList* WindowDrawList = ImGui::GetWindowDrawList();
 
-		WindowDrawList->AddRectFilled(vZero, ImVec2(Window::iSizeW, fTopBarHeight), Menu::Colors::LightBlue);
+		WindowDrawList->AddRectFilled(vZero, ImVec2(Window::iSizeW, fTopBarHeight), Menu::Colors::FromRGB(255, 118, 117));
 
 		ImGui::PushFont(font_l);
 		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "Sledge");
@@ -123,26 +125,27 @@ void Menu::Draw() {
 			break;
 		}
 
-		ImGui::SetCursorPosY(Window::iSizeH - fPadding - vButtonSize.y);
-		ImGui::SetCursorPosX(fPadding);
+		WindowDrawList->AddRectFilled(ImVec2(0, Window::iSizeH - fTopBarHeight), ImVec2(Window::iSizeW, Window::iSizeH), Menu::Colors::FromRGB(255, 118, 117));
+		ImGui::SetCursorPosX(20);
 
+		ImGui::SetCursorPosY(Window::iSizeH - fTopBarHeight);
 		if (ImGui::Button("Play", vButtonSize))
 			std::thread(Teardown::Launch).detach();
 
 		ImGui::SameLine();
-		ImGui::SetCursorPosX((fPadding * 2) + vButtonSize.x);
+		ImGui::SetCursorPosX((20 * 2) + vButtonSize.x);
 		if (ImGui::Button("Mods", vButtonSize)) {
 			iCurrentTab = 1;
 		}
 
 		ImGui::SameLine();
-		ImGui::SetCursorPosX((fPadding * 3) + (vButtonSize.x * 2));
+		ImGui::SetCursorPosX((20 * 3) + (vButtonSize.x * 2));
 		if (ImGui::Button("Settings", vButtonSize)) {
 			iCurrentTab = 2;
 		}
 
 		ImGui::SameLine();
-		ImGui::SetCursorPosX((fPadding * 4) + (vButtonSize.x * 3));
+		ImGui::SetCursorPosX((20 * 4) + (vButtonSize.x * 3));
 		if (ImGui::Button("Discord", vButtonSize))
 			system("start https://www.discord.gg/SAAmJ3VSAS");
 
