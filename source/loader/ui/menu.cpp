@@ -49,32 +49,32 @@ void ApplyStyle() {
 	Style.Colors[ImGuiCol_ButtonActive] = Menu::Colors::DarkBlue;
 }
 
-void Menu::Init() {
+void Menu::InitFonts() {
 	ApplyStyle();
 	ImContext = ImGui::GetCurrentContext();
 	ImContext->IO.Fonts->AddFontDefault();
 	font_l = ImContext->IO.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16);
 	font_s = ImContext->IO.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 12);
-
-	sprintf(cBuildText, "Build %s", __DATE__);
-
-	fPadding = Window::iSizeH / 50.f;
-	fTopBarPadding = (vTitleSize.y + vBuildTextSize.y) * 0.1f;
-	fTopBarHeight = (vTitleSize.y + vBuildTextSize.y) + (fTopBarPadding * 3.f);
-	fIconPadding = fPadding * 15;
-
-	vButtonSize = ImVec2((Window::iSizeW - (fPadding * 5)) / 4.f, Window::iSizeH / 10.f);
-	vIconSize = ImVec2(Window::iSizeW - (fIconPadding * 2), Window::iSizeW - (fIconPadding * 2));
-
-	iIconTexture = Resources::TextureFromPNG("ICON_PNG");
-
-	ImGui::SetNextWindowSize(ImVec2(Window::iSizeW, Window::iSizeH));
 }
 
 void Menu::Draw() {
 	std::call_once(fInitialized, [] {
+		sprintf(cBuildText, "Build %s", __DATE__);
+
+		iIconTexture = Resources::TextureFromPNG("ICON_PNG");
+
+		ImGui::SetNextWindowSize(ImVec2(Window::iSizeW, Window::iSizeH));
+
 		vTitleSize = ImGui::CalcTextSize("Sledge");
 		vBuildTextSize = ImGui::CalcTextSize(cBuildText);
+
+		fPadding = Window::iSizeH / 50.f;
+		fTopBarPadding = (vTitleSize.y + vBuildTextSize.y) * 0.1f;
+		fTopBarHeight = (vTitleSize.y + vBuildTextSize.y) + (fTopBarPadding * 3.f);
+		fIconPadding = fPadding * 15;
+
+		vButtonSize = ImVec2((Window::iSizeW - (fPadding * 5)) / 4.f, Window::iSizeH / 10.f);
+		vIconSize = ImVec2(Window::iSizeW - (fIconPadding * 2), Window::iSizeW - (fIconPadding * 2));
 	});
 
 	ImGui::SetNextWindowPos(vZero);
@@ -91,10 +91,10 @@ void Menu::Draw() {
 		WindowDrawList->AddRectFilled(vZero, ImVec2(Window::iSizeW, fTopBarHeight), Menu::Colors::LightBlue);
 
 		ImGui::PushFont(font_l);
-		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2.f) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "Sledge");
+		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "Sledge");
 		ImGui::PopFont();
 		ImGui::PushFont(font_s);
-		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2.f) - (vBuildTextSize.x / 2), (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
+		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vBuildTextSize.x / 2), (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
 		ImGui::PopFont();
 		ImGui::PushFont(font_l);
 

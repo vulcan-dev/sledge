@@ -4,7 +4,7 @@
 
 namespace Menu {
 	void Draw();
-	void Init();
+	void InitFonts();
 
 	namespace Colors {
 		inline ImColor White		(1.f, 1.f, 1.f);

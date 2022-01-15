@@ -30,7 +30,7 @@ void Window::Create() {
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+	//glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
 	GLWindow = glfwCreateWindow(Window::iSizeW, Window::iSizeH, "sledge", NULL, NULL);
@@ -47,7 +47,7 @@ void Window::Create() {
 	ImGui_ImplOpenGL3_Init("#version 130");
 
 	ImGui::GetIO().IniFilename = NULL;
-	Menu::Init();
+	Menu::InitFonts();
 
 	while (!glfwWindowShouldClose(GLWindow)) {
 		glfwPollEvents();
