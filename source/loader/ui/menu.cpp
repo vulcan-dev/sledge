@@ -27,6 +27,7 @@ ImVec2 vIconSize;
 ImVec2 vPopupTitleSize;
 
 ImGuiContext* ImContext;
+ImFont* font_l, *font_s;
 
 char cBuildText[18];
 
@@ -41,18 +42,21 @@ std::once_flag fInitialized;
 
 void ApplyStyle() {
 	ImGuiStyle& Style = ImGui::GetStyle();
+	//ImGuiIO& io = ImGui::GetIO();
 
 	Style.Colors[ImGuiCol_Button] = Menu::Colors::LightBlue;
 	Style.Colors[ImGuiCol_ButtonHovered] = Menu::Colors::LighterBlue;
 	Style.Colors[ImGuiCol_ButtonActive] = Menu::Colors::DarkBlue;
-	//Style.Colors[ImGuiCol_PopupBg] = Menu::Colors::DarkBlue;
 }
 
-void Init() {
-	sprintf(cBuildText, "Build %s", __DATE__);
+void Menu::Init() {
+	ApplyStyle();
+	ImContext = ImGui::GetCurrentContext();
+	ImContext->IO.Fonts->AddFontDefault();
+	font_l = ImContext->IO.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16);
+	font_s = ImContext->IO.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 12);
 
-	vTitleSize = ImGui::CalcTextSize("sledge");
-	vBuildTextSize = ImGui::CalcTextSize(cBuildText);
+	sprintf(cBuildText, "Build %s", __DATE__);
 
 	fPadding = Window::iSizeH / 50.f;
 	fTopBarPadding = (vTitleSize.y + vBuildTextSize.y) * 0.1f;
@@ -64,14 +68,14 @@ void Init() {
 
 	iIconTexture = Resources::TextureFromPNG("ICON_PNG");
 
-	ApplyStyle();
-	ImContext = ImGui::GetCurrentContext();
-
 	ImGui::SetNextWindowSize(ImVec2(Window::iSizeW, Window::iSizeH));
 }
 
 void Menu::Draw() {
-	std::call_once(fInitialized, Init);
+	std::call_once(fInitialized, [] {
+		vTitleSize = ImGui::CalcTextSize("Sledge");
+		vBuildTextSize = ImGui::CalcTextSize(cBuildText);
+	});
 
 	ImGui::SetNextWindowPos(vZero);
 
@@ -86,8 +90,13 @@ void Menu::Draw() {
 
 		WindowDrawList->AddRectFilled(vZero, ImVec2(Window::iSizeW, fTopBarHeight), Menu::Colors::LightBlue);
 
+		ImGui::PushFont(font_l);
 		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2.f) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "Sledge");
+		ImGui::PopFont();
+		ImGui::PushFont(font_s);
 		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2.f) - (vBuildTextSize.x / 2), (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
+		ImGui::PopFont();
+		ImGui::PushFont(font_l);
 
 		ImGui::SetCursorPosX(Window::iSizeW - fTopBarHeight);
 		if (ImGui::Button("X", ImVec2(fTopBarHeight, fTopBarHeight)))
@@ -142,6 +151,7 @@ void Menu::Draw() {
 			ImGui::OpenPopup("MenuPopup");
 		}
 
+		ImGui::PopFont();
 		ImGui::End();
 	}
 
