@@ -109,20 +109,28 @@ void Menu::Draw() {
 			ImGui::SetCursorPos(ImVec2(fIconPadding, (fIconPadding / 4) + fTopBarHeight));
 			ImGui::Image((void*)(intptr_t)iIconTexture, vIconSize);
 			break;
-		case 1:
-			ImGui::Text("Downloaded mods:");
+		case 1: {
+			WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vBuildTextSize.x / 2) + ImGui::GetFontSize(), fTopBarHeight + 12), Menu::Colors::White, "Available Mods");
+			//ImGui::Text("Downloaded mods:");
+			int mc = 0;
 
 			for (auto const& p : std::filesystem::directory_iterator("mods")) {
 				if (p.is_directory()) {
 					std::stringstream ss;
+					mc += 24;
 
-					ss << "\t" << p.path().filename();
+					std::string filename = p.path().filename().string();
+					filename.erase(0, 0);
+					filename.erase(filename.size() - 1);
+					ss << filename;
 
-					ImGui::Text(ss.str().c_str());
+					WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize(ss.str().c_str()).x / 2), fTopBarHeight + 14 + mc), Menu::Colors::White, ss.str().c_str());
 				}
 			}
 
 			break;
+		} case 2:
+			ImGui::Text("WIP");
 		}
 
 		WindowDrawList->AddRectFilled(ImVec2(0, Window::iSizeH - fTopBarHeight), ImVec2(Window::iSizeW, Window::iSizeH), Menu::Colors::FromRGB(255, 118, 117));
