@@ -94,7 +94,7 @@ void Menu::Draw() {
 		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "Sledge");
 		ImGui::PopFont();
 		ImGui::PushFont(font_s);
-		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vBuildTextSize.x / 2), (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
+		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vBuildTextSize.x / 2) + ImGui::GetFontSize(), (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
 		ImGui::PopFont();
 		ImGui::PushFont(font_l);
 
