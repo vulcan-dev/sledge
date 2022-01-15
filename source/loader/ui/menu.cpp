@@ -2,6 +2,7 @@
 #include "ui/window.h"
 
 #include "util/resources.h"
+#include <Ultralight/Ultralight.h>
 
 #include "game/teardown.h"
 
@@ -49,7 +50,7 @@ void ApplyStyle() {
 
 void Init() {
 
-	sprintf(cBuildText, "%s build", __DATE__);
+	sprintf(cBuildText, "Build %s", __DATE__);
 
 	vTitleSize = ImGui::CalcTextSize("sledge");
 	vBuildTextSize = ImGui::CalcTextSize(cBuildText);
@@ -86,7 +87,7 @@ void Menu::Draw() {
 
 		WindowDrawList->AddRectFilled(vZero, ImVec2(Window::iSizeW, fTopBarHeight), Menu::Colors::LightBlue);
 
-		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2.f) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "sledge");
+		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2.f) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "Sledge");
 		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2.f) - (vBuildTextSize.x / 2), (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
 
 		ImGui::SetCursorPosX(Window::iSizeW - fTopBarHeight);
