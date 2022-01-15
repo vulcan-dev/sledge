@@ -2,9 +2,9 @@
 #include "ui/window.h"
 
 #include "util/resources.h"
-#include <Ultralight/Ultralight.h>
 
 #include "game/teardown.h"
+#include "tinyjson.h"
 
 #include <thread>
 #include <mutex>
@@ -13,6 +13,7 @@
 
 #include <filesystem>
 #include <sstream>
+#include <fstream>
 
 float fTopBarHeight;
 float fTopBarPadding;
@@ -40,18 +41,52 @@ const char* cCurrentErrorMessage;
 
 std::once_flag fInitialized;
 
+float* ParseColor(std::string name) {
+	std::stringstream ss(name);
+	std::string item;
+	float* arr = new float[3] {255, 255, 255};
+	int i = 0;
+	while (std::getline(ss, item, ',')) {
+		arr[i] = std::stoi(item);
+		i++;
+	}
+
+	return arr;
+}
+
+float* btn_icol;
+float* btn_hcol;
+float* btn_acol;
+float* bg_col;
+
 void ApplyStyle() {
 	ImGuiStyle& Style = ImGui::GetStyle();
-	//ImGuiIO& io = ImGui::GetIO();
 
-	Style.Colors[ImGuiCol_Button] = Menu::Colors::FromRGB(255, 118, 117);
-	Style.Colors[ImGuiCol_ButtonHovered] = Menu::Colors::FromRGB(255, 138, 137);
-	Style.Colors[ImGuiCol_ButtonActive] = Menu::Colors::FromRGB(255, 88, 87);
-	Style.Colors[ImGuiCol_WindowBg] = Menu::Colors::FromRGB(45, 52, 54);
+	std::ifstream config("config.json");
+	std::stringstream buffer;
+	buffer << config.rdbuf();
+	config.close();
+
+	tiny::TinyJson json;
+	json.ReadJson(buffer.str());
+
+	std::string sbtn_icol = json.Get<std::string>("button_icol");
+	std::string sbtn_hcol = json.Get<std::string>("button_hcol");
+	std::string sbtn_acol = json.Get<std::string>("button_acol");
+	std::string sbg_col   = json.Get<std::string>("bg_col");
+
+	btn_icol = ParseColor(sbtn_icol);
+	btn_hcol = ParseColor(sbtn_hcol);
+	btn_acol = ParseColor(sbtn_acol);
+	bg_col   = ParseColor(sbg_col);
+
+	Style.Colors[ImGuiCol_Button] = Menu::Colors::FromRGB(btn_icol[0], btn_icol[1], btn_icol[2], 255);
+	Style.Colors[ImGuiCol_ButtonHovered] = Menu::Colors::FromRGB(btn_hcol[0], btn_hcol[1], btn_hcol[2], 255);
+	Style.Colors[ImGuiCol_ButtonActive] = Menu::Colors::FromRGB(btn_acol[0], btn_acol[1], btn_acol[2], 255);
+	Style.Colors[ImGuiCol_WindowBg] = Menu::Colors::FromRGB(bg_col[0], bg_col[1], bg_col[2], 255);
 }
 
 void Menu::InitFonts() {
-	ApplyStyle();
 	ImContext = ImGui::GetCurrentContext();
 	ImContext->IO.Fonts->AddFontDefault();
 	font_l = ImContext->IO.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16);
@@ -60,6 +95,7 @@ void Menu::InitFonts() {
 
 void Menu::Draw() {
 	std::call_once(fInitialized, [] {
+		ApplyStyle();
 		sprintf(cBuildText, "Build %s", __DATE__);
 
 		iIconTexture = Resources::TextureFromPNG("ICON_PNG");
@@ -93,10 +129,10 @@ void Menu::Draw() {
 		WindowDrawList->AddRectFilled(vZero, ImVec2(Window::iSizeW, fTopBarHeight), Menu::Colors::FromRGB(255, 118, 117));
 
 		ImGui::PushFont(font_l);
-		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vTitleSize.x / 2), fTopBarPadding), Menu::Colors::White, "Sledge");
+		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize("Sledge").x / 2) + ImGui::GetFontSize() / 2, 4), Menu::Colors::White, "Sledge");
 		ImGui::PopFont();
 		ImGui::PushFont(font_s);
-		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vBuildTextSize.x / 2) + ImGui::GetFontSize(), (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
+		WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize(cBuildText).x / 2) + ImGui::GetFontSize() / 2, (fTopBarPadding * 2) + vTitleSize.y), Menu::Colors::White, cBuildText);
 		ImGui::PopFont();
 		ImGui::PushFont(font_l);
 
@@ -110,27 +146,25 @@ void Menu::Draw() {
 			ImGui::Image((void*)(intptr_t)iIconTexture, vIconSize);
 			break;
 		case 1: {
-			WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (vBuildTextSize.x / 2) + ImGui::GetFontSize(), fTopBarHeight + 12), Menu::Colors::White, "Available Mods");
-			//ImGui::Text("Downloaded mods:");
-			int mc = 0;
+			WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize("Available Mods").x / 2) + ImGui::GetFontSize() / 2, fTopBarHeight + 12), Menu::Colors::White, "Available Mods");
+			int modCount = 0;
 
 			for (auto const& p : std::filesystem::directory_iterator("mods")) {
 				if (p.is_directory()) {
 					std::stringstream ss;
-					mc += 24;
+					modCount += 24;
 
 					std::string filename = p.path().filename().string();
-					filename.erase(0, 0);
-					filename.erase(filename.size() - 1);
 					ss << filename;
 
-					WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize(ss.str().c_str()).x / 2), fTopBarHeight + 14 + mc), Menu::Colors::White, ss.str().c_str());
+					WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize(ss.str().c_str()).x / 2) + ImGui::GetFontSize() / 2, fTopBarHeight + 14 + modCount), Menu::Colors::White, ss.str().c_str());
 				}
 			}
 
 			break;
 		} case 2:
-			ImGui::Text("WIP");
+			WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize("WIP").x / 2) + ImGui::GetFontSize() / 2, fTopBarHeight + 12), Menu::Colors::White, "WIP");
+			break;
 		}
 
 		WindowDrawList->AddRectFilled(ImVec2(0, Window::iSizeH - fTopBarHeight), ImVec2(Window::iSizeW, Window::iSizeH), Menu::Colors::FromRGB(255, 118, 117));
