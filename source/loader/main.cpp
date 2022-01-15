@@ -7,6 +7,13 @@
 #include <fstream>
 #include "tinyjson.h"
 
+#include <libloaderapi.h>
+#include <consoleapi.h>
+#include <processenv.h>
+#include <filesystem>
+
+#include "util/log.h"
+
 struct SJsonCol {
 	int r = 255;
 	int g = 255;
@@ -19,6 +26,25 @@ struct SJsonCol {
 };
 
 int __stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int) {
+#ifdef _DEBUG
+	AllocConsole();
+
+	freopen("CONOUT$", "w", stdout);
+
+	HANDLE hConsole = GetStdHandle((DWORD)-11);
+
+	// enable escape sequences
+	DWORD dwMode = 0;
+	GetConsoleMode(hConsole, &dwMode);
+	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	SetConsoleMode(hConsole, dwMode);
+#endif
+
+	std::string sLogPath = std::filesystem::current_path().string() + "\\logs\\";
+	LogInit("Launcher", sLogPath.c_str());
+
+	LogInfo("Launcher Loaded");
+
 	if (strstr(lpCmdLine, "-nolauncher")) {
 		Teardown::Launch();
 		return 1;
