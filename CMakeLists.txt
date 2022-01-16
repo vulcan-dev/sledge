@@ -18,7 +18,7 @@ string(REPLACE "/DWIN32" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 # libraries
 # ------------------------------------------------------
 add_library(sledge_warnings INTERFACE)
-target_compile_options(sledge_warnings INTERFACE /W4 /WX) # /W4 /WX later
+target_compile_options(sledge_warnings INTERFACE /W4 /WX-) # /W4 /WX later
 
 # shared dependencies
 add_library(sledge_shared_dependencies INTERFACE)

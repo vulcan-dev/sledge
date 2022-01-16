@@ -4,10 +4,12 @@
 #include "util/resources.h"
 
 #include "game/teardown.h"
+#include "util/log.h"
 #include "tinyjson.h"
 
 #include <thread>
 #include <mutex>
+
 
 #include <imgui_internal.h>
 
@@ -41,10 +43,10 @@ const char* cCurrentErrorMessage;
 
 std::once_flag fInitialized;
 
-float* ParseColor(std::string name) {
+int* ParseColor(std::string name) {
 	std::stringstream ss(name);
 	std::string item;
-	float* arr = new float[3] {255, 255, 255};
+	int* arr = new int[3] {255, 255, 255};
 	int i = 0;
 	while (std::getline(ss, item, ',')) {
 		arr[i] = std::stoi(item);
@@ -54,10 +56,10 @@ float* ParseColor(std::string name) {
 	return arr;
 }
 
-float* btn_icol;
-float* btn_hcol;
-float* btn_acol;
-float* bg_col;
+int* btn_icol;
+int* btn_hcol;
+int* btn_acol;
+int* bg_col;
 
 void ApplyStyle() {
 	ImGuiStyle& Style = ImGui::GetStyle();
@@ -140,6 +142,31 @@ void Menu::Draw() {
 		if (ImGui::Button("X", ImVec2(fTopBarHeight, fTopBarHeight)))
 			Window::Close();
 
+#define GET_VARIABLE_NAME(Variable) (#Variable)
+
+		auto SetColor = [](int* btn) -> void {
+			std::ofstream out("config.json", std::ios::out | std::ios::app);
+			tiny::TinyJson json;
+
+			std::ifstream in("config.json");
+			std::stringstream buffer;
+			buffer << in.rdbuf();
+			in.close();
+
+			json.ReadJson(buffer.str());
+			LogVerbose("JSON: {0}", buffer.str());
+
+			// convert col to string separated by commas
+			std::stringstream ss;
+			ss << btn[0] << "," << btn[1] << "," << btn[2];
+
+			json[GET_VARIABLE_NAME(btn)].Set(ss.str());
+			std::string str = json.WriteJson();
+			out << str;
+
+			out.close();
+		};
+
 		switch (iCurrentTab) {
 		case 0:
 			ImGui::SetCursorPos(ImVec2(fIconPadding, (fIconPadding / 4) + fTopBarHeight));
@@ -163,7 +190,39 @@ void Menu::Draw() {
 
 			break;
 		} case 2:
-			WindowDrawList->AddText(ImVec2((Window::iSizeW / 2) - (ImGui::CalcTextSize("WIP").x / 2) + ImGui::GetFontSize() / 2, fTopBarHeight + 12), Menu::Colors::White, "WIP");
+			ImGui::SetCursorPosX(17);
+			ImGui::Text("Idle Color");
+			ImGui::SameLine();
+			ImGuiStyle& Style = ImGui::GetStyle();
+			ImGui::SetCursorPosX(95);
+			if (ImGui::SliderInt3("##btn_icol", btn_icol, 1, 255)) {
+				//SetColor(btn_icol);
+				//Style.Colors[ImGuiCol_Button] = Menu::Colors::FromRGB(btn_icol[0], btn_icol[1], btn_icol[2]);
+			}
+
+			ImGui::SetCursorPosX(10);
+			ImGui::Text("Hover Color");
+			ImGui::SameLine();
+			if (ImGui::SliderInt3("##btn_hcol", btn_hcol, 1, 255)) {
+				//SetColor(btn_hcol);
+				//Style.Colors[ImGuiCol_ButtonHovered] = Menu::Colors::FromRGB(btn_hcol[0], btn_hcol[1], btn_hcol[2]);
+			}
+
+			ImGui::SetCursorPosX(10);
+			ImGui::Text("Active Color");
+			ImGui::SameLine();
+			if (ImGui::SliderInt3("##btn_acol", btn_acol, 1, 255)) {
+				//SetColor(btn_acol);
+				//Style.Colors[ImGuiCol_ButtonActive] = Menu::Colors::FromRGB(btn_acol[0], btn_acol[1], btn_acol[2]);
+			}
+
+			ImGui::SetCursorPosX(10);
+			ImGui::Text("Background Color");
+			ImGui::SameLine();
+			if (ImGui::SliderInt3("##bg_col", bg_col, 1, 255)) {
+				//SetColor(bg_col);
+				//Style.Colors[ImGuiCol_WindowBg] = Menu::Colors::FromRGB(bg_col[0], bg_col[1], bg_col[2]);
+			}
 			break;
 		}
 
