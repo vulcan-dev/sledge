@@ -16,6 +16,8 @@
 #include <filesystem>
 #include <sstream>
 #include <fstream>
+#include <consoleapi3.h>
+#include <WinUser.h>
 
 float fTopBarHeight;
 float fTopBarPadding;
@@ -230,8 +232,11 @@ void Menu::Draw() {
 		ImGui::SetCursorPosX(20);
 
 		ImGui::SetCursorPosY(Window::iSizeH - fTopBarHeight);
-		if (ImGui::Button("Play", vButtonSize))
+		if (ImGui::Button("Play", vButtonSize)) {
+			HWND hWnd = GetConsoleWindow();
+			ShowWindow(hWnd, SW_HIDE);
 			std::thread(Teardown::Launch).detach();
+		}
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX((20 * 2) + vButtonSize.x);
