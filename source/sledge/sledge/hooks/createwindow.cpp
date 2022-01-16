@@ -31,4 +31,6 @@ LRESULT CBTProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam) {
 	return 0;
 }
 
-void Sledge::Hooks::CW() { Hook = SetWindowsHookExA(WH_CBT, reinterpret_cast<HOOKPROC>(CBTProc), reinterpret_cast<HINSTANCE>(g_hMod), NULL); }
+void Sledge::Hooks::CW() { 
+	Hook = SetWindowsHookExA(WH_CBT, reinterpret_cast<HOOKPROC>(CBTProc), reinterpret_cast<HINSTANCE>(g_hMod), NULL);
+}
