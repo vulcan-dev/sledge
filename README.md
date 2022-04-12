@@ -1,9 +1,21 @@
 # Sledge
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ka8ikyfdreboptdu?svg=true)](https://ci.appveyor.com/project/44lr/sledge)\
+<p>
+    <a href="https://store.steampowered.com/app/1167630/Teardown/">
+        <img src="https://img.shields.io/badge/Teardown-0.9.6-orange">
+    </a>
+    <a href="https://isocpp.org/">
+        <img src="https://img.shields.io/badge/language-C%2B%2B20-blue.svg">
+    </a>
+    <a href="https://ci.appveyor.com/project/44lr/sledge">
+        <img src="https://ci.appveyor.com/api/projects/status/ka8ikyfdreboptdu?svg=true">
+    </a>
+</p>
+
 Sledge is an open source project that aims to bring full C# modding support to [Teardown](https://store.steampowered.com/app/1167630/Teardown/).
 
-The current goal is to port all of the already available Lua functions to C#, then add new / custom ones on top. (i.e. Voxel loading, changing gl uniforms, loading custom shaders, etc)
+The current goal is to port all of the already available Lua functions to C#, then add new / custom ones on top. (i.e. Voxel loading, changing gl uniforms, loading custom shaders, etc).
+It also features other neat things like Ultralight support.
 
 You can download the latest build [here](https://github.com/44lr/sledge/releases).
 
@@ -11,12 +23,12 @@ Need help? Wanna know more about the project?
 Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 
 ## Build requirements:
-* [CMake](https://cmake.org/download/)
+* [CMake >3.23](https://cmake.org/download/)
 * [Visual Studio](https://visualstudio.microsoft.com/)
-* C++ and C# SDKs for visual studio
 * [.NET Desktop Runtime >6.0.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 * [Git](https://git-scm.com/downloads)
-* [OpenSSL](https://slproweb.com/products/Win32OpenSSL.html) (3.0.1+, full version)
+* [OpenSSL 3.0.1+ - full version](https://slproweb.com/products/Win32OpenSSL.html)
+* [Child Process Debugging Tool](https://marketplace.visualstudio.com/items?itemName=vsdbgplat.MicrosoftChildProcessDebuggingPowerTool) (Not required, but recommended for debugging)
 
 ## How to build
 1. Clone the repository somewhere using the following command:
@@ -38,3 +50,8 @@ Options:
 - -r --rename(projectName, newProjectName) - Renames a project  
 - -d --delete(projectName) - Deletes a project  
 - -b --build(projectName) - Builds a project  
+
+## Special thanks to:
+* [SK83RJOSH](https://github.com/SK83RJOSH)
+* [Xorberax](https://github.com/ss-gnalvesteffer)
+* [Nymda](https://github.com/nymda)
