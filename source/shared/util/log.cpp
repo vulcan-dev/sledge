@@ -1,5 +1,7 @@
- #include "log.h"
- #include <fmt/color.h>
+#include "log.h"
+
+#include <fmt/color.h>
+#include <fmt/chrono.h>
 
 bool bLogInitialized = false;
 
@@ -17,38 +19,19 @@ std::ofstream LogFile;
 void LogInit(const char* cLogName, const char* cLogLocation) {
     if (bLogInitialized)
         return;
-    time_t CurrentTime = time(NULL);
-    struct tm* LocalTime = localtime(&CurrentTime);
 
-    char cTime[80];
-    strftime(cTime, sizeof(cTime), "%H-%M-%S %d-%m-%y", LocalTime);
-
-    size_t iLogLen = strlen(cLogName) + strlen(cTime);
-
-    char* cLogFileName = reinterpret_cast<char*>(malloc(iLogLen));
-
-    if (cLogFileName == NULL)
-        return;
-
-    sprintf(cLogFileName, "%s - %s.txt", cLogName, cTime);
-    
-    bLogInitialized = true;
+    std::string sLogFilename = fmt::format("{} - {:%Y-%m-%d %H.%M.%S}.txt", cLogName, fmt::localtime(std::time(nullptr)));
 
     char cLogPath[MAX_PATH];
-    sprintf(cLogPath, "%s%s", cLogLocation, cLogFileName);
+    sprintf(cLogPath, "%s%s", cLogLocation, sLogFilename.c_str());
 
     std::filesystem::create_directories(cLogLocation);
 
     LogFile.open(cLogPath, std::ios::out);
-    LogVerbose("log path: {}", cLogPath);
+    bLogInitialized = true;
 }
 
 void Log(ELogType eLogType, std::string sText, bool bNewline) {
-#ifndef _DEBUG
-    if (eLogType == ELogType::Verbose || eLogType == ELogType::NetVerbose)
-        return;
-#endif
-
     fmt::color LogColor = fmt::color::white;
     std::string sLogType;
 
@@ -92,15 +75,20 @@ void Log(ELogType eLogType, std::string sText, bool bNewline) {
         break;
     }
 
+    if (bLogInitialized) {
+        LogFileLock.lock();
+        LogFile << fmt::format("{:%Y-%m-%d - %H:%M:%S} - [{}] - {}", fmt::localtime(std::time(nullptr)), sLogType, sText) << std::endl;
+        LogFileLock.unlock();
+    }
+
+    #ifndef _DEBUG
+        if (eLogType == ELogType::Verbose || eLogType == ELogType::NetVerbose) return;
+    #endif
+
     fmt::print(fg(LogColor), "[{}]", sLogType);
     if (bNewline)
         fmt::print(fg(fmt::color::white), " {}\n", sText);
     else
         fmt::print(fg(fmt::color::white), " {}", sText);
 
-    if (bLogInitialized) {
-        LogFileLock.lock();
-        LogFile << "[" << sLogType << "] " << sText << std::endl;
-        LogFileLock.unlock();
-    }
  }
