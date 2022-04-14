@@ -1,24 +1,35 @@
 # ------------------------------------------------------
-# set up cmake
+# setup cmake 
 # ------------------------------------------------------
-cmake_minimum_required(VERSION 3.20)
-project(sledge LANGUAGES CXX C)
+cmake_minimum_required(VERSION 3.23)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "/EHsc /D_AMD64_ /DWIN32_LEAN_AND_MEAN") # Set C++ exception handler, define platform and ignore some unused headers
+
+set(CMAKE_DOTNET_SDK "Microsoft.NET.Sdk")
+set(CMAKE_DOTNET_TARGET_FRAMEWORK, "net6.0")
+set(CMAKE_CSharp_FLAGS "/langversion:10.0 /platform:x64")  
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-add_subdirectory(submodules)
+
+project(sledge LANGUAGES CXX CSharp) # enable C++ and C#
+
+add_subdirectory(submodules) # add submodules(fmt, imgui, glfw, etc)
 
 # ------------------------------------------------------
-# remove unnecessary windows stuff
+# sledgelib
 # ------------------------------------------------------
-string(REPLACE "/D_WINDOWS" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-string(REPLACE "/DWIN32" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+file(GLOB_RECURSE sledgelib_sources CONFIGURE_DEPENDS "source/sledgelib/*.cs")
+add_library(sledgelib SHARED ${sledgelib_sources})
+
+set_target_properties(sledgelib PROPERTIES DOTNET_TARGET_FRAMEWORK "net6.0")
+target_compile_options(sledgelib PRIVATE "/langversion:10")
 
 # ------------------------------------------------------
 # libraries
 # ------------------------------------------------------
 add_library(sledge_warnings INTERFACE)
-target_compile_options(sledge_warnings INTERFACE /W4 /WX) # /W4 /WX later
+target_compile_options(sledge_warnings INTERFACE /W4 /WX)
 
 # shared dependencies
 add_library(sledge_shared_dependencies INTERFACE)
@@ -26,57 +37,34 @@ target_link_libraries(sledge_shared_dependencies INTERFACE
 	detours
 	fmt::fmt
 	libglew_static
-	spng_static
 	glfw)
 
 # globs for shared files
 file(GLOB_RECURSE shared_sources CONFIGURE_DEPENDS "source/shared/*.cpp")
 file(GLOB_RECURSE shared_headers CONFIGURE_DEPENDS "source/shared/*.h")
 
-# globs for main project
-file(GLOB_RECURSE sledge_sources CONFIGURE_DEPENDS "source/sledge/*.cpp")
-file(GLOB_RECURSE sledge_headers CONFIGURE_DEPENDS "source/sledge/*.h")
+# ------------------------------------------------------
+# main dll
+# ------------------------------------------------------
+file(GLOB_RECURSE sledge_sources CONFIGURE_DEPENDS "source/sledge_core/*.cpp")
+file(GLOB_RECURSE sledge_headers CONFIGURE_DEPENDS "source/sledge_core/*.h")
 
-# ------------------------------------------------------
-# dll
-# ------------------------------------------------------
-add_library(sledge SHARED ${sledge_sources} ${shared_sources} ${sledge_headers} ${shared_headers})
-target_link_libraries(sledge PRIVATE
+add_library(sledge_core SHARED ${sledge_sources} ${shared_sources} ${sledge_headers} ${shared_headers})
+target_link_libraries(sledge_core PRIVATE
     sledge_shared_dependencies
+	sledgelib
 	sledge_warnings
-	steamworks
 	UltralightCore
 	Ultralight
 	AppCore
 	WebCore)
-target_include_directories(sledge PRIVATE "source/sledge" "source/shared")
-target_compile_definitions(sledge PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
-
-# sledgelib
-add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)mods\" mkdir \"$(OutDir)mods\")
-add_custom_command(TARGET sledge POST_BUILD COMMAND dotnet build --configuration Release \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib\")
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib/sledgelib.dll\" \"$(OutDir)mods/sledgelib.dll\")
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/source/sledgelib/sledgelib.runtimeconfig.json\" \"$(OutDir)mods/sledgelib.runtimeconfig.json\")
-
-# mod project script
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/scripts/mod.ps1\" \"$(OutDir)mod.ps1\")
-
-# ultralight dlls
-add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ultralight\" mkdir \"$(OutDir)ultralight\")
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/UltraLightCore/bin/UltraLightCore.dll\" \"$(OutDir)ultralight/UltraLightCore.dll\") 
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/UltraLight/bin/UltraLight.dll\" \"$(OutDir)ultralight/UltraLight.dll\") 
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/AppCore/bin/AppCore.dll\" \"$(OutDir)ultralight/AppCore.dll\") 
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/*\" \"$(OutDir)ultralight\") 
-
-# ultralight resources
-add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ui\" mkdir \"$(OutDir)ui\")
-add_custom_command(TARGET sledge POST_BUILD COMMAND if not exist \"$(OutDir)ui/resources\" mkdir \"$(OutDir)ui/resources\")
-add_custom_command(TARGET sledge POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/resources/*\" \"$(OutDir)ui/resources\") 
+target_include_directories(sledge_core PRIVATE "source/sledge_core" "source/shared")
+set_target_properties(sledge_core PROPERTIES OUTPUT_NAME "sledge_core")
 
 # ------------------------------------------------------
-# precompiled libs for dll
+# precompiled libs for main dll
 # ------------------------------------------------------
-target_precompile_headers(sledge PRIVATE
+target_precompile_headers(sledge_core PRIVATE
     <array>
     <chrono>
     <filesystem>
@@ -89,59 +77,88 @@ target_precompile_headers(sledge PRIVATE
     <vector>)
 
 # ------------------------------------------------------
-# loader
+# extra commands
 # ------------------------------------------------------
-file(GLOB_RECURSE sledge_loader_sources CONFIGURE_DEPENDS "source/loader/*.cpp")
-file(GLOB_RECURSE sledge_loader_headers CONFIGURE_DEPENDS "source/loader/*.h")
+
+# mod project script
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/scripts/mod.ps1\" \"$(OutDir)mod.ps1\")
+
+# runtime config for hostfxr
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/scripts/sledge.runtimeconfig.json\" \"$(OutDir)bin/sledge.runtimeconfig.json\")
+
+# ultralight dlls
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/UltraLightCore/bin/UltraLightCore.dll\" \"$(OutDir)bin/UltraLightCore.dll\") 
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/UltraLight/bin/UltraLight.dll\" \"$(OutDir)bin/UltraLight.dll\") 
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/AppCore/bin/AppCore.dll\" \"$(OutDir)bin/AppCore.dll\") 
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/*\" \"$(OutDir)bin\") 
+
+# ultralight resources
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui\" mkdir \"$(OutDir)ui\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui/resources\" mkdir \"$(OutDir)ui/resources\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/resources/*\" \"$(OutDir)ui/resources\")
+
+# move sledge_core to bin dir
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\")
+
+# remove copy caused by target dependency
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND del \"$(OutDir)sledgelib.*\" )
+
+# ------------------------------------------------------
+# dumper
+# ------------------------------------------------------
+file(GLOB_RECURSE dumper_sources CONFIGURE_DEPENDS "source/dumper/*.cpp")
+file(GLOB_RECURSE dumper_headers CONFIGURE_DEPENDS "source/dumper/*.h")
+
+add_library(sledge_dumper SHARED ${dumper_sources} ${shared_sources} ${dumper_headers} ${shared_headers})
+set_target_properties(sledge_dumper PROPERTIES OUTPUT_NAME "dumper")
+target_link_libraries(sledge_dumper PRIVATE
+    sledge_shared_dependencies
+	sledge_warnings)
+target_include_directories(sledge_dumper PRIVATE "source/dumper" "source/shared")
+
+# ------------------------------------------------------
+# launcher
+# ------------------------------------------------------
+file(GLOB_RECURSE sledge_launcher_sources CONFIGURE_DEPENDS "source/launcher/*.cpp")
+file(GLOB_RECURSE sledge_launcher_headers CONFIGURE_DEPENDS "source/launcher/*.h")
 
 set(OPENSSL_USE_STATIC_LIBS TRUE) 
 find_package(OpenSSL REQUIRED)
 
-add_executable(sledge_loader WIN32 ${sledge_loader_sources} ${shared_sources} ${sledge_loader_headers} ${shared_headers} "resources/launcher_resources.rc")
-target_link_libraries(sledge_loader PRIVATE
+add_executable(sledge_launcher WIN32 ${sledge_launcher_sources} ${shared_sources} ${sledge_launcher_headers} ${shared_headers} "resources/launcher_resources.rc")
+target_link_libraries(sledge_launcher PRIVATE
     sledge_shared_dependencies
 	sledge_warnings
-	imgui
-	ws2_32
 	crypt32
 	OpenSSL::Crypto)
-set_target_properties(sledge_loader PROPERTIES
-	VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:sledge_loader>
+set_target_properties(sledge_launcher PROPERTIES
+	VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:sledge_launcher>
 	OUTPUT_NAME "sledge")
-target_compile_definitions(sledge_loader PUBLIC _AMD64_ WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS)
-target_include_directories(sledge_loader PRIVATE "source/loader" "source/shared")
-add_dependencies(sledge_loader sledge)
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sledge_loader)
+target_include_directories(sledge_launcher PRIVATE "source/launcher" "source/shared")
+add_dependencies(sledge_launcher sledge_core)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sledge_launcher)
 
 # ------------------------------------------------------
-# merge files from source and include in the ide
+# merge files from source and include them in the ide
 # ------------------------------------------------------
 function(group_files sources)
 	foreach(FILE ${sources})
 		get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
 
-		string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
+		string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" GROUP "${PARENT_DIR}") # remove full dir
+		string(REGEX MATCH "[(A-z)|(a-z)|(0-9)]+/[(A-z)|(a-z)|(0-9)]+" GROUPNAME ${GROUP}) # get the first two folders from dir
+		
+		string(LENGTH ${GROUPNAME} GROUPLEN) # get project name len
+		string(SUBSTRING ${GROUP} ${GROUPLEN} -1 GROUP) # remove project name from dir
 
-		string(REPLACE "/" "\\" GROUP "${GROUP}")
-
-		if("${FILE}" MATCHES "source/loader/.*")
-			string(SUBSTRING ${GROUP} 14 -1 GROUP)
-		elseif("${FILE}" MATCHES "source/sledge/.*")
-			string(SUBSTRING ${GROUP} 14 -1 GROUP)
-		elseif("${FILE}" MATCHES "source/shared/.*")
-			string(SUBSTRING ${GROUP} 14 -1 GROUP)
-		endif()
-
-		source_group("${GROUP}" FILES "${FILE}")
+		source_group("${GROUP}" FILES "${FILE}") # group file
 	endforeach()
 endfunction()
-group_files("${sledge_sources};${sledge_loader_sources};${shared_sources};${sledge_headers};${sledge_loader_headers};${shared_headers}")
+group_files("${sledgelib_sources};${sledge_sources};${sledge_launcher_sources};${dumper_sources};${shared_sources};${sledge_headers};${sledge_launcher_headers};${dumper_headers};${shared_headers}")
 
 # ------------------------------------------------------
-# install sledge and loader
+# set output directory
 # ------------------------------------------------------
-install(TARGETS
-	sledge RUNTIME DESTINATION .)
-
-install(TARGETS
-	sledge_loader RUNTIME DESTINATION .)
+set_target_properties(sledge_core sledge_launcher sledge_dumper PROPERTIES RUNTIME_OUTPUT_DIRECTORY  "${CMAKE_CURRENT_BINARY_DIR}/build")
+set_target_properties(sledgelib PROPERTIES RUNTIME_OUTPUT_DIRECTORY  "${CMAKE_CURRENT_BINARY_DIR}/netbuild")
