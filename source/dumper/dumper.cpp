@@ -57,14 +57,14 @@ void Dumper::Run(void* hMod) {
 		if (dwSig == 0) {
 			std::string ssError("Failed to find signature: " + SigPair.first);
 			MessageBoxA(NULL, ssError.c_str(), "Dump failed!", MB_ICONERROR | MB_OK);
-			return;
+			exit(0);
 		}
 		ssResult << "\t {\"" << SigPair.first << "\", 0x" << reinterpret_cast<void*>(dwSig - dwBaseAddr) << " }," << std::endl;
 	}
 
 	ssResult << "};";
 
-	std::ofstream ResultFile(sModulePath + "\\dump.txt");
+	std::ofstream ResultFile(sModulePath + "\\dumper.h");
 	ResultFile << ssResult.str();
 	ResultFile.close();
 
