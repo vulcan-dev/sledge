@@ -94,8 +94,7 @@ add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"
 
 # ultralight resources
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui\" mkdir \"$(OutDir)ui\")
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui/resources\" mkdir \"$(OutDir)ui/resources\")
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/resources/*\" \"$(OutDir)ui/resources\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui/resources\" "(" mkdir \"$(OutDir)ui/resources\" echo f | xcopy /y /f \"$(ProjectDir)submodules/deps/WebCore/bin/resources/*\" \"$(OutDir)ui/resources\" ")" )
 
 # move sledge_core to bin dir
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
