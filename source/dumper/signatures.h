@@ -47,6 +47,11 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 	Sig("Shape", "\xE8\x00\x00\x00\x00\x48\x8B\xF8\x66\x83\x4F\x00\x00", "x????xxxxxx??")
 
 	/*
+		events / callbacks
+	*/
+	Sig("SwitchGameState", "\xE8\x00\x00\x00\x00\x44\x89\x77\x0C", "x????xxxx")
+	
+	/*
 		patches
 	*/
 	Sig("IsWindowForegroundWindow", "\xE8\x00\x00\x00\x00\x84\xC0\x0F\x84\x00\x00\x00\x00\x48\x8B\xD3\x49\x8B\xCE", "x????xxxx????xxxxxx")

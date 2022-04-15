@@ -64,7 +64,7 @@ void Dumper::Run(void* hMod) {
 
 	ssResult << "};";
 
-	std::ofstream ResultFile(sModulePath + "\\dumper.h");
+	std::ofstream ResultFile(sModulePath + "\\offsets.h");
 	ResultFile << ssResult.str();
 	ResultFile.close();
 
