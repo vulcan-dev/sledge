@@ -48,8 +48,8 @@ void Dumper::Run(void* hMod) {
 	DWORD64 dwBaseAddr = reinterpret_cast<DWORD64>(GetModuleHandleA(NULL));
 
 	std::stringstream ssResult;
-	ssResult << "#pragma once" << std::endl << "#include <unordered_map>" << std::endl << std::endl;
-	ssResult << "inline std::unordered_map<const char*, unsigned __int64> g_Addresses = {" << std::endl;
+	ssResult << "#pragma once" << std::endl << "#include <unordered_map>" << std::endl << "#include <string>" << std::endl << std::endl;
+	ssResult << "inline std::unordered_map<std::string, unsigned __int64> g_Addresses = {" << std::endl;
 
 	for (std::pair<std::string, CSignature*> SigPair : g_SigMap) {
 		DWORD64 dwSig = Memory::dwFindPattern(*SigPair.second);

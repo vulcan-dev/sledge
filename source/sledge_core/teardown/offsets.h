@@ -1,7 +1,8 @@
 #pragma once
 #include <unordered_map>
+#include <string>
 
-inline std::unordered_map<const char*, unsigned __int64> g_Addresses = {
+inline std::unordered_map<std::string, unsigned __int64> g_Addresses = {
 	 {"SetBool", 0x000000000013A9B0 },
 	 {"memmove", 0x0000000000290300 },
 	 {"realloc", 0x00000000002F7470 },
@@ -25,5 +26,5 @@ inline std::unordered_map<const char*, unsigned __int64> g_Addresses = {
 	 {"Shape", 0x000000000015DFA0 },
 	 {"IsWindowForegroundWindow", 0x000000000016CD80 },
 	 {"SwitchGameState", 0x000000000003E090 },
-	 {"Log", 0x000000000016F330 },
+	 {"Log", 0x000000000016F330 }
 };
