@@ -55,3 +55,7 @@ Options:
 * [SK83RJOSH](https://github.com/SK83RJOSH)
 * [Xorberax](https://github.com/ss-gnalvesteffer)
 * [Nymda](https://github.com/nymda)
+* [Nitro](https://github.com/BuilderHD)
+* [Daniel] (https://github.com/vulcan-dev)
+* [Alexandar] (https://github.com/alexandargyurov)
+For your help, ideas and support
