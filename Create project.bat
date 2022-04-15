@@ -1,5 +1,7 @@
 @echo off
-mkdir proj
+if not exist proj\ (
+    mkdir proj
+)
 cd proj
 cmake ../ -A x64 -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE=x64
 cd ..
