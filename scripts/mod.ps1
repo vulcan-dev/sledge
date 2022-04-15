@@ -1,337 +1,132 @@
-function Create-LibCS([String] $projectName, [String] $projectTemplate) {
-    $fileContents = ""
-
-    if ($projectTemplate -eq "Y") {
-        $fileContents = "// Documentation: https://github.com/44lr/sledge/wiki/API-Documentation
+$ProjectTemplate = "// Documentation: https://github.com/44lr/sledge/wiki/API-Documentation
 
 using SledgeLib;
 
-public class $projectName {
-    // Game state change
-    private static dUIntCallback cb_StateChangeFunc = new dUIntCallback((uint iState) => {
+public class MOD_NAME : ISledgeMod
+{
+    public string GetName() { return `"MOD_NAME`"; }
+    public string GetDescription() { return `"`"; }
+    public string GetVersion() { return `"0.0.1`"; }
+    public string GetAuthor() { return `"AUTHOR_NAME`"; }
 
-    });
+    public void Load() {
 
-    // Post player update
-    private static dCallback cb_PostPlayerUpdateFunc = new dCallback(() => {
-    
-    });
-
-    // Post update
-    private static dCallback cb_PostUpdateFunc = new dCallback(() => {
-    
-    });
-
-    // Pre player update
-    private static dCallback cb_PrePlayerUpdateFunc = new dCallback(() => {
-        
-    });
-
-    // Pre update
-    private static dCallback cb_PreUpdateFunc = new dCallback(() => {
-    
-    });
-
-    // Player spawn
-    private static dCallback cb_PlayerSpawnFunc = new dCallback(() => {
-        Log.General(""Player Spawned"");
-    });
-
-    private static CCallback? cb_StateChange;
-    private static CCallback? cb_PrePlayerUpdate;
-    private static CCallback? cb_PostPlayerUpdate;
-    private static CCallback? cb_PreUpdate;
-    private static CCallback? cb_PostUpdate;
-    private static CCallback? cb_PlayerSpawn;
-
-    public static void Init() {
-        cb_StateChange = new CCallback(ECallbackType.StateChange, cb_StateChangeFunc);
-        cb_PostPlayerUpdate = new CCallback(ECallbackType.PostPlayerUpdate, cb_PostPlayerUpdateFunc);
-        cb_PostUpdate = new CCallback(ECallbackType.PostUpdate, cb_PostUpdateFunc);
-        cb_PrePlayerUpdate = new CCallback(ECallbackType.PrePlayerUpdate, cb_PrePlayerUpdateFunc);
-        cb_PreUpdate = new CCallback(ECallbackType.PreUpdate, cb_PrePlayerUpdateFunc);
-        cb_PlayerSpawn = new CCallback(ECallbackType.PlayerSpawn, cb_PlayerSpawnFunc);
-
-        Log.General(""$projectName loaded"");
     }
 
-    public static void Reset() {
-        
-        Log.General(""$projectName reset"");
-    }
+    public void Unload() {
 
-    public static void Unload() {
-        if (cb_StateChange != null) { cb_StateChange.Unregister(); cb_StateChange = null; }
-        if (cb_PrePlayerUpdate != null) { cb_PrePlayerUpdate.Unregister(); cb_PrePlayerUpdate = null; }
-        if (cb_PostPlayerUpdate != null) { cb_PostPlayerUpdate.Unregister(); cb_PostPlayerUpdate = null; }
-        if (cb_PreUpdate != null) { cb_PreUpdate.Unregister(); cb_PreUpdate = null; }
-        if (cb_PostUpdate != null) { cb_PostUpdate.Unregister(); cb_PostUpdate = null; }
-        if (cb_PlayerSpawn != null) { cb_PlayerSpawn.Unregister(); cb_PlayerSpawn = null; }
-
-        Log.General(""$projectName unloaded"");
     }
 }"
-    } else {
-        $fileContents = "// Documentation: https://github.com/44lr/sledge/wiki/API-Documentation
 
-using SledgeLib;
-
-public class $projectName {
-    public static void Init() {
-        Log.General(""$projectName initialized"");
-    }
-
-    public static void Reset() {
-        Log.General(""$projectName reset"");
-    }
-    public static void Shutdown() {
-        Log.General(""$projectName shutdown"");
-    }
-}
-"
-    }
-
-    New-Item -Path . -Name "$projectName.cs" -ItemType "file" -Force -Value $fileContents
-}
-
-function Create-CSProj([String] $projectName) {
-    New-Item -Path . -Name "${projectName}.csproj" -ItemType "file" -Force -Value "<Project Sdk=""Microsoft.NET.Sdk"">
-    <PropertyGroup>
-       <TargetFramework>net6.0</TargetFramework>
-       <AssemblyName>$projectName</AssemblyName>
-       <ImplicitUsings>enable</ImplicitUsings>
-       <Nullable>enable</Nullable>
-       <Platforms>x64</Platforms>
-       <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    </PropertyGroup>
-    
-    <Target Name=""PostBuild"" AfterTargets=""PostBuildEvent"">
-        <Exec Command=""xcopy `$(ProjectDir)`$(OutDir)$projectName.dll ..\..\mods\$projectName\ /y /i"" />
-    </Target>
-    <ItemGroup>
-       <Reference Include=""sledgelib"">
-           <HintPath>..\..\mods\sledgelib.dll</HintPath>
-       </Reference>
-    </ItemGroup>
+$CSProjTemplate = "<Project Sdk=`"Microsoft.NET.Sdk`">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include=`"sledgelib`">
+      <HintPath>..\..\bin\sledgelib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Target Name=`"PostBuild`" AfterTargets=`"PostBuildEvent`">
+    <Exec Command=`"copy /Y &quot;`$(TargetDir)`$(TargetName).dll&quot; &quot;`$(ProjectDir)..\`$(TargetName).dll&quot;&#xD;&#xA;copy /Y &quot;`$(TargetDir)`$(TargetName).pdb&quot; &quot;`$(ProjectDir)..\`$(TargetName).pdb&quot;&#xD;&#xA;`"/>
+  </Target>
 </Project>"
+
+function CreateProject([string] $ProjectName) {
+    if (!$ProjectName) {
+        Write-Output "Missing project name";
+        return;
+    }
+
+    Write-Output "Creating project: ${ProjectName}";
+    
+    # Create mod's folder
+    if (-not (Test-Path -Path "./mods/${ProjectName}")) { New-Item "./mods/${ProjectName}/" -ItemType Directory | Out-Null};
+
+    # Create mod's main script
+    $CurrentModTemplate = $ProjectTemplate
+    $CurrentModTemplate = $CurrentModTemplate.replace("MOD_NAME", "${ProjectName}");
+    $CurrentModTemplate = $CurrentModTemplate.replace("AUTHOR_NAME", "${env:username}");
+    New-Item -Path "./mods/${ProjectName}/" -Name "main.cs" -ItemType "file" -Force -Value ${CurrentModTemplate} | Out-Null;
+
+    # Change location into the mods folder
+    Set-Location "./mods/";
+
+    # Create sln file for mod
+    dotnet new sln --name ${ProjectName} --force;
+    dotnet new classlib --output ${ProjectName} --framework net6.0 --no-restore --force;
+    dotnet sln add .\${ProjectName}\${ProjectName}.csproj;
+
+    # Create mod's csproj file
+    New-Item -Path "./${ProjectName}/" -Name "${ProjectName}.csproj" -ItemType "file" -Force -Value ${CSProjTemplate} | Out-Null;
+
+    # Delete Class1.cs if it exists
+    if (Test-Path -Path "${ProjectName}\Class1.cs") { Remove-Item -Path "${ProjectName}\Class1.cs" };
+
+    # Replace configuration platforms
+    (Get-Content -Path "./${ProjectName}.sln").replace("Debug|Any CPU", "Debug|x64") | Set-Content -Path "./${ProjectName}.sln";
+    (Get-Content -Path "./${ProjectName}.sln").replace("Release|Any CPU", "Release|x64") | Set-Content -Path "./${ProjectName}.sln";
+
+    # Change location back to where the script was located
+    Set-Location "../";
+
+    Write-Output "Created project files for mod: ${ProjectName}";
 }
 
-function Create-Project([String] $projectName, [String] $projectTemplate) {
-    Write-Output "Creating Project: $projectName"
+function DeleteProject([string] $ProjectName) {
+  # Check if the mod exists
+  if (-not (Test-Path -Path "./mods/${ProjectName}")) {
+    Write-Output("Mod ${ProjectName} does not exist");
+    return;
+  }
 
-    New-Item -ItemType Directory -Force -Path $projectName
-    if (-not(Test-Path -Path "./mods/$projectName" -PathType Container)) {
-        New-Item -Path "./mods/$projectName" -ItemType Directory -Force
-        Write-Output "Created mods directory"
-    }
+  # Prompt the user to confirm if they really wanna delete the mod
+  $Option ="";
+  while (($Option -ne "y") -and ($Option -ne "n")) {
+    Write-Host -NoNewline "Are you sure you want to delete ${ProjectName}? (y/n)";
+    $Option = Read-Host;
+  }
+  if ($Option -eq "n") { return; }
 
-    Write-Output "Current Directory: $(Get-Location)"
+  # Delete the mod's folder and files 
+  Remove-Item -Path "./mods/${ProjectName}" -Recurse -Force -Confirm:$false;
+  Remove-Item -Path "./mods/${ProjectName}.*" -Force -Confirm:$false;
 
-    Set-Location $projectName
-
-    dotnet new sln -n $projectName --force
-    dotnet new classlib -o ${projectName} -f net6.0 --no-restore --force
-    dotnet sln add .\${projectName}\${projectName}.csproj
-
-    Set-Location ${projectName}
-
-    if (Test-Path -Path "Class1.cs") {
-        Remove-Item -Path "Class1.cs"
-    }
- 
-    # create variable
-    Create-LibCS $projectName $projectTemplate
-    Create-CSProj $projectName
-
-    # replace configuration platforms
-    (Get-Content -Path "../$projectName.sln").replace("Debug|Any CPU", "Debug|x64") | Set-Content -Path "../$projectName.sln"
-    (Get-Content -Path "../$projectName.sln").replace("Release|Any CPU", "Release|x64") | Set-Content -Path "../$projectName.sln"
-
-    # Create Build.bat
-    New-Item -Path ../ -Name "build.bat" -ItemType "file" -Force -Value "@echo off
-dotnet build /p:Configuration=Release /p:Platform=""x64""
-if /i ""%1"" equ ""-r"" (
-    cd ..
-    .\sledge.exe -nolauncher   
-)"
+  # Check if the mod has a vs database, if so, delete that as well
+  if (Test-Path -Path "./mods/.vs/${ProjectName}") { Remove-Item -Path "./mods/.vs/${ProjectName}" -Recurse -Force -Confirm:$false; }
 }
 
-function Rename-Project([String] $projectName, [String] $newName) {
-    $newName  = $newName -replace(" ", "_")
+function BuildProject([string] $ProjectName) {
+  if (-not (Test-Path -Path "./mods/${ProjectName}/${ProjectName}.csproj")) {
+    Write-Output("Mod not found");
+  }
 
-    Write-Output "Renaming Project: $projectName to $newName"
+  $CSProjPath = Resolve-Path "./mods/${ProjectName}/${ProjectName}.csproj"
 
-    if (Test-Path -Path "$projectName/${projectName}/bin") {
-        Remove-Item -Path "$projectName/${projectName}/bin" -Recurse
-    }
-
-    if (Test-Path -Path "$projectName/${projectName}/obj") {
-        Remove-Item -Path "$projectName/${projectName}/obj" -Recurse
-    }
-
-    if (Test-Path -Path "./mods/$projectName") {
-        Remove-Item -Path "./mods/$projectName/$projectName.dll"
-    }
-
-    try {
-        Rename-Item -Path $projectName -NewName $newName -ErrorAction Stop
-    } catch {
-        Write-Output "Project Rename Failed. Maybe a process is using the project"
-    }
-
-    if (Test-Path -Path "./mods/$projectName" -PathType Container) {
-        Remove-Item -Path "./mods/$projectName/*" -Recurse
-    }
-
-    if (Test-Path -Path "./mods/$projectName") {
-        Rename-Item -Path ./mods/$projectName -NewName $newName
-    }
-
-    $files = Get-ChildItem -Path $newName -Recurse -File | ? { $_.Name -ne "build.bat" }
-    foreach ($file in $files) {
-        $fileName = $file.Name
-        $fileName = $fileName -replace $projectName, $newName
-        $filePath = $file.FullName
-        Rename-Item -Path $filePath -NewName $fileName
-    }
-
-    $files = Get-ChildItem -Path $newName -Recurse -File | ? { $_.Name -ne "build.bat" }
-    foreach ($file in $files) {
-        $filePath = $file.FullName
-        $fileContents = Get-Content $filePath
-        $fileContents = $fileContents -replace $projectName, $newName
-        Set-Content -Path $filePath -Value $fileContents
-    }
+  "dotnet build `"${CSProjPath}`" /p:Configuration=Release /p:Platform=`"x64`"" | cmd
 }
 
-if ($args[0] -eq "--help" -or $args[0] -eq "-h") {
-    Write-Output "Usage: .\mod.ps1 [options(-create(projectName, projectTemplate), -rename(projectName), -delete(projectName))]"
-    Write-Output "Options: -c --create(projectName, projectTemplate(y/n)) - Creates a new project"
-    Write-Output "         -r --rename(projectName, newProjectName) - Renames a project"
-    Write-Output "         -d --delete(projectName) - Deletes a project"
-    Write-Output "         -b --build(projectName) - Builds a project"
-    exit
-} elseif ($args[0] -eq "--create" -or $args[0] -eq "-c") {
-    # Get Project Name
-    $projectName = $args[1]
-
-    if ($null -eq $projectName) {
-        Write-Host -NoNewline "Enter Project Name: "
-        $projectName = Read-Host
-
-        if ("" -eq $projectName) {
-            Write-Host "No Project Name Specified"
-            exit
-        }
-    }
-
-    $projectName = $projectName -replace(" ", "_")
-
-    # Project Template?
-    $projectTemplate = $args[2]
-    if ($null -eq $projectTemplate) {
-        Write-Host -NoNewline "Project Template? [Y/N]: "
-        $projectTemplate = Read-Host
-
-        if ("" -eq $projectTemplate) {
-            $projectTemplate = "Y"
-        }
-
-        if ("Y" -eq $projectTemplate) {
-            $projectTemplate = "Y"
-        } else {
-            $projectTemplate = "N"
-        }
-    }
-
-    Create-Project $projectName $projectTemplate
-    Set-Location ..
-    Write-Output (Get-Item .).FullName
-    .\build.bat
-    Set-Location ..
-} elseif ($args[0] -eq "--rename" -or $args[0] -eq "-r") {
-    # Get Project Name
-    $projectName = $args[1]
-
-    if ($null -eq $projectName) {
-        Write-Host -NoNewline "Enter Project Name: "
-        $projectName = Read-Host
-
-        if ("" -eq $projectName) {
-            Write-Host "No Project Name Specified"
-            exit
-        }
-    }
-
-    if (-not(Test-Path -Path $projectName)) {
-        Write-Output "Project $projectName does not exist"
-        return
-    }
-
-    $newName = $args[2]
-    if ($null -eq $newName) {
-        Write-Host -NoNewline "Enter new name: "
-        $newName = Read-Host
-        if ($null -eq $newName) {
-            Write-Output "No name specified"
-            return
-        }
-    }
-
-    Rename-Project $projectName $newName
-    if (Test-Path -Path $newName) {
-        Set-Location $newName
-        .\build.bat
-        Set-Location ..
-    }
-} elseif ($args[0] -eq "--delete" -or $args[0] -eq "-d") {
-    $projectName = $args[1]
-
-    if ($null -eq $projectName) {
-        Write-Host -NoNewline "Enter Project Name: "
-        $projectName = Read-Host
-
-        if ("" -eq $projectName) {
-            Write-Host "No Project Name Specified"
-            exit
-        }
-    }
-
-    if (-not(Test-Path -Path $projectName)) {
-        Write-Output "Project $projectName does not exist"
-        return
-    }
-
-    Write-Output "Deleting Project: $projectName"
-
-    if (Test-Path -Path "$projectName") {
-        Remove-Item -Path "$projectName" -Recurse
-    }
-
-    if (Test-Path -Path "./mods/$projectName") {
-        Remove-Item -Path "./mods/$projectName" -Recurse
-    }
-} elseif ($args[0] -eq "--build" -or $args[0] -eq "-b") {
-    $projectName = $args[1]
-
-    if ($null -eq $projectName) {
-        Write-Host -NoNewline "Enter Project Name: "
-        $projectName = Read-Host
-
-        if ("" -eq $projectName) {
-            Write-Host "No Project Name Specified"
-            exit
-        }
-    }
-
-    Set-Location $projectName
-    .\build.bat
-    Set-Location ..
+if ($args[0] -eq "--help" -or $args[0] -eq "-h" -or !$args[0]) {
+    Write-Output "Usage: ./mod.ps1 [options]";
+    Write-Output "Options:  -c --create(ProjectName)) - Creates a new project";
+    Write-Output "          -d --delete(ProjectName) - Deletes a project";
+    Write-Output "          -b --build(ProjectName) - Builds a project";
+    exit;
 } else {
-    Write-Output "Usage: .\mod.ps1 [options(-create(projectName, projectTemplate), -rename(projectName), -delete(projectName))]"
-    Write-Output "Options: -c --create(projectName, projectTemplate(y/n)) - Creates a new project"
-    Write-Output "         -r --rename(projectName, newProjectName) - Renames a project"
-    Write-Output "         -d --delete(projectName) - Deletes a project"
-    Write-Output "         -b --build(projectName) - Builds a project"
-    exit
+    $Mode = $args[0];
+
+    switch ($Mode) {
+        "--create" { CreateProject($args[1]); exit 0; }
+        "-c" { CreateProject($args[1]); exit 0; }
+        "--delete" { DeleteProject($args[1]); exit 0; }
+        "-d" { DeleteProject($args[1]); exit 0; }
+        "--build" { BuildProject($args[1]); exit 0; }
+        "-b" { BuildProject($args[1]); exit 0; }
+        default { Write-Output "Unknown mode: ${Mode}"; exit 0; }
+    }
 }
