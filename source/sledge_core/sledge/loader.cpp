@@ -4,6 +4,8 @@
 #include "net/sledgelib.h"
 #include "net/nethost.h"
 
+#include "teardown/hooks.h"
+
 #include "util/log.h"
 
 #include <processenv.h>
@@ -106,17 +108,23 @@ void Loader::Init(void* hModule) {
 	LogInfo("Slegde Mod Loader - {} build", g_Build);
 
 	/*
-		initialize nethost and load sledgelib
+		parse command line arguments
 	*/
-	if (!NetHost::Init()) {
-		ReportErrorAndUnload("HostFxr failed to load");
-		return;
-	}
+	char* cCMDLine = GetCommandLineA();
+	if (strstr(cCMDLine, "-nosplash"))
+		g_SkipSplash = true;
 
-	if (!SledgeLib::Load()) {
+
+	/*
+		initialize everything
+	*/
+	if (!NetHost::Init())
+		ReportErrorAndUnload("HostFxr failed to load");
+
+	if (!SledgeLib::Load())
 		ReportErrorAndUnload("SledgeLib failed to load");
-		return;
-	}
+
+	Teardown::ApplyHooks();
 }
 
 /*
