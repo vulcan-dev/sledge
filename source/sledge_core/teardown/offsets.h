@@ -2,13 +2,12 @@
 #include <unordered_map>
 #include <string>
 
-inline std::unordered_map<std::string, unsigned __int64> g_Addresses = {
+inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"SetBool", 0x000000000013A9B0 },
 	 {"memmove", 0x0000000000290300 },
 	 {"realloc", 0x00000000002F7470 },
 	 {"free", 0x00000000002EDC54 },
 	 {"SetInt", 0x000000000013AAC0 },
-	 {"DebugPrint", 0x000000000010EF70 },
 	 {"calloc", 0x00000000002F1134 },
 	 {"malloc", 0x00000000002EDC94 },
 	 {"GetFloat", 0x0000000000139B20 },
@@ -24,7 +23,10 @@ inline std::unordered_map<std::string, unsigned __int64> g_Addresses = {
 	 {"Game", 0x0000000000038CC0 },
 	 {"Body", 0x00000000000BAC70 },
 	 {"Shape", 0x000000000015DFA0 },
-	 {"IsWindowForegroundWindow", 0x000000000016CD80 },
+	 {"Update", 0x000000000003B6C0 },
 	 {"SwitchGameState", 0x000000000003E090 },
-	 {"Log", 0x000000000016F330 }
+	 {"IsWindowForegroundWindow", 0x000000000016CD80 },
+	 {"UpdatePlayer", 0x00000000000BFC70 },
+	 {"DebugPrint", 0x000000000010EF70 },
+	 {"Log", 0x000000000016F330 },
 };

@@ -27,7 +27,7 @@ void hSwitchState(void* pGame, EGameState State) {
 }
 
 void Teardown::Hooks::HookSwitchState() {
-	SwitchState = reinterpret_cast<tSwitchState>(reinterpret_cast<DWORD64>(g_hTeardown) + g_Addresses["SwitchGameState"]);
+	SwitchState = reinterpret_cast<tSwitchState>(reinterpret_cast<DWORD64>(g_hTeardown) + g_Offsets["SwitchGameState"]);
 
 	LogVerbose("SwitchState: {}", reinterpret_cast<void*>(SwitchState));
 	
