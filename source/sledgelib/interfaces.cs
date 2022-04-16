@@ -41,7 +41,7 @@ namespace SledgeLib
         [FieldOffset(0x0)]
         internal dStateChangeCallback StateChange;
         [FieldOffset(0x8)]
-        internal dStateChangeCallback LevelLoad;
+        internal dStringCallback LevelLoad;
         [FieldOffset(0x10)]
         internal dCallback PreUpdate;
         [FieldOffset(0x18)]
