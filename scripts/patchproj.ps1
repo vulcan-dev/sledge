@@ -89,19 +89,11 @@ function ApplyVCXProjPatches([String] $ProjectPath) {
     Write-Output("VCXProj patches applied");
 }
 
-# Project is generated for Any CPU, this changes it to x64 and makes it read only
+# Project is generated for Any CPU, this changes it to x64
 function ApplySolutionPatch([String] $ProjectPath) {
-    $SolutionFile = Get-Item -Path "$ProjectPath\\sledge.sln";
-
-    if (!$SolutionFIle.IsReadOnly) {
-        $Solution = Get-Content -Raw -Path "$ProjectPath\\sledge.sln";
-        $PatchedSolution = $Solution.Replace("Any CPU", "x64");
-        Out-File -FilePath "$ProjectPath\\sledge.sln" -InputObject $PatchedSolution;
-
-        $SolutionFile.IsReadOnly = $true;
-    } else {
-        Write-Output("--> Solution is already read only");
-    }
+    $Solution = Get-Content -Raw -Path "$ProjectPath\\sledge.sln";
+    $PatchedSolution = $Solution.Replace("Any CPU", "x64");
+    Out-File -FilePath "$ProjectPath\\sledge.sln" -InputObject $PatchedSolution;
 
     Write-Output("Solution patch applied");
 }
