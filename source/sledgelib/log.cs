@@ -31,7 +31,7 @@ namespace SledgeLib
             }
             catch (Exception e)
             {
-                Error("Logger error while formatting: {0}", e.Message);
+                Error("Logger error while formatting: {0} \n{1}", e.Message, Environment.StackTrace);
                 return;
             }
             _WriteLog(eType, "[" + sCallingAssembly + "] - " + sMsg);
