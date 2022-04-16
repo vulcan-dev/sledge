@@ -2,6 +2,8 @@
 #include "teardown/offsets.h"
 #include "teardown/enums.h"
 
+#include "net/sledgelib.h"
+
 #include "util/log.h"
 
 #include <minwindef.h>
@@ -20,6 +22,8 @@ void hSwitchState(void* pGame, EGameState State) {
 		return SwitchState(pGame, EGameState::Menu);
 
 	SwitchState(pGame, State);
+
+	SledgeLib::CallbackInterface->StateChange(static_cast<unsigned int>(State));
 }
 
 void Teardown::Hooks::HookSwitchState() {

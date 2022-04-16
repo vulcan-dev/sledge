@@ -2,16 +2,14 @@ using SledgeLib;
 
 internal class Loader
 {
-    /*
-     * function that gets called from sledge_core once it's injected
-     */
-    public delegate void dGetInterface(ref UnmanagedInterface Interface);
-    public static void GetInterface(ref UnmanagedInterface Interface)
+    public delegate UnmanagedInterface dGetInterface();
+    public static UnmanagedInterface GetInterface()
     {
+        UnmanagedInterface Interface = new UnmanagedInterface();
         Interface.Init = Loader.Init;
         Interface.Shutdown = Loader.Shutdown;
-
-        Log.General("Sent unmanaged interface");
+        Interface.GetCallbackInterface = CallbackInvokers.GetCallbackInvokers;
+        return Interface;
     }
 
     public static bool Init()

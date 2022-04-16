@@ -9,7 +9,7 @@
 
 #include <fmt/format.h>
 
-typedef void (*tGetInterface) (SLUnmanagedInterface* Interface);
+typedef SLUnmanagedInterface (*tGetInterface) ();
 tGetInterface GetInterface;
 
 bool SledgeLib::Load() {
@@ -36,8 +36,9 @@ bool SledgeLib::Load() {
 	/*
 		get the C# interface
 	*/
+	SLUnmanagedInterface NetInterface = GetInterface();
 	SledgeLib::Interface = new SLUnmanagedInterface();
-	GetInterface(SledgeLib::Interface);
+	memcpy(SledgeLib::Interface, &NetInterface, sizeof(SLUnmanagedInterface));
 
 	return true;
 }
@@ -57,6 +58,11 @@ bool SledgeLib::Init() {
 		LogError("SledgeLib threw exception {0:#x} on Init()", lExceptionCode);
 		return false;
 	}
+
+	SledgeLib::CallbackInterface = new SLCallbackInterface();
+	SLCallbackInterface NetCallbackInterface = SledgeLib::Interface->GetCallbackInterface();
+	memcpy(SledgeLib::CallbackInterface, &NetCallbackInterface, sizeof(SLCallbackInterface));
+
 	return true;
 }
 

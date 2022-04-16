@@ -26,7 +26,6 @@ namespace SledgeLib
             if (AssemblyLocation == null)
                 throw new System.Exception("Unable to get assembly location");
 
-
             ModsFolder = AssemblyLocation + "\\..\\mods";
             if (!Directory.Exists(ModsFolder))
                 Directory.CreateDirectory(ModsFolder);
@@ -52,8 +51,6 @@ namespace SledgeLib
                     continue;
                 }
 
-                ModList[ModCtx.m_Interface.GetName()] = ModCtx;
-
                 Log.Verbose("Loaded mod: {0} by {1}", ModCtx.m_Interface.GetName(), ModCtx.m_Interface.GetAuthor());
             }
 
@@ -61,7 +58,6 @@ namespace SledgeLib
              * create watcher for handling mod loading / unloading / reloading
              */
             Watcher = new FileSystemWatcher(ModsFolder);
-
             Watcher.Created += OnFileCreated;
             Watcher.Changed += OnFileChanged;
             Watcher.Deleted += OnFileDeleted;
@@ -77,15 +73,13 @@ namespace SledgeLib
             internal Assembly m_Assembly;
             internal DateTime m_AssemblyLastWrite;
 
-            internal bool m_HasDataFolder = false;
-
-            internal string m_DataFolder = "";
+            internal string? m_DataFolder;
             internal string m_AssemblyName;
             internal string m_AssemblyPath;
 
             internal ISledgeMod m_Interface;
 
-            public ModContext(string AssemblyPath)
+            public ModContext(string AssemblyPath) : base(isCollectible: true)
             {
                 m_AssemblyPath = AssemblyPath;
                 m_AssemblyName = Path.GetFileNameWithoutExtension(AssemblyPath);
@@ -112,14 +106,22 @@ namespace SledgeLib
                     }
                 }
                 if (InterfaceType == null)
+                {
+                    Unload();
+                    GC.Collect();
                     throw new Exception("Mod does not implement ISledgeMod interface");
+                }
 
                 /*
                  * instantiate the class that implements ISledgeMod
                  */
                 ISledgeMod? InterfaceInstance = (ISledgeMod?)Activator.CreateInstance(InterfaceType);
                 if (InterfaceInstance == null)
+                {
+                    Unload();
+                    GC.Collect();
                     throw new Exception("Failed to instantiate interface class");
+                }
                 m_Interface = InterfaceInstance;
 
                 /*
@@ -127,10 +129,48 @@ namespace SledgeLib
                  */
                 if (Directory.Exists(ModsFolder + "\\" + m_AssemblyName))
                 {
-                    m_HasDataFolder = true;
                     m_DataFolder = ModsFolder + "\\" + m_AssemblyName;
                 }
+
+                /*
+                 * register the mod's callbacks
+                 */
+                try
+                {
+                    CallbackManager.RegisterCallbacks(this);
+                } catch (Exception ex)
+                {
+                    m_Interface.Unload();
+                    Unload();
+                    GC.Collect();
+                    Log.Error("Exception ocurred while registering callbacks: {0}", ex);
+                    throw new Exception("Unable to register callbacks");
+                }
+
+                /*
+                 * add mod to list
+                 */
+                ModList[m_Interface.GetName()] = this;
             }
+
+            ~ModContext()
+            {
+                /*
+                 * remove mod from list, invoke Unload function, unload assembly and collect GC
+                 */
+                ModList.Remove(m_Interface.GetName());
+                m_Interface.Unload();
+                Unload();
+                GC.Collect();
+            }
+        }
+
+        internal static ModContext? GetContextFromName(string Name)
+        {
+            foreach (ModContext Context in ModList.Values)
+                if (Context.Name == Name)
+                    return Context;
+            return null;
         }
 
         /*
@@ -140,6 +180,19 @@ namespace SledgeLib
         {
             if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
                 return typeof(ModManager).Assembly;
+
+            if (LoadContext.Name == null)
+                return null;
+
+            ModContext? Ctx = GetContextFromName(LoadContext.Name);
+            if (Ctx == null)
+                return null;
+
+            if (Ctx.m_DataFolder == null)
+                return null;
+
+            if (File.Exists(Ctx.m_DataFolder + "\\dependencies\\" + DependencyName.Name + ".dll"))
+                return LoadContext.LoadFromAssemblyPath(Ctx.m_DataFolder + "\\dependencies\\" + DependencyName.Name + ".dll");
 
             return null;
         }
