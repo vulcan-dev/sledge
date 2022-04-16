@@ -99,6 +99,19 @@ namespace SledgeLib
         }
 
         /*
+         * unregisters all the callbacks  belonging to a mod
+         */
+        internal static void UnregisterCallbacks(ModManager.ModContext Mod)
+        {
+            lock (CallbackInvokers.StateChangeCallbacks) { CallbackInvokers.StateChangeCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+            lock (CallbackInvokers.LevelLoadCallbacks) { CallbackInvokers.LevelLoadCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+            lock (CallbackInvokers.PreUpdateCallbacks) { CallbackInvokers.PreUpdateCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+            lock (CallbackInvokers.PostUpdateCallbacks) { CallbackInvokers.PostUpdateCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+            lock (CallbackInvokers.PrePlayerUpdateCallbacks) { CallbackInvokers.PrePlayerUpdateCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+            lock (CallbackInvokers.PostPlayerUpdateCallbacks) { CallbackInvokers.PostPlayerUpdateCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+        }
+
+        /*
          * Adds the callback to any of the lists defined in callbackinvokers.cs
          */
         internal static void AddCallbackToInvokerList(ECallbackType CallbackType, MethodInfo CallbackMethod)
