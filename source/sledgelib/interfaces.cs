@@ -47,8 +47,8 @@ namespace SledgeLib
         [FieldOffset(0x18)]
         internal dCallback PostUpdate;
         [FieldOffset(0x20)]
-        internal dCallback PrePlayerUpdate;
+        internal dFloatCallback PrePlayerUpdate;
         [FieldOffset(0x28)]
-        internal dCallback PostPlayerUpdate;
+        internal dFloatCallback PostPlayerUpdate;
     }
 }

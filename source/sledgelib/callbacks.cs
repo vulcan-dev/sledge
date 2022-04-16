@@ -50,8 +50,8 @@ namespace SledgeLib
             { ECallbackType.LevelLoad, new MethodRules(typeof(void), typeof(string)) },
             { ECallbackType.PreUpdate, new MethodRules(typeof(void)) },
             { ECallbackType.PostUpdate, new MethodRules(typeof(void)) },
-            { ECallbackType.PrePlayerUpdate, new MethodRules(typeof(void)) },
-            { ECallbackType.PostPlayerUpdate, new MethodRules(typeof(void)) },
+            { ECallbackType.PrePlayerUpdate, new MethodRules(typeof(void), typeof(float)) },
+            { ECallbackType.PostPlayerUpdate, new MethodRules(typeof(void), typeof(float)) },
         };
 
         /*

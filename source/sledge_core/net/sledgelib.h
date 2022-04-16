@@ -5,8 +5,8 @@ struct SLCallbackInterface {
 	void (*LevelLoad) (const char*);
 	void (*PreUpdate) ();
 	void (*PostUpdate) ();
-	void (*PrePlayerUpdate) ();
-	void (*PostPlayerUpdate) ();
+	void (*PrePlayerUpdate) (float);
+	void (*PostPlayerUpdate) (float);
 };
 
 struct SLUnmanagedInterface {

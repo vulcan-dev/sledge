@@ -6,6 +6,7 @@ namespace SledgeLib
 {
     internal delegate void dStateChangeCallback(EGameState state);
     internal delegate void dStringCallback(string s);
+    internal delegate void dFloatCallback(float f);
     internal delegate void dCallback();
 
     internal class CallbackInvokers
@@ -63,15 +64,15 @@ namespace SledgeLib
         }
 
         static internal List<MethodInfo> PrePlayerUpdateCallbacks = new List<MethodInfo>();
-        static void OnPrePlayerUpdate()
+        static void OnPrePlayerUpdate(float TimeStep)
         {
-            InvokeCallbacks(ref PrePlayerUpdateCallbacks, null);
+            InvokeCallbacks(ref PrePlayerUpdateCallbacks, new object[] { TimeStep });
         }
 
         static internal List<MethodInfo> PostPlayerUpdateCallbacks = new List<MethodInfo>();
-        static void OnPostPlayerUpdate()
+        static void OnPostPlayerUpdate(float TimeStep)
         {
-            InvokeCallbacks(ref PostPlayerUpdateCallbacks, null);
+            InvokeCallbacks(ref PostPlayerUpdateCallbacks, new object[] { TimeStep });
         }
     }
 }
