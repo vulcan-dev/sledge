@@ -61,6 +61,8 @@ namespace SledgeLib
             Watcher.Created += OnFileCreated;
             Watcher.Changed += OnFileChanged;
             Watcher.Deleted += OnFileDeleted;
+            Watcher.EnableRaisingEvents = true;
+            Watcher.NotifyFilter = NotifyFilters.Attributes | NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.LastAccess | NotifyFilters.LastWrite;
 
             Log.General("Loaded mods and registered watcher functions");
         }
@@ -138,9 +140,10 @@ namespace SledgeLib
                 try
                 {
                     CallbackManager.RegisterCallbacks(this);
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
-                    m_Interface.Unload();
+                    CallbackManager.UnregisterCallbacks(this);
                     Unload();
                     GC.Collect();
                     Log.Error("Exception ocurred while registering callbacks: {0}", ex);
@@ -153,23 +156,42 @@ namespace SledgeLib
                 ModList[m_Interface.GetName()] = this;
             }
 
-            ~ModContext()
+
+            internal void UnloadMod()
             {
                 /*
-                 * remove mod from list, invoke Unload function, unload assembly and collect GC
+                 * unregister callbacks, remove mod from list, invoke Unload function, unload assembly and collect GC
                  */
+                CallbackManager.UnregisterCallbacks(this);
                 ModList.Remove(m_Interface.GetName());
                 m_Interface.Unload();
                 Unload();
                 GC.Collect();
             }
+
+            ~ModContext() { Log.Verbose("ModContext GC called"); }
         }
 
         internal static ModContext? GetContextFromName(string Name)
         {
-            foreach (ModContext Context in ModList.Values)
-                if (Context.Name == Name)
-                    return Context;
+            lock (ModList)
+            {
+                foreach (ModContext Context in ModList.Values)
+                    if (Context.Name == Name)
+                        return Context;
+            }
+            return null;
+        }
+
+
+        internal static ModContext? GetContextFromPath(string Path)
+        {
+            lock (ModList)
+            {
+                foreach(ModContext Context in ModList.Values)
+                    if (Context.m_AssemblyPath == Path)
+                        return Context;
+            }
             return null;
         }
 
@@ -202,17 +224,57 @@ namespace SledgeLib
          */
         internal static void OnFileCreated(object Sender, FileSystemEventArgs Args)
         {
-            Log.Verbose("file created: {0}", Args.FullPath);
+            if (Path.GetExtension(Args.FullPath) != ".dll")
+                return;
+
+            // check if dll is an assembly
+            try
+            {
+                AssemblyName.GetAssemblyName(Args.FullPath);
+            } catch (Exception) { return; }
+
+            try
+            {
+                new ModContext(Args.FullPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Exception thrown while loading mod: {0} : {1}", Path.GetFileName(Args.FullPath), ex);
+            }
+            Log.General("Loaded mod: {0}", Path.GetFileName(Args.FullPath));
         }
 
         internal static void OnFileChanged(object Sender, FileSystemEventArgs Args)
         {
-            Log.Verbose("file changed: {0}", Args.FullPath);
+            ModContext? Ctx = GetContextFromPath(Args.FullPath);
+            if (Ctx == null)
+                return;
+
+
+            if (Ctx.m_AssemblyLastWrite == File.GetLastWriteTime(Args.FullPath))
+                return;
+
+            Ctx.UnloadMod();
+
+            try
+            {
+                new ModContext(Args.FullPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Exception thrown while reloading mod: {0} : {1}", Path.GetFileName(Args.FullPath), ex);
+            }
+            Log.General("Reloaded mod: {0}", Path.GetFileName(Args.FullPath));
         }
 
         internal static void OnFileDeleted(object Sender, FileSystemEventArgs Args)
         {
-            Log.Verbose("file deleted: {0}", Args.FullPath);
+            ModContext? Ctx = GetContextFromPath(Args.FullPath);
+            if (Ctx == null)
+                return;
+
+            Ctx.UnloadMod();
+            Log.General("Unloaded mod: {0}", Path.GetFileName(Args.FullPath));
         }
     }
 }
