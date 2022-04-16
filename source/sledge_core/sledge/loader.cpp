@@ -124,6 +124,9 @@ void Loader::Init(void* hModule) {
 	if (!SledgeLib::Load())
 		ReportErrorAndUnload("SledgeLib failed to load");
 
+	if (!SledgeLib::Init())
+		ReportErrorAndUnload("SledgeLib failed to init");
+
 	Teardown::ApplyHooks();
 }
 
@@ -131,5 +134,5 @@ void Loader::Init(void* hModule) {
 	called when the DLL is detached
 */
 void Loader::Shutdown() {
-	
+	SledgeLib::Shutdown();
 }
