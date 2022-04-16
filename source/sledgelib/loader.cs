@@ -3,9 +3,9 @@ using SledgeLib;
 internal class Loader
 {
     public delegate UnmanagedInterface dGetInterface();
+    internal static UnmanagedInterface Interface = new UnmanagedInterface();
     public static UnmanagedInterface GetInterface()
     {
-        UnmanagedInterface Interface = new UnmanagedInterface();
         Interface.Init = Loader.Init;
         Interface.Shutdown = Loader.Shutdown;
         Interface.GetCallbackInterface = CallbackInvokers.GetCallbackInvokers;

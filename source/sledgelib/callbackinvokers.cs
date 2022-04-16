@@ -10,10 +10,11 @@ namespace SledgeLib
 
     internal class CallbackInvokers
     {
+        internal static CallbackInvokersInterface Interface = new CallbackInvokersInterface();
         internal static CallbackInvokersInterface GetCallbackInvokers()
         {
-            CallbackInvokersInterface Interface = new CallbackInvokersInterface();
             Interface.StateChange = OnStateChange;
+            Interface.LevelLoad = OnLevelLoad;
             Interface.PreUpdate = OnPreUpdate;
             Interface.PostUpdate = OnPostUpdate;
             Interface.PrePlayerUpdate = OnPrePlayerUpdate;
