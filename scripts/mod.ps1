@@ -9,11 +9,13 @@ public class MOD_NAME : ISledgeMod
     public string GetVersion() { return `"0.0.1`"; }
     public string GetAuthor() { return `"AUTHOR_NAME`"; }
 
-    public void Load() {
+    public void Load()
+    {
 
     }
 
-    public void Unload() {
+    public void Unload()
+    {
 
     }
 }"
