@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace SledgeLib
 {
     /*
@@ -12,5 +14,18 @@ namespace SledgeLib
 
         public void Load();
         public void Unload();
+    }
+
+
+    public delegate bool dBoolRet();
+    
+    [StructLayout(LayoutKind.Explicit)]
+    internal struct UnmanagedInterface
+    {
+        [FieldOffset(0)]
+        internal dBoolRet Init;
+
+        [FieldOffset(8)]
+        internal dBoolRet Shutdown;
     }
 }

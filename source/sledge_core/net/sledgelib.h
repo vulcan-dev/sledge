@@ -1,2 +1,15 @@
 #pragma once
-namespace SledgeLib { bool Load(); }
+
+struct SLUnmanagedInterface {
+	bool (*Init) ();
+	bool (*Shutdown) ();
+};
+
+namespace SledgeLib {
+	bool Load();
+
+	bool Init();
+	void Shutdown();
+
+	inline SLUnmanagedInterface* Interface;
+}
