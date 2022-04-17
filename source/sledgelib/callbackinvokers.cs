@@ -46,9 +46,9 @@ namespace SledgeLib
         }
 
         static internal List<MethodInfo> LevelLoadCallbacks = new List<MethodInfo>();
-        static void OnLevelLoad(string sLevelName)
+        static void OnLevelLoad(string sLevelPath)
         {
-            InvokeCallbacks(ref LevelLoadCallbacks, new object[] { sLevelName });
+            InvokeCallbacks(ref LevelLoadCallbacks, new object[] { sLevelPath });
         }
 
         static internal List<MethodInfo> PreUpdateCallbacks = new List<MethodInfo>();
