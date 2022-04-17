@@ -22,6 +22,9 @@ You can download the latest build [here](https://github.com/44lr/sledge/releases
 Need help? Wanna know more about the project?
 Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 
+## IMPORTANT
+This project is still very early in development, so expect tons of API changes (and possibly crashes).
+
 ## Build requirements:
 * [CMake >3.23](https://cmake.org/download/)
 * [Visual Studio](https://visualstudio.microsoft.com/)
