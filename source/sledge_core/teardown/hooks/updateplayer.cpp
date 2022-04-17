@@ -23,7 +23,7 @@ void hUpdatePlayer(void* pPlayer, float fTimeStep) {
 }
 
 void Teardown::Hooks::HookUpdatePlayer() {
-	UpdatePlayer = reinterpret_cast<tUpdatePlayer>(reinterpret_cast<DWORD64>(g_hTeardown) + g_Offsets["UpdatePlayer"]);
+	UpdatePlayer = reinterpret_cast<tUpdatePlayer>(g_BaseAddress + g_Offsets["UpdatePlayer"]);
 
 	LogVerbose("UpdatePlayer: {}", reinterpret_cast<void*>(UpdatePlayer));
 

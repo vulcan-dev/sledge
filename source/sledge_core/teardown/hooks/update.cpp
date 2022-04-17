@@ -23,7 +23,7 @@ void hUpdate(void* pGame, void* pDevice) {
 }
 
 void Teardown::Hooks::HookUpdate() {
-	Update = reinterpret_cast<tUpdate>(reinterpret_cast<DWORD64>(g_hTeardown) + g_Offsets["Update"]);
+	Update = reinterpret_cast<tUpdate>(g_BaseAddress + g_Offsets["Update"]);
 
 	LogVerbose("Update: {}", reinterpret_cast<void*>(Update));
 
