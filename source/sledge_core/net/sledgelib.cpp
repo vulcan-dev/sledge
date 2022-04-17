@@ -40,6 +40,13 @@ bool SledgeLib::Load() {
 	SledgeLib::Interface = new SLUnmanagedInterface();
 	memcpy(SledgeLib::Interface, &NetInterface, sizeof(SLUnmanagedInterface));
 
+	/*
+		get the callback interface
+	*/
+	SledgeLib::CallbackInterface = new SLCallbackInterface();
+	SLCallbackInterface NetCallbackInterface = SledgeLib::Interface->GetCallbackInterface();
+	memcpy(SledgeLib::CallbackInterface, &NetCallbackInterface, sizeof(SLCallbackInterface));
+
 	return true;
 }
 
@@ -58,10 +65,6 @@ bool SledgeLib::Init() {
 		LogError("SledgeLib threw exception {0:#x} on Init()", lExceptionCode);
 		return false;
 	}
-
-	SledgeLib::CallbackInterface = new SLCallbackInterface();
-	SLCallbackInterface NetCallbackInterface = SledgeLib::Interface->GetCallbackInterface();
-	memcpy(SledgeLib::CallbackInterface, &NetCallbackInterface, sizeof(SLCallbackInterface));
 
 	return true;
 }
