@@ -5,6 +5,7 @@
 #include "net/nethost.h"
 
 #include "teardown/hooks.h"
+#include "teardown/functions.h"
 
 #include "util/log.h"
 
@@ -26,7 +27,7 @@ void ReportErrorAndUnload(const char* cError) {
 	/*
 		write the final error to the log
 	*/
-	LogError("Fatal error during load - {}", cError);
+	LogError("Fatal error ocurred during Loader::Init - {}", cError);
 
 	/*
 		close the console
@@ -118,16 +119,15 @@ void Loader::Init(void* hModule) {
 	/*
 		initialize everything
 	*/
+	Teardown::GetFunctionAddresses();
+
 	if (!NetHost::Init())
 		ReportErrorAndUnload("HostFxr failed to load");
 
+	Teardown::ApplyHooks();
+
 	if (!SledgeLib::Load())
 		ReportErrorAndUnload("SledgeLib failed to load");
-
-	if (!SledgeLib::Init())
-		ReportErrorAndUnload("SledgeLib failed to init");
-
-	Teardown::ApplyHooks();
 }
 
 /*
@@ -135,4 +135,12 @@ void Loader::Init(void* hModule) {
 */
 void Loader::Shutdown() {
 	SledgeLib::Shutdown();
+}
+
+/*
+	called once game is instantiated
+*/
+void Loader::GameInit() {
+	if (!SledgeLib::Init())
+		ReportErrorAndUnload("SledgeLib failed to init");
 }
