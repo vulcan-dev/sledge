@@ -154,6 +154,11 @@ namespace SledgeLib
                  * add mod to list
                  */
                 ModList[m_Interface.GetName()] = this;
+
+                /*
+                 * invoke load function for mod
+                 */
+                m_Interface.Load();
             }
 
 
