@@ -26,7 +26,8 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"Update", 0x000000000003B6C0 },
 	 {"SwitchGameState", 0x000000000003E090 },
 	 {"IsWindowForegroundWindow", 0x000000000016CD80 },
+	 {"ChangeLevel", 0x000000000003E8C0 },
 	 {"UpdatePlayer", 0x00000000000BFC70 },
-	 {"DebugPrint", 0x000000000010EF70 },
 	 {"Log", 0x000000000016F330 },
+	 {"DebugPrint", 0x000000000010EF70 },
 };
