@@ -231,7 +231,10 @@ namespace SledgeLib
             try
             {
                 AssemblyName.GetAssemblyName(Args.FullPath);
-            } catch (Exception) { return; }
+            } catch (Exception) {
+                Log.Verbose("Added dll which is not an assembly to mods folder ({0})", Path.GetFileName(Args.FullPath));
+                return;
+            }
 
             try
             {
