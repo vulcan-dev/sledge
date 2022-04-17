@@ -8,3 +8,19 @@ enum class EGameState : unsigned int{
 	Editing = 5,
 	Quitting = 6
 };
+
+
+enum EEntityType : unsigned char {
+	Body = 1,
+	Shape = 2,
+	Light = 3,
+	Location = 4,
+	Water = 5,
+	Enemy = 6,
+	Joint = 7,
+	Vehicle = 8,
+	Wheel = 9,
+	Screen = 10,
+	Trigger = 11,
+	Script = 12
+};
