@@ -1,6 +1,7 @@
 #include "teardown/functions.h"
 #include "teardown/offsets.h"
 
+#include "teardown/functions/misc.h"
 #include "teardown/functions/memory.h"
 #include "teardown/functions/tags.h"
 #include "teardown/functions/registry.h"
@@ -44,7 +45,13 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["GetBool"], &Teardown::GetBool, "GetBool" },
 	{ g_Offsets["GetInt"], &Teardown::GetInt, "GetInt" },
 	{ g_Offsets["GetFloat"], &Teardown::GetFloat, "GetFloat" },
-	{ g_Offsets["GetString"], &Teardown::GetString, "GetString" }
+	{ g_Offsets["GetString"], &Teardown::GetString, "GetString" },
+
+	/*
+		misc functions
+	*/
+	{ g_Offsets["DebugPrint"], &Teardown::DebugPrint, "DebugPrint" }
+
 };
 
 void Teardown::GetFunctionAddresses() {

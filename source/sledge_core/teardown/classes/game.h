@@ -36,7 +36,7 @@ public:
 	void* m_Registry; //0x00C0
 	class ModManager* m_ModManager; //0x00C8
 	void* N00000136; //0x00D0
-	void* N00000137; //0x00D8
+	void* m_Debug; //0x00D8
 	void* N00000138; //0x00E0
 	void* N00000139; //0x00E8
 	char pad_00F0[380]; //0x00F0

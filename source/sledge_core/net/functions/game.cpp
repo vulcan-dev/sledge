@@ -1,4 +1,5 @@
 #include "teardown/classes/game.h"
+#include "teardown/functions/misc.h"
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
@@ -55,4 +56,10 @@ sledgelib_func void _LoadLevel(char* cLevelPath, char* cLevelLayers, char* cLeve
 	delete ssLevelLayers;
 	delete ssLevelId;
 	delete ssLevelModId;
+}
+
+sledgelib_func void _DebugPrint(char* cMessage) {
+	small_string* ssMessage = new small_string(cMessage);
+	Teardown::DebugPrint(g_Game->m_Debug, ssMessage);
+	delete ssMessage;
 }
