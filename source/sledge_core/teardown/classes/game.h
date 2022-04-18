@@ -33,7 +33,7 @@ public:
 	class LevelInfo* m_LevelInfo; //0x00A8
 	void* N00000132; //0x00B0
 	void* N00000133; //0x00B8
-	void* N00000134; //0x00C0
+	void* m_Registry; //0x00C0
 	class ModManager* m_ModManager; //0x00C8
 	void* N00000136; //0x00D0
 	void* N00000137; //0x00D8
