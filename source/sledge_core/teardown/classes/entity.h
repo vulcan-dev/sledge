@@ -1,3 +1,5 @@
+#pragma once
+
 #include "teardown/enums.h"
 
 class Entity

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "teardown/enums.h"
 #include "teardown/types/small_string.h"
 
