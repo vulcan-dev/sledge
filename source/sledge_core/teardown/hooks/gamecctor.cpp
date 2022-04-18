@@ -25,7 +25,7 @@ Game* hGameCCtor(void* pMemory, void* pDevice) {
 }
 
 void Teardown::Hooks::HookGameCCtor() {
-	GameCCtor = reinterpret_cast<tGameCCtor>(g_BaseAddress + g_Offsets["Game"]);
+	GameCCtor = reinterpret_cast<tGameCCtor>(g_BaseAddress + g_Offsets["Game::Game"]);
 
 	LogVerbose("GameCCtor: {}", reinterpret_cast<void*>(GameCCtor));
 
