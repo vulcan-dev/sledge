@@ -39,15 +39,20 @@ sledgelib_func void _GetLevelId(char* cReturn, unsigned int iReturnBufferSize) {
 }
 
 sledgelib_func void _LoadLevel(char* cLevelPath, char* cLevelLayers, char* cLevelId, char* cLevelModId) {
-	small_string ssLevelPath(cLevelPath);
-	small_string ssLevelLayers(cLevelLayers);
-	small_string ssLevelId(cLevelId);
-	small_string ssLevelModId(cLevelModId);
+	small_string* ssLevelPath = new small_string(cLevelPath);
+	small_string* ssLevelLayers = new small_string(cLevelLayers);
+	small_string* ssLevelId = new small_string(cLevelId);
+	small_string* ssLevelModId = new small_string(cLevelModId);
 
-	memcpy(&g_Game->m_LevelPath, &ssLevelPath, sizeof(small_string));
-	memcpy(&g_Game->m_LevelLayers, &ssLevelLayers, sizeof(small_string));
-	memcpy(&g_Game->m_LevelId, &ssLevelId, sizeof(small_string));
-	memcpy(&g_Game->m_LevelModId, &ssLevelModId, sizeof(small_string));
+	g_Game->m_LevelPath = *ssLevelPath;
+	g_Game->m_LevelLayers = *ssLevelLayers;
+	g_Game->m_LevelId = *ssLevelId;
+	g_Game->m_LevelModId = *ssLevelModId;
 
 	g_Game->m_NextState = EGameState::Playing;
+
+	delete ssLevelPath;
+	delete ssLevelLayers;
+	delete ssLevelId;
+	delete ssLevelModId;
 }
