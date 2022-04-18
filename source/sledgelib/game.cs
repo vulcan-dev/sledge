@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -51,6 +52,13 @@ namespace SledgeLib
                 LevelModId = "";
 
             _LoadLevel(LevelPath, LevelLayers, LevelId, LevelModId);
+        }
+
+        [DllImport("sledge_core.dll")] private static extern void _DebugPrint(string sMessage);
+        public static void DebugPrint(string sFormat, params object[] oArgs)
+        {
+            try { _DebugPrint(String.Format(sFormat, oArgs)); }
+            catch (Exception ex) { Log.Error("Error ocurred while formatting string for DebugPrint: {0}", ex); }
         }
     }
 }
