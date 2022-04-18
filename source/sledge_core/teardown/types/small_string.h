@@ -43,6 +43,10 @@ public:
 	inline const char* c_str() { return m_StackBuffer[15] ? m_HeapBuffer : &m_StackBuffer[0]; }
 	inline size_t len() { return m_StackBuffer[15] ? strlen(m_HeapBuffer) : strlen(m_StackBuffer); }
 
+	static void* operator new(size_t size) { return Teardown::malloc(size); }
+	static void operator delete(void* p) { Teardown::free(p); }
+	static void operator delete(void* p, size_t) { Teardown::free(p); }
+
 	void operator=(small_string ssSource) {
 		size_t lSourceLen = ssSource.len();
 
