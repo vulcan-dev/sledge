@@ -15,7 +15,7 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"SetFloat", 0x000000000013AA50 },
 	 {"GetBool", 0x0000000000139A70 },
 	 {"GetInt", 0x0000000000139B70 },
-	 {"GetString", 0x0000000000139840 },
+	 {"GetString", 0x0000000000139BC0 },
 	 {"SetTag", 0x0000000000110630 },
 	 {"HasTag", 0x00000000001102A0 },
 	 {"RemoveTag", 0x00000000001103C0 },
