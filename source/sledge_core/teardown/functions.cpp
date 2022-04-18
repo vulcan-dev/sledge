@@ -5,6 +5,7 @@
 #include "teardown/functions/memory.h"
 #include "teardown/functions/tags.h"
 #include "teardown/functions/registry.h"
+#include "teardown/functions/lua.h"
 
 #include "util/log.h"
 
@@ -46,6 +47,15 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["GetInt"], &Teardown::GetInt, "GetInt" },
 	{ g_Offsets["GetFloat"], &Teardown::GetFloat, "GetFloat" },
 	{ g_Offsets["GetString"], &Teardown::GetString, "GetString" },
+
+	/*
+		lua functions
+	*/
+	{ g_Offsets["lua_topointer", &Teardown::lua_topointer, "lua_topointer"] },
+	{ g_Offsets["lua_gettop", &Teardown::lua_gettop, "lua_gettop"] },
+	{ g_Offsets["lua_pushlightuserdata", &Teardown::lua_pushlightuserdata, "lua_pushlightuserdata"] },
+	{ g_Offsets["lua_pushcclosure", &Teardown::lua_pushcclosure, "lua_pushcclosure"] },
+	{ g_Offsets["lua_setfield", &Teardown::lua_setfield, "lua_setfield"] },
 
 	/*
 		misc functions
