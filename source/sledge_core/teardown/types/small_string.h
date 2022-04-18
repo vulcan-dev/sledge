@@ -15,6 +15,7 @@ public:
 		Teardown::malloc(sizeof(this));
 		memset(this, 0, sizeof(this));
 	};
+
 	small_string(const char* cStr)
 	{
 		size_t lLenght = cStr ? strlen(cStr) : 0;
@@ -32,6 +33,11 @@ public:
 
 		memcpy(cDest, cStr, lLenght);
 		cDest[lLenght] = 0;
+	}
+
+	~small_string() {
+		if (m_StackBuffer[15])
+			Teardown::free(m_HeapBuffer);
 	}
 
 	inline const char* c_str() { return m_StackBuffer[15] ? m_HeapBuffer : &m_StackBuffer[0]; }
