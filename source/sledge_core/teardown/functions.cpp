@@ -57,6 +57,9 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["lua_pushcclosure"], &Teardown::lua_pushcclosure, "lua_pushcclosure" },
 	{ g_Offsets["lua_setfield"], &Teardown::lua_setfield, "lua_setfield" },
 	{ g_Offsets["lua_pushnil"], &Teardown::lua_pushnil, "lua_pushnil" },
+	{ g_Offsets["lua_tointeger"], &Teardown::lua_tointeger, "lua_tointeger" },
+	{ g_Offsets["lua_toboolean"], &Teardown::lua_toboolean, "lua_toboolean" },
+	{ g_Offsets["lua_tolstring"], &Teardown::lua_tolstring, "lua_tolstring" },
 
 	/*
 		misc functions

@@ -1,7 +1,6 @@
 #pragma once
 
 typedef int (*lua_CFunction) (class lua_State* L);
-typedef int (*tLuaFunction)(const class ScriptCore* pSC, lua_State* L);
 
 // from: lua.h
 #define LUA_GLOBALSINDEX	(-10002)
@@ -25,4 +24,13 @@ namespace Teardown {
 
 	typedef void (*tlua_pushnil) (class lua_State* L);
 	inline tlua_pushnil lua_pushnil;
+
+	typedef int (*tlua_tointeger) (class lua_State* L, int index);
+	inline tlua_tointeger lua_tointeger;
+
+	typedef bool (*tlua_toboolean) (class lua_State* L, int index);
+	inline tlua_toboolean lua_toboolean;
+
+	typedef const char* (*tlua_tolstring) (class lua_state* L, int index, size_t* len);
+	inline tlua_tolstring lua_tolstring;
 }

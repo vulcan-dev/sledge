@@ -1,4 +1,5 @@
 #pragma once
+typedef int (*tLuaFunction)(const class ScriptCore* pSC, class lua_State* L, char* cFunctionName);
 
 namespace Sledge {
 	namespace LuaHelpers {
