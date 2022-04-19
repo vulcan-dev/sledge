@@ -12,12 +12,12 @@ sledgelib_func bool _lua_toboolean(lua_State* L, int iIndex) { return Teardown::
 sledgelib_func void* _lua_tolstring(lua_State* L, int iIndex) {
 	size_t lLength = 0;
 	const char* cLuaString = Teardown::lua_tolstring(L, iIndex, &lLength);
-	void* pStringBuilder = SledgeLib::Interface->AllocateString(lLength + 1);
+	char* pStringBuilder = reinterpret_cast<char*>(SledgeLib::Interface->AllocateString(lLength + 1));
 	
 	if (cLuaString)
 		memcpy(pStringBuilder, cLuaString, lLength);
-	else
-		memset(pStringBuilder, '\0', 1);
+	
+	pStringBuilder[lLength] = '\0';
 
 	return pStringBuilder;
 }
