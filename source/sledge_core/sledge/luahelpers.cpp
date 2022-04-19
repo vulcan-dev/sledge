@@ -29,14 +29,15 @@ std::vector <SRegistrableFunction*> vFunctions = {};
 int InvokeLuaFunction(class lua_State* L) {
 	tLuaFunction pFunction = reinterpret_cast<tLuaFunction>(Teardown::lua_topointer(L, lua_upvalueindex(1)));
 	const void* pScriptCore = Teardown::lua_topointer(L, lua_upvalueindex(2));
-	int test = pFunction(reinterpret_cast<const ScriptCore*>(pScriptCore), L);
-	return test;
+	const char* cFunctionName = reinterpret_cast<const char*>(Teardown::lua_topointer(L, lua_upvalueindex(3)));
+	return pFunction(reinterpret_cast<const ScriptCore*>(pScriptCore), L, cFunctionName);
 }
 
-void RegisterLuaFunction(class ScriptCore* pSC, const char* cFunctionName, void* pFunction) {
+void RegisterLuaFunction(class ScriptCore* pSC, char* cFunctionName, void* pFunction) {
 	Teardown::lua_pushlightuserdata(*pSC->m_SCLS.m_LuaState, pFunction);
 	Teardown::lua_pushlightuserdata(*pSC->m_SCLS.m_LuaState, pSC);
-	Teardown::lua_pushcclosure(*pSC->m_SCLS.m_LuaState, InvokeLuaFunction, 2);
+	Teardown::lua_pushlightuserdata(*pSC->m_SCLS.m_LuaState, reinterpret_cast<void*>(cFunctionName));
+	Teardown::lua_pushcclosure(*pSC->m_SCLS.m_LuaState, InvokeLuaFunction, 3);
 
 	Teardown::lua_setfield(*pSC->m_SCLS.m_LuaState, LUA_GLOBALSINDEX, cFunctionName);
 }
