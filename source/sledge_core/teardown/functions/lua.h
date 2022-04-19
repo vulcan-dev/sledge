@@ -31,6 +31,6 @@ namespace Teardown {
 	typedef bool (*tlua_toboolean) (class lua_State* L, int index);
 	inline tlua_toboolean lua_toboolean;
 
-	typedef const char* (*tlua_tolstring) (class lua_state* L, int index, size_t* len);
+	typedef const char* (*tlua_tolstring) (class lua_State* L, int index, size_t* len);
 	inline tlua_tolstring lua_tolstring;
 }
