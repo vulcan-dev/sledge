@@ -9,6 +9,7 @@ internal class Loader
         Interface.Init = Loader.Init;
         Interface.Shutdown = Loader.Shutdown;
         Interface.GetCallbackInterface = CallbackInvokers.GetCallbackInvokers;
+        Interface.AllocString = Misc.AllocString;
         return Interface;
     }
 

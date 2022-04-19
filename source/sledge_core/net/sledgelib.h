@@ -13,6 +13,7 @@ struct SLUnmanagedInterface {
 	bool (*Init) ();
 	bool (*Shutdown) ();
 	SLCallbackInterface (*GetCallbackInterface) ();
+	void* (*AllocateString) (size_t lLength);
 };
 
 namespace SledgeLib {

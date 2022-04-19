@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SledgeLib
 {
@@ -21,7 +22,8 @@ namespace SledgeLib
      */
     internal delegate bool dBoolRet();
     internal delegate CallbackInvokersInterface dCallbackInterfaceGetter();
-    
+    internal delegate StringBuilder dStringAllocator(nuint Size);
+
     [StructLayout(LayoutKind.Explicit)]
     internal struct UnmanagedInterface
     {
@@ -33,6 +35,9 @@ namespace SledgeLib
 
         [FieldOffset(0x10)]
         internal dCallbackInterfaceGetter GetCallbackInterface;
+
+        [FieldOffset(0x18)]
+        internal dStringAllocator AllocString;
     }
 
     [StructLayout(LayoutKind.Explicit)]
