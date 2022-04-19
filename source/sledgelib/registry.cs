@@ -15,12 +15,7 @@ namespace SledgeLib
         [DllImport("sledge_core.dll")] public static extern float GetFloat(string KeyName);
 
         [DllImport("sledge_core.dll")] public static extern void SetString(string KeyName, string Value);
-        [DllImport("sledge_core.dll")] private static extern void _GetString(string KeyName, StringBuilder Return, uint ReturnLen);
-        public static string GetString(string KeyName, uint ExpectedMaxLen=100)
-        {
-            StringBuilder Return = new StringBuilder((int)ExpectedMaxLen);
-            _GetString(KeyName, Return, ExpectedMaxLen);
-            return Return.ToString();
-        }
+        [DllImport("sledge_core.dll")] private static extern StringBuilder _GetString(string KeyName);
+        public static string GetString(string KeyName) { return _GetString(KeyName).ToString(); }
     }
 }
