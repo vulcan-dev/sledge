@@ -67,6 +67,7 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 	RawSig("lua_pushlightuserdata", "\x48\x8B\x41\x10\x48\x89\x10", "xxxxxxx")
 	Sig("lua_pushcclosure", "\xE8\x00\x00\x00\x00\x4D\x8B\x16", "x????xxx")
 	Sig("lua_setfield", "\xE8\x00\x00\x00\x00\x48\x8B\x43\x38\xFF\xC7", "x????xxxxxx")
+	RawSig("lua_pushnil", "\x48\x8B\x41\x10\xC7\x40\x00\x00\x00\x00\x00", "xxxxxx?????")
 
 	/*
 		misc

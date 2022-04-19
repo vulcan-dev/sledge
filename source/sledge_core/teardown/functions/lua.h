@@ -1,6 +1,11 @@
 #pragma once
 
 typedef int (*lua_CFunction) (class lua_State* L);
+typedef int (*tLuaFunction)(const class ScriptCore* pSC, lua_State* L);
+
+// from: lua.h
+#define LUA_GLOBALSINDEX	(-10002)
+#define lua_upvalueindex(i)	(LUA_GLOBALSINDEX-(i))
 
 namespace Teardown {
 	typedef void (*tlua_pushlightuserdata) (class lua_State* L, void* p);
@@ -17,4 +22,7 @@ namespace Teardown {
 
 	typedef void (*tlua_setfield) (class lua_State* L, int index, const char* k);
 	inline tlua_setfield lua_setfield;
+
+	typedef void (*tlua_pushnil) (class lua_State* L);
+	inline tlua_pushnil lua_pushnil;
 }

@@ -14,6 +14,7 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"SetString", 0x000000000013AB30 },
 	 {"SetFloat", 0x000000000013AA50 },
 	 {"GetBool", 0x0000000000139A70 },
+	 {"lua_pushnil", 0x0000000000243180 },
 	 {"lua_gettop", 0x00000000002427A0 },
 	 {"GetInt", 0x0000000000139B70 },
 	 {"GetString", 0x0000000000139BC0 },
