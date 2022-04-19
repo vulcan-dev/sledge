@@ -151,6 +151,22 @@ namespace SledgeLib
                 }
 
                 /*
+                 * register the mod's lua functions
+                 */
+                try
+                {
+                    LuaFunctionManager.RegisterLuaFunctions(this);
+                } catch (Exception ex)
+                {
+                    CallbackManager.UnregisterCallbacks(this);
+                    LuaFunctionManager.UnregisterLuaFunctions(this);
+                    Unload();
+                    GC.Collect();
+                    Log.Error("Exception ocurred while registering lua functions: {0}", ex);
+                    throw new Exception("Unable to register lua functions");
+                }
+
+                /*
                  * add mod to list
                  */
                 ModList[m_Interface.GetName()] = this;
@@ -168,6 +184,7 @@ namespace SledgeLib
                  * unregister callbacks, remove mod from list, invoke Unload function, unload assembly and collect GC
                  */
                 CallbackManager.UnregisterCallbacks(this);
+                LuaFunctionManager.UnregisterLuaFunctions(this);
                 ModList.Remove(m_Interface.GetName());
                 m_Interface.Unload();
                 Unload();
