@@ -6,7 +6,7 @@ class ScriptCore_LuaState
 {
 public:
 	char pad_0000[56]; //0x0000
-	class lua_State* m_LuaState; //0x0038
+	class lua_State** m_LuaState; //0x0038
 }; //Size: 0x0040
 
 class ScriptCore
