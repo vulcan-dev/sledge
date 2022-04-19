@@ -17,6 +17,8 @@ namespace Teardown {
 		void HookGameCCtor();
 		void UnhookGameCCtor();
 
+		void HookRegisterLuaFunctions();
+		void UnhookRegisterLuaFunctions();
 	}
 
 	inline void ApplyHooks() {
@@ -25,6 +27,7 @@ namespace Teardown {
 		Hooks::HookUpdatePlayer();
 		Hooks::HookChangeLevel();
 		Hooks::HookGameCCtor();
+		Hooks::HookRegisterLuaFunctions();
 	}
 
 	inline void UndoHooks() {
@@ -33,5 +36,6 @@ namespace Teardown {
 		Hooks::UnhookUpdatePlayer();
 		Hooks::UnhookChangeLevel();
 		Hooks::UnhookGameCCtor();
+		Hooks::UnhookRegisterLuaFunctions();
 	}
 }
