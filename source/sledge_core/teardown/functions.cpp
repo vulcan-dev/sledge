@@ -51,11 +51,12 @@ static const SFunctionInfo aFunctions[] = {
 	/*
 		lua functions
 	*/
-	{ g_Offsets["lua_topointer", &Teardown::lua_topointer, "lua_topointer"] },
-	{ g_Offsets["lua_gettop", &Teardown::lua_gettop, "lua_gettop"] },
-	{ g_Offsets["lua_pushlightuserdata", &Teardown::lua_pushlightuserdata, "lua_pushlightuserdata"] },
-	{ g_Offsets["lua_pushcclosure", &Teardown::lua_pushcclosure, "lua_pushcclosure"] },
-	{ g_Offsets["lua_setfield", &Teardown::lua_setfield, "lua_setfield"] },
+	{ g_Offsets["lua_topointer"], &Teardown::lua_topointer, "lua_topointer" },
+	{ g_Offsets["lua_gettop"], &Teardown::lua_gettop, "lua_gettop" },
+	{ g_Offsets["lua_pushlightuserdata"], &Teardown::lua_pushlightuserdata, "lua_pushlightuserdata" },
+	{ g_Offsets["lua_pushcclosure"], &Teardown::lua_pushcclosure, "lua_pushcclosure" },
+	{ g_Offsets["lua_setfield"], &Teardown::lua_setfield, "lua_setfield" },
+	{ g_Offsets["lua_pushnil"], &Teardown::lua_pushnil, "lua_pushnil" },
 
 	/*
 		misc functions
