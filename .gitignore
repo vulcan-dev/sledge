@@ -1,9 +1,3 @@
 proj/*
 .vscode
-
 *.aps
-
-source/sledgelib/.vs
-source/sledgelib/obj
-source/sledgelib/bin
-source/sledgelib/sledgelib.dll

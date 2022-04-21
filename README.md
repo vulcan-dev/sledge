@@ -2,7 +2,7 @@
 
 <p>
     <a href="https://store.steampowered.com/app/1167630/Teardown/">
-        <img src="https://img.shields.io/badge/Teardown-0.9.6-orange">
+        <img src="https://img.shields.io/badge/Teardown-1.0.0-orange">
     </a>
     <a href="https://isocpp.org/">
         <img src="https://img.shields.io/badge/language-C%2B%2B20-blue.svg">
@@ -10,7 +10,11 @@
     <a href="https://ci.appveyor.com/project/44lr/sledge">
         <img src="https://ci.appveyor.com/api/projects/status/ka8ikyfdreboptdu?svg=true">
     </a>
+    <a href="https://discord.gg/SAAmJ3VSAS">
+        <img src="https://img.shields.io/discord/919624550466064494?color=%235865F2&label=Discord">
+    </a>
 </p>
+
 
 Sledge is an open source project that aims to bring full C# modding support to [Teardown](https://store.steampowered.com/app/1167630/Teardown/).
 
@@ -18,9 +22,6 @@ The current goal is to port all of the already available Lua functions to C#, th
 It also features other neat things like Ultralight support.
 
 You can download the latest build [here](https://github.com/44lr/sledge/releases).
-
-Need help? Wanna know more about the project?
-Join the [Discord server](https://www.discord.gg/SAAmJ3VSAS)
 
 ## IMPORTANT
 This project is still very early in development, so expect tons of API changes (and possibly crashes).
