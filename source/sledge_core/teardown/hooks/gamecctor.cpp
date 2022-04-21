@@ -4,7 +4,7 @@
 
 #include "sledge/loader.h"
 
-#include "util/log.h"
+#include "util/timer.h"
 
 #include <minwindef.h>
 

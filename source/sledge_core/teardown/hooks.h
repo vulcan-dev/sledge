@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/timer.h"
+
 namespace Teardown {
 	namespace Hooks {
 		void HookSwitchState();
@@ -22,6 +24,7 @@ namespace Teardown {
 	}
 
 	inline void ApplyHooks() {
+		MONITOR();
 		Hooks::HookSwitchState();
 		Hooks::HookUpdate();
 		Hooks::HookUpdatePlayer();
@@ -31,6 +34,7 @@ namespace Teardown {
 	}
 
 	inline void UndoHooks() {
+		MONITOR();
 		Hooks::UnhookSwitchState();
 		Hooks::UnhookUpdate();
 		Hooks::UnhookUpdatePlayer();
