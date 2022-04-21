@@ -3,7 +3,9 @@
 
 #include "util/log.h"
 
+#pragma warning(push, 0)
 #include <fmt/format.h>
+#pragma warning(pop)
 
 #include <filesystem>
 #include <libloaderapi.h>

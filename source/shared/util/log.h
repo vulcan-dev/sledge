@@ -1,6 +1,8 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <fmt/format.h>
+#pragma warning(pop)
 
 enum class ELogType {
 	Verbose,
