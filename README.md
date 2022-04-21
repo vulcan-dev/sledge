@@ -2,7 +2,7 @@
 
 <p>
     <a href="https://store.steampowered.com/app/1167630/Teardown/">
-        <img src="https://img.shields.io/badge/Teardown-0.9.6-orange">
+        <img src="https://img.shields.io/badge/Teardown-1.0.0-orange">
     </a>
     <a href="https://isocpp.org/">
         <img src="https://img.shields.io/badge/language-C%2B%2B20-blue.svg">
