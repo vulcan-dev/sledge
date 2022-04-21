@@ -7,8 +7,6 @@
 #include "teardown/hooks.h"
 #include "teardown/functions.h"
 
-#include "util/log.h"
-
 #include <processenv.h>
 
 #include <memoryapi.h>

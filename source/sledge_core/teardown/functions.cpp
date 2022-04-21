@@ -7,7 +7,7 @@
 #include "teardown/functions/registry.h"
 #include "teardown/functions/lua.h"
 
-#include "util/log.h"
+#include "util/timer.h"
 
 #include "globals.h"
 
@@ -69,6 +69,7 @@ static const SFunctionInfo aFunctions[] = {
 };
 
 void Teardown::GetFunctionAddresses() {
+	MONITOR();
 	for (const SFunctionInfo& Func : aFunctions) {
 		unsigned __int64 iFunctionAddress = g_BaseAddress + Func.m_Offset;
 		memcpy(Func.m_Function, &iFunctionAddress, sizeof(void*));
