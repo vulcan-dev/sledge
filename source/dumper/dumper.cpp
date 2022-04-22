@@ -6,7 +6,6 @@
 #include <sstream>
 #include <fstream>
 
-#include <windef.h>
 #include <processthreadsapi.h>
 #include <libloaderapi.h>
 
