@@ -1,3 +1,12 @@
 proj/*
+build/*
+
 .vscode
+.idea
+.vs
+
 *.aps
+*.vcproj*
+*.vcxproj*
+*.xml
+*.sln
