@@ -1,4 +1,3 @@
-#include <minwindef.h>
 #include <libloaderapi.h>
 
 #include "dumper.h"
