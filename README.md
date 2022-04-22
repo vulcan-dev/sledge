@@ -60,6 +60,6 @@ Options:
 * [Xorberax](https://github.com/ss-gnalvesteffer)
 * [Nymda](https://github.com/nymda)
 * [Nitro](https://github.com/BuilderHD)
-* [Daniel] (https://github.com/vulcan-dev)
-* [Alexandar] (https://github.com/alexandargyurov)
+* [Daniel](https://github.com/vulcan-dev)
+* [Alexandar](https://github.com/alexandargyurov)
 For your help, ideas and support

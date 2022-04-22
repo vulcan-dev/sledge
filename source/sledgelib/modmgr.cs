@@ -81,7 +81,7 @@ namespace SledgeLib
 
             internal ISledgeMod m_Interface;
 
-            public ModContext(string AssemblyPath) : base(isCollectible: true)
+            public ModContext(string AssemblyPath) : base(name: AssemblyPath, isCollectible: true)
             {
                 m_AssemblyPath = AssemblyPath;
                 m_AssemblyName = Path.GetFileNameWithoutExtension(AssemblyPath);
