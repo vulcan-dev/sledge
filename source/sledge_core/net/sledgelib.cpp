@@ -3,16 +3,19 @@
 #include "globals.h"
 
 #include "net/nethost.h"
-#include "util/log.h"
+#include "util/timer.h"
 
 #include <excpt.h>
 
+#pragma warning(push, 0)
 #include <fmt/format.h>
+#pragma warning(pop)
 
 typedef SLUnmanagedInterface (*tGetInterface) ();
 tGetInterface GetInterface;
 
 bool SledgeLib::Load() {
+	MONITOR();
 	/*
 		get expected path of sledgelib.dll and check if it exists
 	*/

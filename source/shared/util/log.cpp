@@ -1,7 +1,9 @@
 #include "log.h"
 
+#pragma warning(push, 0)
 #include <fmt/color.h>
 #include <fmt/chrono.h>
+#pragma warning(pop)
 
 bool bLogInitialized = false;
 
