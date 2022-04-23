@@ -1,6 +1,8 @@
 #include "teardown.h"
 #include "steam.h"
 
+#include <fmt/format.h>
+
 #include <string>
 #include <filesystem>
 #include <fstream>
@@ -97,9 +99,9 @@ void Teardown::Launch() {
 	char cCurrentPath[MAX_PATH];
 	GetCurrentDirectoryA(MAX_PATH, cCurrentPath);
 
-	char cExePath[MAX_PATH];
-	sprintf(cExePath, "%s\\%s", cTeardownPath, "teardown.exe");
-	if (!std::filesystem::exists(cExePath)) {
+	std::string sExePath = fmt::format("{}\\{}", cTeardownPath, "teardown.exe");
+	const char* cExePath = sExePath.c_str();
+	if (!std::filesystem::exists(sExePath)) {
 		MessageBoxA(NULL, "Unable to find teardown.exe", "Error", MB_ICONERROR | MB_OK);
 		return;
 	}
@@ -107,31 +109,30 @@ void Teardown::Launch() {
 	/*
 		get path of dlls
 	*/
+	std::string sSledgePath = fmt::format("{}\\bin\\sledge_core.dll", cCurrentPath);
+	std::string sDumperPath = fmt::format("{}\\bin\\dumper.dll", cCurrentPath);
 
-	char cDLLPath[MAX_PATH];
-	sprintf(cDLLPath, "%s\\%s", cCurrentPath, "\\bin\\sledge_core.dll");
-	const char* cDLLPath2 = cDLLPath;
+	const char* cSledgePath = sSledgePath.c_str();
+	const char* cDumperPath = sDumperPath.c_str();
 
-	if (!std::filesystem::exists(cDLLPath)) {
-		MessageBoxA(NULL, "Unable to find sledge_core.dll", "Error", MB_ICONERROR | MB_OK);
+	if (!std::filesystem::exists(cSledgePath)) {
+		MessageBoxA(NULL, "Unable to find sledge.dll", "Error", MB_ICONERROR | MB_OK);
 		return;
 	}
 
 	/*
-		set up path variables before starting teardown
+		set up dll directory and env variablesbefore starting teardown
 	*/
-	char cUltralightDir[MAX_PATH];
-	sprintf(cUltralightDir, "%s\\ultralight", cCurrentPath);
-	SetDllDirectory(cUltralightDir);
-
+	std::string sUltralightPath = fmt::format("{}\\ultralight", cCurrentPath);
+	SetDllDirectory(sUltralightPath.c_str());
 	SetEnvironmentVariableA("SteamAppId", "1167630");
 
 	/*
 		parse command line arguments
 	*/
 	std::string sTeardownCmdLine(cExePath);
-
 	char* cCMDLine = GetCommandLine();
+
 	if (strstr(cCMDLine, "-nosplash"))
 		sTeardownCmdLine = sTeardownCmdLine + " -nosplash";
 
@@ -181,32 +182,28 @@ void Teardown::Launch() {
 	Steam::Defuse(ProcInfo.hProcess, ProcInfo.hThread, pExeBuffer);
 
 	/*
-		attach sledge or dumper
+		attach sledge
 	*/
 	if (!bWriteDump) {
-		if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cDLLPath2, 1)) {
+		if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cSledgePath, 1)) {
 			MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
 			return;
 		}
 	}
 	else {
-		char cDumperPath[MAX_PATH];
-		sprintf(cDumperPath, "%s\\%s", cCurrentPath, "dumper.dll");
-		const char* cDumperPath2 = cDumperPath;
-
-		if (!std::filesystem::exists(cDumperPath2)) {
+		if (!std::filesystem::exists(cDumperPath)) {
 			MessageBoxA(NULL, "Unable to find dumper.dll", "Error", MB_ICONERROR | MB_OK);
 			return;
 		}
 
-		if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cDumperPath2, 1)) {
+		if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cDumperPath, 1)) {
 			MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
 			return;
 		}
 	}
 
 	/*
-		resume thread and get close handles once process closes	
+		resume thread and get close handles once process closes
 	*/
 	ResumeThread(ProcInfo.hThread);
 	WaitForSingleObject(ProcInfo.hProcess, INFINITE);
