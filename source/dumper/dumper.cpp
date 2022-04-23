@@ -68,7 +68,7 @@ void Dumper::Run(void* hMod) {
 	ResultFile << ssResult.str();
 	ResultFile.close();
 
-	MessageBoxA(0, "Saved addresses to dump.txt", "Dump successful", MB_OK);
+	MessageBoxA(0, "Saved addresses to offsets.h", "Dump successful", MB_OK);
 
 	exit(0);
 }
