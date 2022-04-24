@@ -4,10 +4,6 @@
 
 #include "sledge/loader.h"
 
-#include "util/timer.h"
-
-#include <minwindef.h>
-
 #include <windef.h>
 #include <processthreadsapi.h>
 #include <detours.h>

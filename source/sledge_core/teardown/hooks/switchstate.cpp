@@ -6,8 +6,6 @@
 
 #include "util/log.h"
 
-#include <minwindef.h>
-
 #include <windef.h>
 #include <processthreadsapi.h>
 #include <detours.h>
