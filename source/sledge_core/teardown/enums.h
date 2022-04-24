@@ -11,16 +11,16 @@ enum class EGameState : unsigned int{
 
 
 enum EEntityType : unsigned char {
-	Body = 1,
-	Shape = 2,
-	Light = 3,
-	Location = 4,
-	Water = 5,
-	Enemy = 6,
-	Joint = 7,
-	Vehicle = 8,
-	Wheel = 9,
-	Screen = 10,
-	Trigger = 11,
-	Script = 12
+	Type_Body = 1,
+	Type_Shape = 2,
+	Type_Light = 3,
+	Type_Location = 4,
+	Type_Water = 5,
+	Type_Enemy = 6,
+	Type_Joint = 7,
+	Type_Vehicle = 8,
+	Type_Wheel = 9,
+	Type_Screen = 10,
+	Type_Trigger = 11,
+	Type_Script = 12
 };
