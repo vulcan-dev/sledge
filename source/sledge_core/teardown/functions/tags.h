@@ -5,7 +5,7 @@
 
 namespace Teardown {
 	inline void (*SetTag) (Entity* pEntity, small_string* ssName, small_string* ssValue);
-	inline bool (*tHasTag) (Entity* pEntity, small_string* ssName);
-	inline void (*tRemoveTag) (Entity* pEntity, small_string* ssName);
-	inline small_string* (*tGetTag) (Entity* pEntity, small_string* ssReturn, small_string* ssName);
+	inline bool (*HasTag) (Entity* pEntity, small_string* ssName);
+	inline void (*RemoveTag) (Entity* pEntity, small_string* ssName);
+	inline small_string* (*GetTag) (Entity* pEntity, small_string* ssReturn, small_string* ssName);
 }
