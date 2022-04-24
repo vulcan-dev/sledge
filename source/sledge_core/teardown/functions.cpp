@@ -6,6 +6,9 @@
 #include "teardown/functions/tags.h"
 #include "teardown/functions/registry.h"
 #include "teardown/functions/lua.h"
+#include "teardown/functions/constructors.h"
+#include "teardown/functions/scene.h"
+#include "teardown/functions/entity.h"
 
 #include "util/timer.h"
 
@@ -33,7 +36,7 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["SetTag"], &Teardown::SetTag, "SetTag" },
 	{ g_Offsets["HasTag"], &Teardown::HasTag, "HasTag" },
 	{ g_Offsets["RemoveTag"], &Teardown::RemoveTag, "RemoveTag" },
-	{ g_Offsets["GetTag"], &Teardown::RemoveTag, "GetTag" },
+	{ g_Offsets["GetTag"], &Teardown::GetTag, "GetTag" },
 
 	/*
 		registry functions
@@ -60,6 +63,30 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["lua_tointeger"], &Teardown::lua_tointeger, "lua_tointeger" },
 	{ g_Offsets["lua_toboolean"], &Teardown::lua_toboolean, "lua_toboolean" },
 	{ g_Offsets["lua_tolstring"], &Teardown::lua_tolstring, "lua_tolstring" },
+
+	/*
+		constructor functions
+	*/
+	{ g_Offsets["Body::Body"], &Teardown::BodyConstructor, "Body::Body", },
+	{ g_Offsets["Shape::Shape"], &Teardown::ShapeConstructor, "Shape::Shape", },
+	{ g_Offsets["Joint::Joint"], &Teardown::JointConstructor, "Joint::Joint", },
+	{ g_Offsets["Light::Light"], &Teardown::LightConstructor, "Light::Light", },
+	{ g_Offsets["Screen::Screen"], &Teardown::ScreenConstructor, "Screen::Screen", },
+	{ g_Offsets["Script::Script"], &Teardown::ScriptConstructor, "Script::Script", },
+
+	/*
+		entity functions
+	*/
+	{ g_Offsets["LoadVox"], &Teardown::LoadVox, "LoadVox" },
+	{ g_Offsets["GenVoxTexture"], &Teardown::GenVoxTexture, "GenVoxTexture" },
+	{ g_Offsets["GenVoxBuffers"], &Teardown::GenVoxBuffers, "GenVoxBuffers" },
+	{ g_Offsets["SetBodyDynamic"], &Teardown::SetBodyDynamic, "SetBodyDynamic" },
+	{ g_Offsets["InitializeBody"], &Teardown::InitializeBody, "InitializeBody" },
+
+	/*
+		scene functions
+	*/
+	{ g_Offsets["QueryRaycast"], &Teardown::QueryRaycast, "QueryRaycast" },
 
 	/*
 		misc functions
