@@ -42,7 +42,7 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"lua_topointer", 0x0000000000243F80 },
 	 {"IsWindowForegroundWindow", 0x000000000016CF00 },
 	 {"ChangeLevel", 0x000000000003E8C0 },
-	 {"WriteToConsole", 0x000000007417042E },
+	 {"WriteToConsole", 0x000000000016F4B0 },
 	 {"lua_pushnil", 0x0000000000243300 },
 	 {"lua_gettop", 0x0000000000242920 },
 	 {"lua_pushlightuserdata", 0x0000000000243270 },
