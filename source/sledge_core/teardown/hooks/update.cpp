@@ -14,28 +14,28 @@
 #include "globals.h"
 
 typedef void (*tUpdate) (void* pGame, void* pDevice);
-tUpdate Update;
+tUpdate _Update;
 
 void hUpdate(void* pGame, void* pDevice) {
 	SledgeLib::CallbackInterface->PreUpdate();
-	Update(pGame, pDevice);
+	_Update(pGame, pDevice);
 	SledgeLib::CallbackInterface->PostUpdate();
 }
 
-void Teardown::Hooks::HookUpdate() {
-	Update = reinterpret_cast<tUpdate>(g_BaseAddress + g_Offsets["Update"]);
+void Teardown::Hooks::Update::Hook() {
+	_Update = reinterpret_cast<tUpdate>(g_BaseAddress + g_Offsets["Update"]);
 
-	LogVerbose("Update: {}", reinterpret_cast<void*>(Update));
+	LogVerbose("Update: {}", reinterpret_cast<void*>(_Update));
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&Update, hUpdate);
+	DetourAttach(&_Update, hUpdate);
 	DetourTransactionCommit();
 }
 
-void Teardown::Hooks::UnhookUpdate() {
+void Teardown::Hooks::Update::Unhook() {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourDetach(&Update, hUpdate);
+	DetourDetach(&_Update, hUpdate);
 	DetourTransactionCommit();
 }

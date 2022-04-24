@@ -24,7 +24,7 @@ Game* hGameCCtor(void* pMemory, void* pDevice) {
 	return g_Game;
 }
 
-void Teardown::Hooks::HookGameCCtor() {
+void Teardown::Hooks::GameConstructor::Hook() {
 	GameCCtor = reinterpret_cast<tGameCCtor>(g_BaseAddress + g_Offsets["Game::Game"]);
 
 	LogVerbose("Game::Game: {}", reinterpret_cast<void*>(GameCCtor));
@@ -35,7 +35,7 @@ void Teardown::Hooks::HookGameCCtor() {
 	DetourTransactionCommit();
 }
 
-void Teardown::Hooks::UnhookGameCCtor() {
+void Teardown::Hooks::GameConstructor::Unhook() {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 	DetourDetach(&GameCCtor, hGameCCtor);

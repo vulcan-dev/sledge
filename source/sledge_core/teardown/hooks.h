@@ -4,42 +4,54 @@
 
 namespace Teardown {
 	namespace Hooks {
-		void HookSwitchState();
-		void UnhookSwitchState();
+		namespace SwitchState {
+			void Hook();
+			void Unhook();
+		}
 
-		void HookUpdate();
-		void UnhookUpdate();
+		namespace Update {
+			void Hook();
+			void Unhook();
+		}
 
-		void HookUpdatePlayer();
-		void UnhookUpdatePlayer();
+		namespace UpdatePlayer {
+			void Hook();
+			void Unhook();
+		}
 
-		void HookChangeLevel();
-		void UnhookChangeLevel();
+		namespace LevelChange {
+			void Hook();
+			void Unhook();
+		}
 
-		void HookGameCCtor();
-		void UnhookGameCCtor();
+		namespace GameConstructor {
+			void Hook();
+			void Unhook();
+		}
 
-		void HookRegisterLuaFunctions();
-		void UnhookRegisterLuaFunctions();
+		namespace RegisterLuaFunctions {
+			void Hook();
+			void Unhook();
+		}
 	}
 
 	inline void ApplyHooks() {
 		MONITOR();
-		Hooks::HookSwitchState();
-		Hooks::HookUpdate();
-		Hooks::HookUpdatePlayer();
-		Hooks::HookChangeLevel();
-		Hooks::HookGameCCtor();
-		Hooks::HookRegisterLuaFunctions();
+		Hooks::SwitchState::Hook();
+		Hooks::Update::Hook();
+		Hooks::UpdatePlayer::Hook();
+		Hooks::LevelChange::Hook();
+		Hooks::GameConstructor::Hook();
+		Hooks::RegisterLuaFunctions::Hook();
 	}
 
 	inline void UndoHooks() {
 		MONITOR();
-		Hooks::UnhookSwitchState();
-		Hooks::UnhookUpdate();
-		Hooks::UnhookUpdatePlayer();
-		Hooks::UnhookChangeLevel();
-		Hooks::UnhookGameCCtor();
-		Hooks::UnhookRegisterLuaFunctions();
+		Hooks::SwitchState::Unhook();
+		Hooks::Update::Unhook();
+		Hooks::UpdatePlayer::Unhook();
+		Hooks::LevelChange::Unhook();
+		Hooks::GameConstructor::Unhook();
+		Hooks::RegisterLuaFunctions::Unhook();
 	}
 }

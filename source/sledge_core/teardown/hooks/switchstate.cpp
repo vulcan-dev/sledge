@@ -15,31 +15,30 @@
 #include "globals.h"
 
 typedef void (*tSwitchState) (void* pGame, EGameState iState);
-tSwitchState SwitchState;
+tSwitchState _SwitchState;
 
 void hSwitchState(void* pGame, EGameState State) {
 	if (State == EGameState::Splash && g_SkipSplash)
-		return SwitchState(pGame, EGameState::Menu);
-
-	SwitchState(pGame, State);
+		return _SwitchState(pGame, EGameState::Menu);
+	_SwitchState(pGame, State);
 
 	SledgeLib::CallbackInterface->StateChange(static_cast<unsigned int>(State));
 }
 
-void Teardown::Hooks::HookSwitchState() {
-	SwitchState = reinterpret_cast<tSwitchState>(g_BaseAddress + g_Offsets["SwitchGameState"]);
+void Teardown::Hooks::SwitchState::Hook() {
+	_SwitchState = reinterpret_cast<tSwitchState>(g_BaseAddress + g_Offsets["SwitchGameState"]);
 
-	LogVerbose("SwitchState: {}", reinterpret_cast<void*>(SwitchState));
+	LogVerbose("SwitchState: {}", reinterpret_cast<void*>(_SwitchState));
 	
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&SwitchState, hSwitchState);
+	DetourAttach(&_SwitchState, hSwitchState);
 	DetourTransactionCommit();
 }
 
-void Teardown::Hooks::UnhookSwitchState() {
+void Teardown::Hooks::SwitchState::Unhook() {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourDetach(&SwitchState, hSwitchState);
+	DetourDetach(&_SwitchState, hSwitchState);
 	DetourTransactionCommit();
 }
