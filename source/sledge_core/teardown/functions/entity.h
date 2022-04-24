@@ -8,4 +8,6 @@ namespace Teardown {
 
 	inline void (*SetBodyDynamic) (void* pPhysics, class Body* pBody);
 	inline void (*InitializeBody) (class Body* pBody);
+
+	inline void (*ReactivateBody) (void* pPhysics, class Body* pBody);
 }
