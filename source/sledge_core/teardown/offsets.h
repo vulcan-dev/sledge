@@ -21,7 +21,7 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"SetFloat", 0x000000000013AB50 },
 	 {"DebugPrint", 0x000000000010F070 },
 	 {"GetBool", 0x0000000000139B70 },
-	 {"ReactivateBody", 0x00000000000B8880 },
+	 {"UpdateBodyActive", 0x00000000000B8880 },
 	 {"GetInt", 0x0000000000139C70 },
 	 {"GetString", 0x0000000000139CC0 },
 	 {"SetTag", 0x0000000000110730 },

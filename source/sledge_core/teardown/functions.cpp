@@ -82,7 +82,7 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["GenVoxBuffers"], &Teardown::GenVoxBuffers, "GenVoxBuffers" },
 	{ g_Offsets["SetBodyDynamic"], &Teardown::SetBodyDynamic, "SetBodyDynamic" },
 	{ g_Offsets["InitializeBody"], &Teardown::InitializeBody, "InitializeBody" },
-	{ g_Offsets["ReactivateBody"], &Teardown::ReactivateBody, "ReactivateBody" },
+	{ g_Offsets["UpdateBodyActive"], &Teardown::UpdateBodyActive, "UpdateBodyActive" },
 
 	/*
 		scene functions
