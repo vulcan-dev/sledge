@@ -33,6 +33,11 @@ namespace Teardown {
 			void Hook();
 			void Unhook();
 		}
+
+		namespace WriteToConsole {
+			void Hook();
+			void Unhook();
+		}
 	}
 
 	inline void ApplyHooks() {
@@ -43,6 +48,7 @@ namespace Teardown {
 		Hooks::LevelChange::Hook();
 		Hooks::GameConstructor::Hook();
 		Hooks::RegisterLuaFunctions::Hook();
+		Hooks::WriteToConsole::Hook();
 	}
 
 	inline void UndoHooks() {
@@ -53,5 +59,6 @@ namespace Teardown {
 		Hooks::LevelChange::Unhook();
 		Hooks::GameConstructor::Unhook();
 		Hooks::RegisterLuaFunctions::Unhook();
+		Hooks::WriteToConsole::Unhook();
 	}
 }
