@@ -1,16 +1,10 @@
 #pragma once
 
-typedef void  (*tfree)		(void* pMemoryBlock);
-typedef void* (*tmalloc)	(size_t lSize);
-typedef void* (*tcalloc)	(size_t lCount, size_t lSize);
-typedef void* (*trealloc)	(void* pMemoryBlock, size_t lSize);
-typedef void* (*tmemmove)	(void* pDest, void* pSource, size_t lSize);
-
 namespace Teardown
 {
-	inline tfree free = nullptr;
-	inline tmalloc malloc = nullptr;
-	inline tcalloc calloc = nullptr;
-	inline trealloc realloc = nullptr;
-	inline tmemmove memmove = nullptr;
+	inline void (*free)	(void* pMemoryBlock);
+	inline void* (*malloc)	(size_t lSize);
+	inline void* (*calloc)	(size_t lCount, size_t lSize);
+	inline void* (*realloc) (void* pMemoryBlock, size_t lSize);
+	inline void* (*memmove) (void* pDest, void* pSource, size_t lSize);
 }
