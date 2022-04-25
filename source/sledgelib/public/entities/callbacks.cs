@@ -99,7 +99,7 @@ namespace SledgeLib
         }
 
         /*
-         * unregisters all the callbacks  belonging to a mod
+         * unregisters all the callbacks belonging to a mod
          */
         internal static void UnregisterCallbacks(ModManager.ModContext Mod)
         {

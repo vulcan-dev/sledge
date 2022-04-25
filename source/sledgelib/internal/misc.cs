@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SledgeLib
 {
-    public class Misc
+    public class Interop
     {
         internal static StringBuilder AllocString(nuint Length)
         {
