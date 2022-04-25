@@ -2,6 +2,7 @@
 #include <string.h>
 #include "teardown/functions/memory.h"
 
+#pragma pack(push, 1)
 class small_string
 {
 public:
@@ -22,7 +23,6 @@ public:
 	small_string(const char* cStr)
 	{
 		size_t lLenght = cStr ? strlen(cStr) : 0;
-
 		if (lLenght == 0)
 			return;
 
@@ -124,3 +124,4 @@ public:
 		cDest[lTotalStrLen] = 0;
 	}
 };
+#pragma pack(pop)
