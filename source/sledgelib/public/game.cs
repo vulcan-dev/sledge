@@ -7,7 +7,13 @@ namespace SledgeLib
     public class Game
     {
         [DllImport("sledge_core.dll")] private static extern void _GetLevelPath(StringBuilder ReturnString, uint ReturnLength);
-        public static string m_LevelPath
+        [DllImport("sledge_core.dll")] private static extern bool _IsPlaying();
+        [DllImport("sledge_core.dll")] private static extern void _GetLevelLayers(StringBuilder ReturnString, uint ReturnLength);
+        [DllImport("sledge_core.dll")] private static extern void _GetLevelId(StringBuilder ReturnString, uint ReturnLength);
+        [DllImport("sledge_core.dll")] private static extern void _LoadLevel(string LevelPath, string LevelLayers, string LevelId, string LevelModId);
+        [DllImport("sledge_core.dll")] private static extern void _DebugPrint(string sMessage);
+
+        public static string LevelPath
         {
             get {
                 StringBuilder ReturnString = new StringBuilder(255);
@@ -16,8 +22,7 @@ namespace SledgeLib
             }
         }
 
-        [DllImport("sledge_core.dll")] private static extern void _GetLevelLayers(StringBuilder ReturnString, uint ReturnLength);
-        public static string m_LevelLayers
+        public static string LevelLayers
         {
             get {
                 StringBuilder ReturnString = new StringBuilder(100);
@@ -26,8 +31,7 @@ namespace SledgeLib
             }
         }
 
-        [DllImport("sledge_core.dll")] private static extern void _GetLevelId(StringBuilder ReturnString, uint ReturnLength);
-        public static string m_LevelId
+        public static string LevelId
         {
             get {
                 StringBuilder ReturnString = new StringBuilder(100);
@@ -36,7 +40,6 @@ namespace SledgeLib
             }
         }
 
-        [DllImport("sledge_core.dll")] private static extern void _LoadLevel(string LevelPath, string LevelLayers, string LevelId, string LevelModId);
         public static void LoadLevel(string? LevelPath, string? LevelLayers, string? LevelId, string? LevelModId)
         {
             if (LevelPath == null)
@@ -54,11 +57,15 @@ namespace SledgeLib
             _LoadLevel(LevelPath, LevelLayers, LevelId, LevelModId);
         }
 
-        [DllImport("sledge_core.dll")] private static extern void _DebugPrint(string sMessage);
         public static void DebugPrint(string sFormat, params object[] oArgs)
         {
             try { _DebugPrint(String.Format(sFormat, oArgs)); }
             catch (Exception ex) { Log.Error("Error ocurred while formatting string for DebugPrint: {0}", ex); }
+        }
+
+        public static bool Playing
+        {
+            get { return _IsPlaying(); }
         }
     }
 }
