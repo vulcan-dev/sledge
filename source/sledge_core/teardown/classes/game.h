@@ -3,6 +3,7 @@
 #include "teardown/enums.h"
 #include "teardown/types/small_string.h"
 
+#pragma pack(push, 1)
 class Game
 {
 public:
@@ -44,7 +45,9 @@ public:
 	char pad_00F0[380]; //0x00F0
 	bool m_QuickLoad; //0x026C
 	bool m_QuickSave; //0x026D
-	char pad_026E[210]; //0x026E
+	char pad_026E[1]; //0x026E
+	bool m_RespawnPlayer; //0x026F
+	char pad_0270[32]; //0x0270
 	small_string m_LevelId; //0x0340
 	small_string m_LevelPath; //0x0350
 	small_string m_LevelLayers; //0x0360
@@ -53,5 +56,6 @@ public:
 	bool N000001AB; //0x0478
 	char pad_0479[7]; //0x0479
 }; //Size: 0x0480
+#pragma pack(pop)
 
 inline Game* g_Game;

@@ -2,10 +2,11 @@
 #include "teardown/types/small_string.h"
 #include "teardown/types/small_vector.h"
 
+#pragma pack(push, 1)
 class Scene
 {
 public:
-	void* N0000009C; //0x0008
+	void* m_Physics; //0x0008
 	void* N0000009D; //0x0010
 	char pad_0018[8]; //0x0018
 	void* N0000009F; //0x0020
@@ -58,5 +59,6 @@ public:
 	virtual void Function0();
 	virtual void Function1();
 }; //Size: 0x08C0
+#pragma pack(pop)
 
 inline Scene* g_Scene = nullptr;

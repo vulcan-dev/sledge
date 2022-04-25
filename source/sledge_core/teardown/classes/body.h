@@ -3,6 +3,7 @@
 #include "teardown/types/math.h"
 #include <teardown/classes/entity.h>
 
+#pragma pack(push, 1)
 class Body : public Entity
 {
 public:
@@ -17,7 +18,8 @@ public:
 	char pad_00B4[40]; //0x00B4
 	bool m_Dynamic; //0x00DC
 	char pad_00DD[7]; //0x00DD
-	unsigned int m_ActiveTicksLeft; //0x00E4
+	unsigned char m_ActiveTicksLeft; //0x00E4
 	bool m_Colliding; //0x00E5
-	char pad_00E6[14]; //0x00E6
-}; //Size: 0x00F4
+	char pad_00E6[2]; //0x00E6
+}; //Size: 0x00E8
+#pragma pack(pop)
