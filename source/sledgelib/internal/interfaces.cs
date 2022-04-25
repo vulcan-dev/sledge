@@ -13,8 +13,8 @@ namespace SledgeLib
         public string GetVersion();
         public string GetAuthor();
 
-        public void Load();
-        public void Unload();
+        public void Load() {}
+        public void Unload() {}
     }
 
     /*
