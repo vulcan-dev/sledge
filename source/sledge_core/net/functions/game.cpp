@@ -63,3 +63,5 @@ sledgelib_func void _DebugPrint(char* cMessage) {
 	Teardown::DebugPrint(g_Game->m_Debug, ssMessage);
 	delete ssMessage;
 }
+
+sledgelib_func bool _IsPlaying() { return g_Game->m_Playing; }
