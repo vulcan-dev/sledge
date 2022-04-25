@@ -205,6 +205,28 @@ namespace SledgeLib
             return null;
         }
 
+        internal static ModContext? GetContextFromAssembly(Assembly ModAssembly)
+        {
+            lock (ModList)
+            {
+                foreach (ModContext Context in ModList.Values)
+                    if (Context.m_Assembly == ModAssembly)
+                        return Context;
+            }
+            return null;
+        }
+
+        internal static string? GetModFolderFromAssembly(Assembly ModAssembly)
+        {
+            ModContext? Ctx = GetContextFromAssembly(ModAssembly);
+            if (Ctx == null)
+                return null;
+
+            if (Ctx.m_DataFolder == null)
+                return null;
+
+            return Ctx.m_DataFolder;
+        }
 
         internal static ModContext? GetContextFromPath(string Path)
         {
