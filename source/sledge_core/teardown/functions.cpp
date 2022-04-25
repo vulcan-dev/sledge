@@ -80,7 +80,6 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["LoadVox"], &Teardown::LoadVox, "LoadVox" },
 	{ g_Offsets["GenVoxTexture"], &Teardown::GenVoxTexture, "GenVoxTexture" },
 	{ g_Offsets["GenVoxBuffers"], &Teardown::GenVoxBuffers, "GenVoxBuffers" },
-	{ g_Offsets["SetBodyDynamic"], &Teardown::SetBodyDynamic, "SetBodyDynamic" },
 	{ g_Offsets["InitializeBody"], &Teardown::InitializeBody, "InitializeBody" },
 	{ g_Offsets["UpdateBodyActive"], &Teardown::UpdateBodyActive, "UpdateBodyActive" },
 

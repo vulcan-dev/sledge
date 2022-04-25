@@ -36,7 +36,6 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"Screen::Screen", 0x000000000013C850 },
 	 {"Log", 0x000000000016F4B0 },
 	 {"Script::Script", 0x000000000013E5E0 },
-	 {"SetBodyDynamic", 0x0000000000006520 },
 	 {"InitializeBody", 0x00000000000041B0 },
 	 {"Update", 0x000000000003B6C0 },
 	 {"SwitchGameState", 0x000000000003E090 },
