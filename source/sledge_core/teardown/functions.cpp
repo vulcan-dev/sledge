@@ -54,15 +54,24 @@ static const SFunctionInfo aFunctions[] = {
 	/*
 		lua functions
 	*/
-	{ g_Offsets["lua_topointer"], &Teardown::lua_topointer, "lua_topointer" },
 	{ g_Offsets["lua_gettop"], &Teardown::lua_gettop, "lua_gettop" },
+
 	{ g_Offsets["lua_pushlightuserdata"], &Teardown::lua_pushlightuserdata, "lua_pushlightuserdata" },
 	{ g_Offsets["lua_pushcclosure"], &Teardown::lua_pushcclosure, "lua_pushcclosure" },
-	{ g_Offsets["lua_setfield"], &Teardown::lua_setfield, "lua_setfield" },
 	{ g_Offsets["lua_pushnil"], &Teardown::lua_pushnil, "lua_pushnil" },
+	{ g_Offsets["lua_pushnumber"], &Teardown::lua_pushnumber, "lua_pushnumber" },
+	{ g_Offsets["lua_pushinteger"], &Teardown::lua_pushinteger, "lua_pushinteger" },
+	{ g_Offsets["lua_pushstring"], &Teardown::lua_pushstring, "lua_pushstring" },
+	{ g_Offsets["lua_pushboolean"], &Teardown::lua_pushboolean, "lua_pushboolean" },
+
+	{ g_Offsets["lua_setfield"], &Teardown::lua_setfield, "lua_setfield" },
+
+	{ g_Offsets["lua_topointer"], &Teardown::lua_topointer, "lua_topointer" },
 	{ g_Offsets["lua_tointeger"], &Teardown::lua_tointeger, "lua_tointeger" },
 	{ g_Offsets["lua_toboolean"], &Teardown::lua_toboolean, "lua_toboolean" },
 	{ g_Offsets["lua_tolstring"], &Teardown::lua_tolstring, "lua_tolstring" },
+
+	{ g_Offsets["lua_createtable"], &Teardown::lua_createtable, "lua_createtable" },
 
 	/*
 		constructor functions
