@@ -1,13 +1,13 @@
 #pragma once
+class Body;
+class small_string;
 
 namespace Teardown {
-	inline void (*GenVoxTexture)(class Vox* pVox);
-	inline void (*GenVoxBuffers)(class Vox* pVox);
+	inline void (*GenVoxTexture)(void* pVox);
+	inline void (*GenVoxBuffers)(void* pVox);
 
-	inline class Vox* (*LoadVox) (class small_string* ssPath, small_string* ssObject, float fScale);
+	inline void* (*LoadVox) (small_string* ssPath, small_string* ssObject, float fScale);
 
-	inline void (*SetBodyDynamic) (void* pPhysics, class Body* pBody);
-	inline void (*InitializeBody) (class Body* pBody);
-
-	inline void (*UpdateBodyActive) (void* pPhysics, class Body* pBody);
+	inline void (*InitializeBody) (Body* pBody);
+	inline void (*UpdateBodyActive) (void* pPhysics, Body* pBody);
 }
