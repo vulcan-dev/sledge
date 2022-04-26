@@ -1,6 +1,8 @@
 #include "loader.h"
 #include "globals.h"
 
+#include "sledge/vr.h"
+
 #include "net/sledgelib.h"
 #include "net/nethost.h"
 
@@ -127,6 +129,10 @@ void Loader::Init(void* hModule) {
 
 	Teardown::ApplyHooks();
 
+	if (!g_VR)
+		if (!SledgeVR::Init())
+			ReportErrorAndUnload("OpenVR failed to load");
+
 	if (!SledgeLib::Load())
 		ReportErrorAndUnload("SledgeLib failed to load");
 }
@@ -137,6 +143,7 @@ void Loader::Init(void* hModule) {
 void Loader::Shutdown() {
 	SledgeLib::Shutdown();
 	Teardown::UndoHooks();
+	SledgeVR::Shutdown();
 }
 
 /*
