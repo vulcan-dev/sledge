@@ -2,6 +2,7 @@
 
 inline void* g_hSledge = nullptr;
 inline void* g_hTeardown = nullptr;
+inline void* g_hWnd = nullptr;
 
 inline char g_ModulePath[261];
 
