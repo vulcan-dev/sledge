@@ -110,3 +110,5 @@ public:
 	bool m_HideParticles; //0x86E5
 	char pad_86E6[4754]; //0x86E6
 }; //Size: 0x9978
+
+inline Renderer* g_Renderer;

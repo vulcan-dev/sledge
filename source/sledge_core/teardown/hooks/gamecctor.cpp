@@ -4,6 +4,7 @@
 #include "teardown/classes/game.h"
 #include "teardown/classes/scene.h"
 #include "teardown/classes/player.h"
+#include "teardown/classes/renderer.h"
 
 #include "sledge/loader.h"
 
@@ -20,6 +21,7 @@ Game* hGameCCtor(void* pMemory, void* pDevice) {
 	g_Game = GameCCtor(pMemory, pDevice);
 	g_Scene = g_Game->m_Scene;
 	g_Player = g_Game->m_Player;
+	g_Renderer = g_Game->m_Renderer;
 	
 	LogVerbose("g_Game: {}", reinterpret_cast<void*>(g_Game));
 	CreateThread(NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(Loader::GameInit), NULL, NULL, NULL);

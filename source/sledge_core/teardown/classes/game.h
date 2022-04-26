@@ -20,7 +20,8 @@ public:
 	void* N00000053; //0x0020
 	void* N00000054; //0x0028
 	class Input* m_Input; //0x0030
-	char pad_0038[16]; //0x0038
+	char pad_0038[8]; //0x0038
+	class Renderer* m_Renderer; //0x0040
 	class Scene* m_Scene; //0x0048
 	void* m_SoundSystem; //0x0050
 	void* m_CameraController; //0x0058
