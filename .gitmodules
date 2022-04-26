@@ -13,3 +13,6 @@
 [submodule "submodules/glfw"]
 	path = submodules/glfw
 	url = https://github.com/glfw/glfw
+[submodule "submodules/openvr"]
+	path = submodules/openvr
+	url = https://github.com/ValveSoftware/openvr
