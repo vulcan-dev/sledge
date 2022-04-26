@@ -37,7 +37,8 @@ target_link_libraries(sledge_shared_dependencies INTERFACE
 	detours
 	fmt::fmt
 	libglew_static
-	glfw)
+	glfw
+	glm)
 
 # globs for shared files
 file(GLOB_RECURSE shared_sources CONFIGURE_DEPENDS "source/shared/*.cpp")

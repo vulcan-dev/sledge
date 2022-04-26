@@ -16,3 +16,6 @@
 [submodule "submodules/openvr"]
 	path = submodules/openvr
 	url = https://github.com/ValveSoftware/openvr
+[submodule "submodules/glm"]
+	path = submodules/glm
+	url = https://github.com/g-truc/glm
