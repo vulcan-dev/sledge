@@ -111,9 +111,11 @@ void Teardown::Launch() {
 	*/
 	std::string sSledgePath = fmt::format("{}\\bin\\sledge_core.dll", cCurrentPath);
 	std::string sDumperPath = fmt::format("{}\\bin\\dumper.dll", cCurrentPath);
+	std::string sOpenVRPath = fmt::format("{}\\bin\\openvr_api.dll", cCurrentPath);
 
 	const char* cSledgePath = sSledgePath.c_str();
 	const char* cDumperPath = sDumperPath.c_str();
+	const char* cOpenVRPath = sOpenVRPath.c_str();
 
 	if (!std::filesystem::exists(cSledgePath)) {
 		MessageBoxA(NULL, "Unable to find sledge.dll", "Error", MB_ICONERROR | MB_OK);
@@ -136,26 +138,15 @@ void Teardown::Launch() {
 	if (strstr(cCMDLine, "-nosplash"))
 		sTeardownCmdLine.append(" -nosplash");
 
-	if (strstr(cCMDLine, "-vr"))
+	bool bVR = false;
+	if (strstr(cCMDLine, "-vr")) {
+		bVR = true;
 		sTeardownCmdLine.append(" -vr");
+	}
 
 	bool bWriteDump = false;
 	if (strstr(cCMDLine, "-dump"))
 		bWriteDump = true;
-
-	/*
-		create suspended process
-	*/
-	PROCESS_INFORMATION ProcInfo;
-	STARTUPINFOA StartupInfo;
-
-	ZeroMemory(&ProcInfo, sizeof(ProcInfo));
-	ZeroMemory(&StartupInfo, sizeof(StartupInfo));
-
-	if (!CreateProcessA(NULL, const_cast<LPSTR>(sTeardownCmdLine.c_str()), NULL, NULL, TRUE, CREATE_DEFAULT_ERROR_MODE | CREATE_SUSPENDED, NULL, cTeardownPath, &StartupInfo, &ProcInfo)) {
-		MessageBoxA(NULL, "CreateProcessA failed when starting teardown.unpacked.exe", "Error", MB_ICONERROR | MB_OK);
-		return;
-	}
 
 	/*
 		read teardown.exe into buffer
@@ -180,6 +171,20 @@ void Teardown::Launch() {
 	fclose(TeardownExe);
 
 	/*
+		create suspended process
+	*/
+	PROCESS_INFORMATION ProcInfo;
+	STARTUPINFOA StartupInfo;
+
+	ZeroMemory(&ProcInfo, sizeof(ProcInfo));
+	ZeroMemory(&StartupInfo, sizeof(StartupInfo));
+
+	if (!CreateProcessA(NULL, const_cast<LPSTR>(sTeardownCmdLine.c_str()), NULL, NULL, TRUE, CREATE_DEFAULT_ERROR_MODE | CREATE_SUSPENDED, NULL, cTeardownPath, &StartupInfo, &ProcInfo)) {
+		MessageBoxA(NULL, "CreateProcessA failed when starting teardown.unpacked.exe", "Error", MB_ICONERROR | MB_OK);
+		return;
+	}
+
+	/*
 		remove steamstub stuff
 	*/
 	Steam::Defuse(ProcInfo.hProcess, ProcInfo.hThread, pExeBuffer);
@@ -190,17 +195,32 @@ void Teardown::Launch() {
 	if (!bWriteDump) {
 		if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cSledgePath, 1)) {
 			MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
+			CloseHandle(ProcInfo.hProcess);
+			CloseHandle(ProcInfo.hThread);
 			return;
+		}
+
+		if (bVR) {
+			if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cOpenVRPath, 1)) {
+				MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
+				CloseHandle(ProcInfo.hProcess);
+				CloseHandle(ProcInfo.hThread);
+				return;
+			}
 		}
 	}
 	else {
 		if (!std::filesystem::exists(cDumperPath)) {
 			MessageBoxA(NULL, "Unable to find dumper.dll", "Error", MB_ICONERROR | MB_OK);
+			CloseHandle(ProcInfo.hProcess);
+			CloseHandle(ProcInfo.hThread);
 			return;
 		}
 
 		if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cDumperPath, 1)) {
 			MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
+			CloseHandle(ProcInfo.hProcess);
+			CloseHandle(ProcInfo.hThread);
 			return;
 		}
 	}
