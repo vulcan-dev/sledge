@@ -72,6 +72,7 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 	*/
 	Sig("IsWindowForegroundWindow", "\xE8\x00\x00\x00\x00\x84\xC0\x0F\x84\x00\x00\x00\x00\x48\x8B\xD3\x49\x8B\xCE", "x????xxxx????xxxxxx")
 	RawSig("WriteToConsole", "\x80\x79\x0F\x00\x74\x03\x48\x8B\x09\x48\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00", "xxxxxxxxxxxxxxx????")
+	RawSig("SetCursorCaptured", "\x48\x83\xEC\x28\x48\x8B\x41\x08\x44\x88\x40\x24", "xxxxxxxxxxxx")
 
 	/*
 		lua functions
@@ -94,7 +95,6 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 	Sig("lua_pushlstring", "\xE8\x00\x00\x00\x00\x8B\x4E\x28", "x????xxx")
 	RawSig("lua_pushboolean", "\x4C\x8B\x41\x10\x33\xC0", "xxxxxx")
 	Sig("lua_createtable", "\xE8\x00\x00\x00\x00\x66\x0F\x6E\x06", "x????xxxx")
-
 
 	/*
 		misc
