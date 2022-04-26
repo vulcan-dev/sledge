@@ -82,7 +82,7 @@ public:
 	FramebufferInfo m_LightBuffer1; //0x7FAC
 	FramebufferInfo m_LightBuffer2; //0x7FE8
 	FramebufferInfo m_ReflectionBuffer; //0x8024
-	FramebufferInfo m_FinalBuffer_NoBarrel; //0x8060
+	FramebufferInfo m_FinalBuffer; //0x8060
 	FramebufferInfo m_LightBuffer3; //0x809C
 	FramebufferInfo m_ReflectionBuffer2; //0x80D8
 	FramebufferInfo m_UnkBuffer3; //0x8114
