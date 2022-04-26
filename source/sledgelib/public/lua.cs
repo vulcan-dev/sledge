@@ -160,8 +160,6 @@ namespace SledgeLib
                 Log.Error("Error on lua function {0}: {1}", LuaFunc.m_FunctionName, e);
                 return 0;
             }
-
-            return 0;
         }
 
         /*
