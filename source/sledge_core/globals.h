@@ -11,3 +11,4 @@ inline char g_Build[12] = __DATE__;
 inline unsigned __int64 g_BaseAddress = 0;
 
 inline bool g_SkipSplash = false;
+inline bool g_VR = false;

@@ -114,6 +114,9 @@ void Loader::Init(void* hModule) {
 	if (strstr(cCMDLine, "-nosplash"))
 		g_SkipSplash = true;
 
+	if (strstr(cCMDLine, "-vr"))
+		g_VR = true;
+
 	/*
 		initialize everything
 	*/
