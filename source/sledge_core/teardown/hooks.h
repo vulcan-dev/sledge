@@ -4,6 +4,11 @@
 
 namespace Teardown {
 	namespace Hooks {
+		namespace Window {
+			void Hook();
+			void Unhook();
+		}
+
 		namespace SwitchState {
 			void Hook();
 			void Unhook();
@@ -43,10 +48,16 @@ namespace Teardown {
 			void Hook();
 			void Unhook();
 		}
+
+		namespace SetCursorCaptured	{
+			void Hook();
+			void Unhook();
+		}
 	}
 
 	inline void ApplyHooks() {
 		MONITOR();
+		Hooks::Window::Hook();
 		Hooks::SwitchState::Hook();
 		Hooks::Update::Hook();
 		Hooks::UpdatePlayer::Hook();
@@ -55,10 +66,12 @@ namespace Teardown {
 		Hooks::RegisterLuaFunctions::Hook();
 		Hooks::WriteToConsole::Hook();
 		Hooks::IsWindowForegroundWindow::Hook();
+		Hooks::SetCursorCaptured::Hook();
 	}
 
 	inline void UndoHooks() {
 		MONITOR();
+		Hooks::Window::Unhook();
 		Hooks::SwitchState::Unhook();
 		Hooks::Update::Unhook();
 		Hooks::UpdatePlayer::Unhook();
@@ -67,5 +80,6 @@ namespace Teardown {
 		Hooks::RegisterLuaFunctions::Unhook();
 		Hooks::WriteToConsole::Unhook();
 		Hooks::IsWindowForegroundWindow::Unhook();
+		Hooks::SetCursorCaptured::Unhook();
 	}
 }

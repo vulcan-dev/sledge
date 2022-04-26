@@ -1,31 +1,45 @@
+#include "teardown/hooks.h"
+
+#include "util/log.h"
+
 #include "globals.h"
 
-#include "teardown/hooks.h"
-#include "teardown/offsets.h"
-
 #include <windef.h>
-#include <processthreadsapi.h>
+#include <WinBase.h>
+#include <WinUser.h>
+
 #include <detours.h>
 
-typedef bool (*tIsWindowForegroundWindow) (void*);
-tIsWindowForegroundWindow _IsWindowForegroundWindow;
+typedef HWND(*tCreateWindowExA)	(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam);
+tCreateWindowExA _CreateWindowExA;
 
-bool hIsWindowForegroundWindow(void*) { return true; }
+HWND hCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam) {
+	HWND hWnd = _CreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 
-void Teardown::Hooks::IsWindowForegroundWindow::Hook() {
-	_IsWindowForegroundWindow = reinterpret_cast<tIsWindowForegroundWindow>(g_BaseAddress + g_Offsets["IsWindowForegroundWindow"]);
+	if (!strcmp(lpWindowName, "Teardown"))
+		g_hWnd = hWnd;
 
-	LogVerbose("IsWindowForegroundWindow: {}", reinterpret_cast<void*>(_IsWindowForegroundWindow));
+	return hWnd;
+}
+
+void Teardown::Hooks::Window::Hook() {
+	HMODULE hUser32 = GetModuleHandle("USER32.dll");
+	if (hUser32 == NULL)
+		return;
+
+	_CreateWindowExA = reinterpret_cast<tCreateWindowExA>(GetProcAddress(hUser32, "CreateWindowExA"));
+
+	LogVerbose("CreateWindowExA: {}", reinterpret_cast<void*>(_CreateWindowExA));
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&_IsWindowForegroundWindow, hIsWindowForegroundWindow);
+	DetourAttach(&_CreateWindowExA, hCreateWindowExA);
 	DetourTransactionCommit();
 }
 
-void Teardown::Hooks::IsWindowForegroundWindow::Unhook() {
+void Teardown::Hooks::Window::Unhook() {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourDetach(&_IsWindowForegroundWindow, hIsWindowForegroundWindow);
+	DetourDetach(&_CreateWindowExA, hCreateWindowExA);
 	DetourTransactionCommit();
 }
