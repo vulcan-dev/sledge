@@ -38,6 +38,11 @@ namespace Teardown {
 			void Hook();
 			void Unhook();
 		}
+
+		namespace IsWindowForegroundWindow {
+			void Hook();
+			void Unhook();
+		}
 	}
 
 	inline void ApplyHooks() {
@@ -49,6 +54,7 @@ namespace Teardown {
 		Hooks::GameConstructor::Hook();
 		Hooks::RegisterLuaFunctions::Hook();
 		Hooks::WriteToConsole::Hook();
+		Hooks::IsWindowForegroundWindow::Hook();
 	}
 
 	inline void UndoHooks() {
@@ -60,5 +66,6 @@ namespace Teardown {
 		Hooks::GameConstructor::Unhook();
 		Hooks::RegisterLuaFunctions::Unhook();
 		Hooks::WriteToConsole::Unhook();
+		Hooks::IsWindowForegroundWindow::Unhook();
 	}
 }
