@@ -52,9 +52,10 @@ void ReportErrorAndUnload(const char* cError) {
 	MessageBoxA(0, cError, "Sledge failed to load", MB_ICONERROR | MB_OK);
 
 	/*
-		unload dll and kill thread
+		unload dll
 	*/
-	FreeLibraryAndExitThread(reinterpret_cast<HMODULE>(g_hSledge), 0);
+	Loader::Shutdown();
+	FreeLibrary(reinterpret_cast<HMODULE>(g_hSledge));
 }
 
 /*
@@ -113,7 +114,6 @@ void Loader::Init(void* hModule) {
 	if (strstr(cCMDLine, "-nosplash"))
 		g_SkipSplash = true;
 
-
 	/*
 		initialize everything
 	*/
@@ -133,6 +133,7 @@ void Loader::Init(void* hModule) {
 */
 void Loader::Shutdown() {
 	SledgeLib::Shutdown();
+	Teardown::UndoHooks();
 }
 
 /*
