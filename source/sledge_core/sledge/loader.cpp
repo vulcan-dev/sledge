@@ -129,7 +129,7 @@ void Loader::Init(void* hModule) {
 
 	Teardown::ApplyHooks();
 
-	if (!g_VR)
+	if (g_VR)
 		if (!SledgeVR::Init())
 			ReportErrorAndUnload("OpenVR failed to load");
 
