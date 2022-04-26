@@ -134,7 +134,10 @@ void Teardown::Launch() {
 	char* cCMDLine = GetCommandLine();
 
 	if (strstr(cCMDLine, "-nosplash"))
-		sTeardownCmdLine = sTeardownCmdLine + " -nosplash";
+		sTeardownCmdLine.append(" -nosplash");
+
+	if (strstr(cCMDLine, "-vr"))
+		sTeardownCmdLine.append(" -vr");
 
 	bool bWriteDump = false;
 	if (strstr(cCMDLine, "-dump"))
