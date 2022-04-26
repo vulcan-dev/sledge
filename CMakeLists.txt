@@ -57,7 +57,8 @@ target_link_libraries(sledge_core PRIVATE
 	UltralightCore
 	Ultralight
 	AppCore
-	WebCore)
+	WebCore
+	openvr)
 target_include_directories(sledge_core PRIVATE "source/sledge_core" "source/shared")
 set_target_properties(sledge_core PROPERTIES OUTPUT_NAME "sledge_core")
 
@@ -158,6 +159,8 @@ add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(Ta
 add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
 add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND if exist \"$(OutDir)\\$(TargetName).pdb\" move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\")
 
+#move openvr binaries to bin folder
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/submodules/openvr/bin/win64/*\" \"$(OutDir)bin\")
 
 # remove copy caused by target dependency
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND del \"$(OutDir)sledgelib.*\" )
