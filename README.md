@@ -62,4 +62,5 @@ Options:
 * [Nitro](https://github.com/BuilderHD)
 * [Daniel](https://github.com/vulcan-dev)
 * [Alexandar](https://github.com/alexandargyurov)
+
 For your help, ideas and support
