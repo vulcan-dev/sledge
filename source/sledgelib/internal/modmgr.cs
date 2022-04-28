@@ -4,6 +4,10 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 
+/*
+ * TO-DO: Implement exception handler
+ */
+
 namespace SledgeLib
 {
     internal class ModManager
