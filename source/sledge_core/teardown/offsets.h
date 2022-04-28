@@ -50,7 +50,6 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"DrawScene", 0x00000000000483E0 },
 	 {"WriteToConsole", 0x000000000016F4B0 },
 	 {"UpdateToolBodies", 0x00000000000CD0F0 },
-	 {"UpdateTools", 0x00000000000C5580 },
 	 {"lua_gettop", 0x0000000000242920 },
 	 {"lua_tointeger", 0x0000000000243E20 },
 	 {"lua_pushlightuserdata", 0x0000000000243270 },
