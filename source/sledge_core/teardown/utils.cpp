@@ -4,6 +4,7 @@
 #include "teardown/classes/entity.h"
 #include "teardown/classes/body.h"
 #include "teardown/classes/shape.h"
+#include "teardown/classes/joint.h"
 
 template<typename T>
 T Teardown::Utils::GetEntityByIdx(unsigned int iIndex, EEntityType eType) {
@@ -23,3 +24,4 @@ Entity* Teardown::Utils::GetEntityByIdx(unsigned int iIndex) {
 template Entity* Teardown::Utils::GetEntityByIdx(unsigned int, EEntityType);
 template Body* Teardown::Utils::GetEntityByIdx(unsigned int, EEntityType);
 template Shape* Teardown::Utils::GetEntityByIdx(unsigned int, EEntityType);
+template Joint* Teardown::Utils::GetEntityByIdx(unsigned int, EEntityType);
