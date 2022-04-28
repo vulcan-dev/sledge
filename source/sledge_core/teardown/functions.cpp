@@ -94,6 +94,7 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["UpdateBodyActive"], &Teardown::UpdateBodyActive, "UpdateBodyActive" },
 	{ g_Offsets["InitializeBodyDynamic"], &Teardown::InitializeBodyDynamic, "InitializeBodyDynamic" },
 	{ g_Offsets["AttachJoint"], &Teardown::AttachJoint, "AttachJoint" },
+	{ g_Offsets["DetachJoint"], &Teardown::DetachJoint, "DetachJoint" },
 
 	/*
 		scene functions

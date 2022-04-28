@@ -15,4 +15,5 @@ namespace Teardown {
 	inline void (*UpdateBodyActive) (void* pPhysics, Body* pBody);
 	inline void (*InitializeBodyDynamic) (void* pPhysics, Body* pBody, bool bDynamic);
 	inline void (*AttachJoint) (Joint* pJoint, Shape* pChild, Shape* pParent, Vector3* ChildJointPosLocal, Vector3* ParentJointPosLocal);
+	inline void (*DetachJoint) (Joint* pJoint, Shape* pShape);
 }
