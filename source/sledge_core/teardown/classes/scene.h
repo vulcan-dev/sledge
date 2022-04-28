@@ -7,7 +7,7 @@ class Scene
 {
 public:
 	void* m_Physics; //0x0008
-	void* N0000009D; //0x0010
+	void* m_Unknown; //0x0010
 	char pad_0018[8]; //0x0018
 	void* N0000009F; //0x0020
 	void* N000000A0; //0x0028
@@ -53,8 +53,9 @@ public:
 	class small_vector<void*>* m_ScriptsPtr; //0x0250
 	char pad_0258[1560]; //0x0258
 	small_vector<class Entity*> m_Entities; //0x0870
-	char pad_0880[64]; //0x0880
-
+	char pad_0880[4]; //0x0880
+	unsigned int m_VoxCount; //0x0884
+	char pad_0888[56]; //0x0888
 
 	virtual void Function0();
 	virtual void Function1();
