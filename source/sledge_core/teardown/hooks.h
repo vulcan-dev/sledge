@@ -41,10 +41,10 @@ namespace Teardown {
 		Hooks::SetCursorCaptured::Hook();
 		Hooks::SwapBuffers::Hook();
 
-		Hooks::UpdateTools::Hook();
 		if (g_VR) {
 			Hooks::DrawScene::Hook();
 			Hooks::UpdateShadowVolumes::Hook();
+			Hooks::UpdateTools::Hook();
 		}
 	}
 
