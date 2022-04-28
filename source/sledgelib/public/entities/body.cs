@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 
 /*
- * TO-DO:   Fix Body.Active and Body.Dynamic setters
+ * TO-DO:   Fix Body.Dynamic setter
  *          (inactive / non dynamic physbuffers don't get generated)
  */
 
@@ -37,7 +37,7 @@ namespace SledgeLib
         public void SetParent(uint iParent) { Entity.Entity_SetParent(Handle, iParent); }
 
         public Body() { Handle = Body_Create(); }
-        public Body(uint iHandle) { Handle = iHandle; }
+        public Body(uint Handle) { this.Handle = Handle; }
 
         public Transform Transform
         {
@@ -73,14 +73,13 @@ namespace SledgeLib
         public bool Active
         {
             get { return Body_GetActive(Handle); }
-            //set { Body_SetActive(Handle, value); } // currently broken
-
+            set { Body_SetActive(Handle, value); }
         }
 
         public bool Dynamic
         {
             get { return Body_GetDynamic(Handle); }
-            //set { Body_SetDynamic(Handle, value); } // currently broken
+            //set { Body_SetDynamic(Handle, value); }
         }
 
         public float Mass { get { return Body_GetMass(Handle); } }

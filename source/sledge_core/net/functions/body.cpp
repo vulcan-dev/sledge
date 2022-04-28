@@ -7,7 +7,6 @@
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
-
 sledgelib_func unsigned int Body_Create() {
 	void* pBuffer = Teardown::malloc(sizeof(Body));
 	if (pBuffer == NULL)
@@ -43,6 +42,17 @@ sledgelib_func void Body_SetPosition(unsigned int iHandle, Vector3 vNew) {
 	Body* pBody = Teardown::Utils::GetEntityByIdx<Body*>(iHandle, Type_Body);
 	if (!pBody) return;
 	pBody->m_Transform.m_Position = vNew;
+}
+
+sledgelib_func Vector4 Body_GetRotation(unsigned int iHandle) {
+	Body* pBody = Teardown::Utils::GetEntityByIdx<Body*>(iHandle, Type_Body);
+	if (!pBody) return Vector4();
+	return pBody->m_Transform.m_Rotation;
+}
+sledgelib_func void Body_SetRotation(unsigned int iHandle, Vector4 vNew) {
+	Body* pBody = Teardown::Utils::GetEntityByIdx<Body*>(iHandle, Type_Body);
+	if (!pBody) return;
+	pBody->m_Transform.m_Rotation = vNew;
 }
 
 sledgelib_func Vector3 Body_GetVelocity(unsigned int iHandle) {
@@ -96,6 +106,7 @@ sledgelib_func void Body_SetActive(unsigned int iHandle, bool bActive) {
 		pBody->m_ActiveTicksLeft = 0;
 
 	Teardown::UpdateBodyActive(g_Scene->m_Physics, pBody);
+	Teardown::InitializeBodyDynamic(g_Scene->m_Physics, pBody, bActive);
 }
 
 sledgelib_func float Body_GetMass(unsigned int iHandle) {
