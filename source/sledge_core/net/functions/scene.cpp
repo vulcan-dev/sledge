@@ -1,5 +1,5 @@
 #include "teardown/functions/scene.h"
-#include "teardown/classes/game.h"
+#include "teardown/classes/scene.h"
 #include "teardown/classes/shape.h"
 #include "teardown/types/math.h"
 #include "teardown/types/misc.h"
@@ -23,10 +23,16 @@ sledgelib_func SRayInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float 
 	Filter.m_Mask = -1;
 	
 	Shape* HitShape;
-	ReturnInfo.m_Hit = Teardown::QueryRaycast(g_Game->m_Scene, &vOrigin, &vDirection, fMaxDist, &Filter, &ReturnInfo.m_HitDist, &ReturnInfo.m_HitNormal, &HitShape, 0);
+	ReturnInfo.m_Hit = Teardown::QueryRaycast(g_Scene, &vOrigin, &vDirection, fMaxDist, &Filter, &ReturnInfo.m_HitDist, &ReturnInfo.m_HitNormal, &HitShape, 0);
 
 	if (ReturnInfo.m_Hit && HitShape)
 		ReturnInfo.m_HitShape = HitShape->m_Id;
 
 	return ReturnInfo;
+}
+
+sledgelib_func unsigned int MakeHole(Vector3 vPosition, float fSoftRadius, float fMidRadius, float fHardRadius, bool bSilent) {
+	unsigned int iVoxCount = g_Scene->m_VoxCount;
+	Teardown::MakeHole(g_Scene->m_Unknown, 0, &vPosition, fSoftRadius, fMidRadius, fHardRadius, bSilent, 0);
+	return iVoxCount - g_Scene->m_VoxCount;
 }
