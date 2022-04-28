@@ -2,7 +2,7 @@
 
 #include "teardown/types/small_vector.h"
 
-struct SRaycastFilter
+struct SQueryFilter
 {
 	int m_Mask;
 	int m_Layers;
