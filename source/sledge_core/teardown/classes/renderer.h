@@ -1,9 +1,8 @@
 #pragma once
 
-#include <glm/mat4x4.hpp>
-
 #include "teardown/types/small_string.h"
 #include "teardown/types/rendertypes.h"
+#include "teardown/types/math.h"
 
 class Renderer
 {
@@ -25,10 +24,10 @@ public:
 	float m_ZNear; //0x0784 default: 0.200
 	float m_ZFar; //0x0788 default 499.968
 	unsigned int m_RenderedFrames; //0x078C
-	glm::mat4 m_PerspectiveProjectionMatrix; //0x0790
+	Matrix4x4 m_PerspectiveProjectionMatrix; //0x0790
 	char pad_07D0[76]; //0x07D0
-	glm::mat4 m_VpMatrix; //0x081C
-	glm::mat4 m_VpInvMatrix; //0x085C
+	Matrix4x4 m_VpMatrix; //0x081C
+	Matrix4x4 m_VpInvMatrix; //0x085C
 	char pad_089C[1852]; //0x089C
 	ShaderInfo m_Sprites; //0x0FD8
 	ShaderInfo m_Barrel; //0x1240
@@ -98,8 +97,8 @@ public:
 	FramebufferInfo m_NormalBuffer2; //0x836C
 	FramebufferInfo m_UnusedFramebuffer_Maybe; //0x83A8
 	char pad_83E4[612]; //0x83E4
-	glm::mat4 m_StableVpMatrix; //0x8648
-	glm::mat4 m_UnstableVpMatrix; //0x8688
+	Matrix4x4 m_StableVpMatrix; //0x8648
+	Matrix4x4 m_UnstableVpMatrix; //0x8688
 	char pad_86C8[8]; //0x86C8
 	small_string m_RenderBuffer; //0x86D0
 	bool m_DrawBounds; //0x86E0
