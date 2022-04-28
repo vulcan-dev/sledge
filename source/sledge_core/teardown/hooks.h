@@ -1,58 +1,30 @@
 #pragma once
 
+/*
+	TO-DO:
+		create a class for detours or something, store them in a array and iterate them
+		instead of depending on namespaces
+*/
+
 #include "util/timer.h"
+#include "globals.h"
 
 namespace Teardown {
 	namespace Hooks {
-		namespace Window {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace SwitchState {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace Update {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace UpdatePlayer {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace LevelChange {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace GameConstructor {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace RegisterLuaFunctions {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace WriteToConsole {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace IsWindowForegroundWindow {
-			void Hook();
-			void Unhook();
-		}
-
-		namespace SetCursorCaptured	{
-			void Hook();
-			void Unhook();
-		}
+		namespace Window { void Hook(); void Unhook(); }
+		namespace SwapBuffers { void Hook(); void Unhook(); }
+		namespace SwitchState { void Hook(); void Unhook(); }
+		namespace Update { void Hook(); void Unhook(); }
+		namespace UpdatePlayer { void Hook(); void Unhook(); }
+		namespace LevelChange { void Hook(); void Unhook(); }
+		namespace GameConstructor { void Hook(); void Unhook(); }
+		namespace RegisterLuaFunctions { void Hook(); void Unhook(); }
+		namespace WriteToConsole { void Hook(); void Unhook(); }
+		namespace IsWindowForegroundWindow { void Hook(); void Unhook(); }
+		namespace SetCursorCaptured { void Hook(); void Unhook(); }
+		namespace DrawScene { void Hook(); void Unhook(); }
+		namespace UpdateShadowVolumes { void Hook(); void Unhook(); }
+		namespace UpdateTools { void Hook(); void Unhook(); }
 	}
 
 	inline void ApplyHooks() {
@@ -67,6 +39,13 @@ namespace Teardown {
 		Hooks::WriteToConsole::Hook();
 		Hooks::IsWindowForegroundWindow::Hook();
 		Hooks::SetCursorCaptured::Hook();
+		Hooks::SwapBuffers::Hook();
+
+		Hooks::UpdateTools::Hook();
+		if (g_VR) {
+			Hooks::DrawScene::Hook();
+			Hooks::UpdateShadowVolumes::Hook();
+		}
 	}
 
 	inline void UndoHooks() {
@@ -81,5 +60,12 @@ namespace Teardown {
 		Hooks::WriteToConsole::Unhook();
 		Hooks::IsWindowForegroundWindow::Unhook();
 		Hooks::SetCursorCaptured::Unhook();
+		Hooks::SwapBuffers::Unhook();
+
+		if (g_VR) {
+			Hooks::DrawScene::Unhook();
+			Hooks::UpdateShadowVolumes::Unhook();
+			Hooks::UpdateTools::Unhook();
+		}
 	}
 }
