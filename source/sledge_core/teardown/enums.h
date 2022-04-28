@@ -9,18 +9,16 @@ enum class EGameState : unsigned int{
 	Quitting = 6
 };
 
-
 enum EEntityType : unsigned char {
 	Type_Body = 1,
 	Type_Shape = 2,
 	Type_Light = 3,
 	Type_Location = 4,
 	Type_Water = 5,
-	Type_Enemy = 6,
-	Type_Joint = 7,
-	Type_Vehicle = 8,
-	Type_Wheel = 9,
-	Type_Screen = 10,
-	Type_Trigger = 11,
-	Type_Script = 12
+	Type_Joint = 6,
+	Type_Vehicle = 7,
+	Type_Wheel = 8,
+	Type_Screen = 9,
+	Type_Trigger = 10,
+	Type_Script = 11
 };
