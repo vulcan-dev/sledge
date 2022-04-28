@@ -99,6 +99,7 @@ static const SFunctionInfo aFunctions[] = {
 		scene functions
 	*/
 	{ g_Offsets["QueryRaycast"], &Teardown::QueryRaycast, "QueryRaycast" },
+	{ g_Offsets["MakeHole"], &Teardown::MakeHole, "MakeHole" },
 
 	/*
 		misc functions

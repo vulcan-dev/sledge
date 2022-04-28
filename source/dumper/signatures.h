@@ -112,4 +112,5 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 	RawSig("DebugPrint", "\x44\x8B\x81\x00\x00\x00\x00\x4C\x8B\xD2", "xxx????xxx")
 	RawSig("ScriptCore::RegisterLuaFunctions", "\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x30\x48\x8D\x79\x30", "xxxx?xxxxxxxxx")
 	Sig("QueryRaycast", "\xE8\x00\x00\x00\x00\xF2\x0F\x10\xA5\x00\x00\x00\x00", "x????xxxx????")
+	Sig("MakeHole", "\xE8\x00\x00\x00\x00\x83\xFB\x05", "x????xxx")
 };
