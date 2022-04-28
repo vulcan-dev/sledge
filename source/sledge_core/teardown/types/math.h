@@ -16,4 +16,9 @@ struct Bounds {
 	Vector3 m_Min;
 	Vector3 m_Max;
 };
+
+struct Matrix4x4 {
+	float m_Data[4][4];
+};
+
 #pragma pack(pop)
