@@ -21,9 +21,9 @@ public:
 class FramebufferInfo
 {
 public:
-	unsigned int m_FrameBufferId; //0x0000 49 default
+	unsigned int m_FramebufferTextureId; //0x0000
 	char pad_0004[8]; //0x0004
-	unsigned int m_TextureId; //0x000C 70 default
+	unsigned int m_TextureId; //0x000C
 	unsigned int m_NormalTextureId; //0x0010
 	unsigned int N000004FC; //0x0014
 	unsigned int N000004D3; //0x0018
