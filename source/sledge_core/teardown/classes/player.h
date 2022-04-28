@@ -51,7 +51,16 @@ public:
 	bool m_M2Down; //0x00DF
 	char pad_00E0[1]; //0x00E0
 	bool m_M1Down; //0x00E1
-	char pad_00E2[38]; //0x00E2
+	char pad_00E2[2]; //0x00E2
+	float m_Height; //0x00E4
+	float N000003A0; //0x00E8
+	float m_CollisionRadius; //0x00EC
+	float N000003A1; //0x00F0
+	float m_ClimbRadius; //0x00F4
+	float m_BaseHeight; //0x00F8
+	float N000012C8; //0x00FC
+	float m_CurrentHeight; //0x0100
+	float m_CrouchCompletion; //0x0104
 	float m_RunSpeed; //0x0108
 	char pad_010C[4]; //0x010C
 	class Body* m_GrabbedBody; //0x0110
