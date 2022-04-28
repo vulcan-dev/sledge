@@ -6,27 +6,49 @@
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
-struct SRayInfo {
+struct SQueryInfo {
 	bool m_Hit;
 	float m_HitDist;
 	Vector3 m_HitNormal;
+	Vector3 m_HitPos;
 	unsigned int m_HitShape;
 };
 
+/*
+	TO-DO:
+		Implement a way to query raycasts with filters from C#
+*/
 
-sledgelib_func SRayInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist) {
-	SRayInfo ReturnInfo;
-	SRaycastFilter Filter;
-	memset(&ReturnInfo, 0, sizeof(SRayInfo));
-	memset(&Filter, 0, sizeof(SRaycastFilter));
+sledgelib_func SQueryInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist) {
+	SQueryInfo ReturnInfo;
+	SQueryFilter Filter;
+	memset(&ReturnInfo, 0, sizeof(SQueryInfo));
+	memset(&Filter, 0, sizeof(SQueryFilter));
 
 	Filter.m_Mask = -1;
 	
-	Shape* HitShape;
-	ReturnInfo.m_Hit = Teardown::QueryRaycast(g_Scene, &vOrigin, &vDirection, fMaxDist, &Filter, &ReturnInfo.m_HitDist, &ReturnInfo.m_HitNormal, &HitShape, 0);
+	Shape* pHitShape;
+	ReturnInfo.m_Hit = Teardown::QueryRaycast(g_Scene, &vOrigin, &vDirection, fMaxDist, &Filter, &ReturnInfo.m_HitDist, &ReturnInfo.m_HitNormal, &pHitShape, 0);
 
-	if (ReturnInfo.m_Hit && HitShape)
-		ReturnInfo.m_HitShape = HitShape->m_Id;
+	if (ReturnInfo.m_Hit && pHitShape)
+		ReturnInfo.m_HitShape = pHitShape->m_Id;
+
+	return ReturnInfo;
+}
+
+sledgelib_func SQueryInfo QueryClosestPoint(Vector3 vOrigin, float fMaxDist) {
+	SQueryFilter Filter;
+	SQueryInfo ReturnInfo;
+	memset(&ReturnInfo, 0, sizeof(SQueryInfo));
+	memset(&Filter, 0, sizeof(SQueryFilter));
+
+	Filter.m_Mask = -1;
+
+	Shape* pHitShape;
+	ReturnInfo.m_Hit = Teardown::QueryClosestPoint(g_Scene, &vOrigin, fMaxDist, &Filter, &ReturnInfo.m_HitPos, &ReturnInfo.m_HitNormal, &pHitShape, 0);
+
+	if (ReturnInfo.m_Hit && pHitShape)
+		ReturnInfo.m_HitShape = pHitShape->m_Id;
 
 	return ReturnInfo;
 }
