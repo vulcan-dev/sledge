@@ -200,13 +200,11 @@ void Teardown::Launch() {
 			return;
 		}
 
-		if (bVR) {
-			if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cOpenVRPath, 1)) {
-				MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
-				CloseHandle(ProcInfo.hProcess);
-				CloseHandle(ProcInfo.hThread);
-				return;
-			}
+		if (!DetourUpdateProcessWithDll(ProcInfo.hProcess, &cOpenVRPath, 1)) {
+			MessageBoxA(NULL, "DetourUpdateProcessWithDll failed", "Error", MB_ICONERROR | MB_OK);
+			CloseHandle(ProcInfo.hProcess);
+			CloseHandle(ProcInfo.hThread);
+			return;
 		}
 	}
 	else {
