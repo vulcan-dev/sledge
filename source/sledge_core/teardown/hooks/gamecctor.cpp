@@ -22,7 +22,13 @@ Game* hGameCCtor(void* pMemory, void* pDevice) {
 	g_Scene = g_Game->m_Scene;
 	g_Player = g_Game->m_Player;
 	g_Renderer = g_Game->m_Renderer;
-	
+
+	/*
+	* reduce player collison radius to prevent collisions with arms
+	*/
+	if (g_VR)
+		g_Player->m_CollisionRadius = 0.1f;
+
 	LogVerbose("g_Game: {}", reinterpret_cast<void*>(g_Game));
 	CreateThread(NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(Loader::GameInit), NULL, NULL, NULL);
 	return g_Game;
