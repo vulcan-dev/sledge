@@ -13,6 +13,7 @@ namespace SledgeLib
     public class Joint {
         [DllImport("sledge_core.dll")] private static extern uint Joint_Create();
         [DllImport("sledge_core.dll")] private static extern void Joint_Attach(uint Joint, uint Parent, uint Child, Vector3 ChildJointPos, Vector3 ParentJointPos);
+        [DllImport("sledge_core.dll")] private static extern void Joint_Detach(uint Joint, uint Child);
         [DllImport("sledge_core.dll")] private static extern bool Joint_GetCollide(uint Joint);
         [DllImport("sledge_core.dll")] private static extern void Joint_SetCollide(uint Joint, bool Value);
         [DllImport("sledge_core.dll")] private static extern bool Joint_GetSound(uint Joint);
@@ -63,6 +64,11 @@ namespace SledgeLib
         public void Attach(Shape Parent, Shape Child, Vector3 ChildJointPos, Vector3 ParentJointPos)
         {
             Joint_Attach(this.Handle, Child.Handle, Parent.Handle, ChildJointPos, ParentJointPos);
+        }
+
+        public void Detach(Shape Parent)
+        {
+            Joint_Detach(this.Handle, Parent.Handle);
         }
     }
 }

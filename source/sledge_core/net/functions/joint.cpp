@@ -13,6 +13,16 @@ sledgelib_func unsigned int Joint_Create() {
 		return 0;
 	Teardown::JointConstructor(pBuffer, nullptr);
 	return reinterpret_cast<Joint*>(pBuffer)->m_Id;
+
+}
+sledgelib_func void Joint_Detach(unsigned int iJoint, unsigned int iChildShape) {
+	Joint* pJoint = Teardown::Utils::GetEntityByIdx<Joint*>(iJoint, Type_Joint);
+	if (!pJoint) return;
+
+	Shape* pChild = Teardown::Utils::GetEntityByIdx<Shape*>(iChildShape, Type_Shape);
+	if (!pChild) return;
+
+	Teardown::DetachJoint(pJoint, pChild);
 }
 
 sledgelib_func void Joint_Attach(unsigned int iJoint, unsigned int iParentShape, unsigned int iChildShape, Vector3 vChildJointPos, Vector3 vParentJointPos) {
