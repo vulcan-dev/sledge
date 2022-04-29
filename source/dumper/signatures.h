@@ -112,6 +112,7 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 	Sig("QueryClosestPoint", "\xE8\x00\x00\x00\x00\x84\xC0\x75\x47", "x????xxxx")
 	Sig("QueryRaycast", "\xE8\x00\x00\x00\x00\xF2\x0F\x10\xA5\x00\x00\x00\x00", "x????xxxx????")
 	Sig("MakeHole", "\xE8\x00\x00\x00\x00\x83\xFB\x05", "x????xxx")
+	Sig("DrawLine", "\xE8\x00\x00\x00\x00\xFF\xC3\x8B\x47\x08", "x????xxxxx")
 
 	/*
 		misc
