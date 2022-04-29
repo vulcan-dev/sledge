@@ -17,7 +17,9 @@ sledgelib_func Vector3 Player_GetVelocity() { return g_Player->m_Velocity; }
 sledgelib_func void Player_SetVelocity(Vector3 vValue) { g_Player->m_Velocity = vValue; }
 
 sledgelib_func Transform Player_GetCameraTransform() { return g_Player->m_CameraTransform2; }
-sledgelib_func void Player_SetCameraTransform(Transform tValue) { g_Player->m_CameraTransform2 = tValue; }
+
+sledgelib_func Vector3 Player_GetCameraPosition() { return g_Player->m_CameraTransform2.m_Position; }
+sledgelib_func void Player_SetCameraPosition(Vector3 vValue) { g_Player->m_CameraTransform2.m_Position = vValue; }
 
 sledgelib_func Vector2 Player_GetCameraAngles() { return g_Player->m_CameraAngle; }
 sledgelib_func void Player_SetCameraAngles(Vector2 vValue) { g_Player->m_CameraAngle = vValue; }

@@ -9,25 +9,27 @@ namespace SledgeLib
     public class Player
     {
         [DllImport("sledge_core.dll")] private static extern float Player_GetHealth();
-        [DllImport("sledge_core.dll")] private static extern void Player_SetHealth(float fValue);
+        [DllImport("sledge_core.dll")] private static extern void Player_SetHealth(float Value);
         [DllImport("sledge_core.dll")] private static extern Vector3 Player_GetPosition();
-        [DllImport("sledge_core.dll")] private static extern void Player_SetPosition(Vector3 vValue);
+        [DllImport("sledge_core.dll")] private static extern void Player_SetPosition(Vector3 Value);
         [DllImport("sledge_core.dll")] private static extern Vector3 Player_GetVelocity();
-        [DllImport("sledge_core.dll")] private static extern void Player_SetVelocity(Vector3 vValue);
+        [DllImport("sledge_core.dll")] private static extern void Player_SetVelocity(Vector3 Value);
         [DllImport("sledge_core.dll")] private static extern Transform Player_GetCameraTransform();
-        [DllImport("sledge_core.dll")] private static extern void Player_SetCameraTransform(Transform tValue);
+        //[DllImport("sledge_core.dll")] private static extern void Player_SetCameraTransform(Transform tValue);
+        [DllImport("sledge_core.dll")] private static extern Vector3 Player_GetCameraPosition();
+        [DllImport("sledge_core.dll")] private static extern void Player_SetCameraPosition(Vector3 Value);
         [DllImport("sledge_core.dll")] private static extern Vector2 Player_GetCameraAngles();
-        [DllImport("sledge_core.dll")] private static extern void Player_SetCameraAngles(Vector2 vValue);
+        [DllImport("sledge_core.dll")] private static extern void Player_SetCameraAngles(Vector2 Value);
         [DllImport("sledge_core.dll")] private static extern Transform Player_GetToolTransform();
-        [DllImport("sledge_core.dll")] private static extern void Player_SetToolTransform(Transform tValue);
-        [DllImport("sledge_core.dll")] private static extern Vector2 Player_GetMovementInput();
+        [DllImport("sledge_core.dll")] private static extern void Player_SetToolTransform(Transform Value);
+        [DllImport("sledge_core.dll")] private static extern Vector2 Player_GetMovementKeys();
         [DllImport("sledge_core.dll")] private static extern void Player_ReleaseGrab();
         [DllImport("sledge_core.dll")] private static extern uint Player_GetGrabbedShape();
         [DllImport("sledge_core.dll")] private static extern uint Player_GetGrabbedBody();
         [DllImport("sledge_core.dll")] private static extern uint Player_GetToolBody();
         [DllImport("sledge_core.dll")] private static extern uint Player_GetVehicleBody();
         [DllImport("sledge_core.dll")] private static extern int Player_GetLastToolIdx();
-        [DllImport("sledge_core.dll")] private static extern void Player_RegisterTool(string sId, string sName, string sFile, uint iGroup = 6);
+        [DllImport("sledge_core.dll")] private static extern void Player_RegisterTool(string Id, string Name, string File, uint Group = 6);
         [DllImport("sledge_core.dll")] private static extern void Player_Respawn();
         [DllImport("sledge_core.dll")] private static extern bool Player_M1Down();
         [DllImport("sledge_core.dll")] private static extern bool Player_M2Down();
@@ -50,7 +52,11 @@ namespace SledgeLib
         public static Transform CameraTransform
         {
             get { return Player_GetCameraTransform(); }
-            set { Player_SetCameraTransform(value); }
+        }
+        public static Vector3 CameraPosition
+        {
+            get { return Player_GetCameraPosition(); }
+            set { Player_SetCameraPosition(value); }
         }
         public static Vector2 CameraAngles
         {
@@ -62,7 +68,7 @@ namespace SledgeLib
             get { return Player_GetToolTransform(); }
             set { Player_SetToolTransform(value); }
         }
-        public static Vector2 MovementInput { get { return Player_GetMovementInput(); } }
+        public static Vector2 MovementInput { get { return Player_GetMovementKeys(); } }
 
         public static dVoid ReleaseGrab = Player_ReleaseGrab;
         public static Shape GrabbedShape { get { return new Shape(Player_GetGrabbedShape()); } }
