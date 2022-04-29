@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Threading;
 
 /*
  * TO-DO: Implement exception handler
@@ -92,11 +93,26 @@ namespace SledgeLib
                 m_AssemblyLastWrite = File.GetLastWriteTime(AssemblyPath);
 
                 Resolving += ModDependencyResolver;
-                
+
                 /*
                  * load DLL from assembly so that the assembly may be deleted or changed after it's loaded
                  */
-                FileStream AssemblyStream = File.OpenRead(AssemblyPath);
+                int LoadAttempts = 0;
+                FileStream AssemblyStream;
+                while (true)
+                {
+                    try
+                    {
+                        AssemblyStream = File.OpenRead(AssemblyPath);
+                        break;
+                    } catch (Exception ex)
+                    {
+                        LoadAttempts++;
+                        Thread.Sleep(250);
+                        if (LoadAttempts >= 5)
+                            throw new Exception("Timed out while attempting to load Assembly");
+                    }
+                }
                 m_Assembly = LoadFromStream(AssemblyStream);
                 AssemblyStream.Close();
 
