@@ -20,10 +20,14 @@
 typedef void (*tDrawScene) (Renderer*, unsigned int, unsigned int, unsigned int, glm::mat4*, glm::mat4*);
 tDrawScene _DrawScene;
 
+/*
+	TO-DO:
+		either rewrite drawscene altogether or detour some of the functions unnecessary to vr (functions in charge of DOF, Motion Blur, Bloom, etc) and stop them from being called
+*/
 void hDrawScene(Renderer* pRenderer, unsigned int a2, unsigned int /*iWidth*/, unsigned int /*iHeight*/, glm::mat4* /*mProjection*/, glm::mat4* /*mView*/) {
 	SledgeVR::Update();
 
-	glm::mat4 PositionMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-g_Game->m_Player->m_Position.x, -(g_Game->m_Player->m_Position.y), -g_Game->m_Player->m_Position.z));
+	glm::mat4 PositionMatrix = glm::translate(glm::mat4(1.0f), SledgeVR::vPlayerPos);
 	
 	glm::mat4 LeftViewMatrix = SledgeVR::mHMDPose * PositionMatrix;
 	glm::mat4 RightViewMatrix = SledgeVR::mHMDPose * PositionMatrix;
