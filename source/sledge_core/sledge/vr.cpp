@@ -228,7 +228,7 @@ void SledgeVR::Update() {
 		if (TrackedDevicePoses[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid) {
 			mHMDPose = TrackedDevicePosesMatrices[vr::k_unTrackedDeviceIndex_Hmd];
 			mHMDPose = glm::inverse(mHMDPose);
-			mHMDPose = glm::scale(mHMDPose, vPlayerScale);
+			mHMDPose = glm::scale(mHMDPose, vWorldScale);
 			mHMDPose = glm::rotate(mHMDPose, fPlayerRotation, glm::vec3(0, 1, 0));
 		}
 

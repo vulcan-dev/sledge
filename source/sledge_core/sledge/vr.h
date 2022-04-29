@@ -52,7 +52,8 @@ namespace SledgeVR {
 
 	inline glm::mat4 mHMDPose;
 
-	inline glm::vec3 vPlayerScale(0.8f);
+	inline glm::vec3 vPlayerPos(0.f);
+	inline glm::vec3 vWorldScale(0.8f);
 	inline float fPlayerRotation = 0.f;
 
 	inline unsigned int iRTWidth, iRTHeight;
