@@ -17,7 +17,7 @@ struct SQueryInfo {
 
 /*
 	TO-DO:
-		Implement a way to query raycasts with filters from C#
+		Implement a way to query with filters from C#
 */
 
 sledgelib_func SQueryInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist) {
@@ -30,6 +30,23 @@ sledgelib_func SQueryInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, floa
 	
 	Shape* pHitShape;
 	ReturnInfo.m_Hit = Teardown::QueryRaycast(g_Scene, &vOrigin, &vDirection, fMaxDist, &Filter, &ReturnInfo.m_HitDist, &ReturnInfo.m_HitNormal, &pHitShape, 0);
+
+	if (ReturnInfo.m_Hit && pHitShape)
+		ReturnInfo.m_HitShape = pHitShape->m_Id;
+
+	return ReturnInfo;
+}
+
+sledgelib_func SQueryInfo QuerySpherecast(Vector3 vOrigin, Vector3 vDirection, float fRadius, float fMaxDist) {
+	SQueryInfo ReturnInfo;
+	SQueryFilter Filter;
+	memset(&ReturnInfo, 0, sizeof(SQueryInfo));
+	memset(&Filter, 0, sizeof(SQueryFilter));
+
+	Filter.m_Mask = -1;
+
+	Shape* pHitShape;
+	ReturnInfo.m_Hit = Teardown::QuerySpherecast(g_Scene, fRadius, &vOrigin, &vDirection, fMaxDist, &Filter, &ReturnInfo.m_HitDist, &ReturnInfo.m_HitNormal, &ReturnInfo.m_HitPos, &pHitShape, 0);
 
 	if (ReturnInfo.m_Hit && pHitShape)
 		ReturnInfo.m_HitShape = pHitShape->m_Id;
