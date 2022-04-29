@@ -26,8 +26,14 @@ sledgelib_func Matrix4x4 _GetPose(unsigned int iHand) {
     return mPose;
 }
 
-sledgelib_func float _GetPlayerScale() { return SledgeVR::vPlayerScale.x; }
-sledgelib_func void _SetPlayerScale(float fScale) { SledgeVR::vPlayerScale = glm::vec3(fScale); }
+sledgelib_func Vector3 _GetVRPlayerPosition() { return Vector3(SledgeVR::vPlayerPos.x, SledgeVR::vPlayerPos.y, SledgeVR::vPlayerPos.z); }
+sledgelib_func void _SetVRPlayerPosition(glm::vec3 Pos) { SledgeVR::vPlayerPos = Pos; }
+
+sledgelib_func Vector3 _GetVRWorldScale() { return Vector3(SledgeVR::vWorldScale.x, SledgeVR::vWorldScale.y, SledgeVR::vWorldScale.z);; }
+sledgelib_func void _SetVRWorldScale(Vector3 vScale) { SledgeVR::vWorldScale = glm::vec3(vScale.x, vScale.y, vScale.z); }
+
+sledgelib_func float _GetVRPlayerRotation() { return SledgeVR::fPlayerRotation; };
+sledgelib_func void _SetVRPlayerRotation(float fRotation) { SledgeVR::fPlayerRotation = fRotation; };
 
 sledgelib_func vr::InputAnalogActionData_t _GetAnalogData(unsigned int iHand, EAnalogType Type) {
     switch (Type) {
@@ -41,10 +47,8 @@ sledgelib_func vr::InputAnalogActionData_t _GetAnalogData(unsigned int iHand, EA
     return vr::InputAnalogActionData_t();
 }
 
+
 sledgelib_func bool _GetTopButtonDown(unsigned int iHand) { return SledgeVR::aControllers[iHand].m_TopButton; }
 sledgelib_func bool _GetBottomButtonDown(unsigned int iHand) { return SledgeVR::aControllers[iHand].m_BottomButton; }
 
 sledgelib_func bool _GetVREnabled() { return g_VR; }
-
-sledgelib_func float _GetVRPlayerRotation() { return SledgeVR::fPlayerRotation; };
-sledgelib_func void _SetVRPlayerRotation(float fRotation) { SledgeVR::fPlayerRotation = fRotation; };

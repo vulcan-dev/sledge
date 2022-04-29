@@ -28,13 +28,15 @@ namespace SledgeLib
     public class VR
     {
         [DllImport("sledge_core.dll")] internal static extern Matrix4x4 _GetHMDPose();
-        [DllImport("sledge_core.dll")] internal static extern float _GetPlayerScale();
-        [DllImport("sledge_core.dll")] internal static extern void _SetPlayerScale(float Scale);
         [DllImport("sledge_core.dll")] internal static extern InputAnalogData _GetAnalogData(EVRHand Hand, EAnalogType Type);
         [DllImport("sledge_core.dll")] internal static extern Matrix4x4 _GetPose(EVRHand Hand);
         [DllImport("sledge_core.dll")] internal static extern bool _GetTopButtonDown(EVRHand Hand);
         [DllImport("sledge_core.dll")] internal static extern bool _GetBottomButtonDown(EVRHand Hand);
         [DllImport("sledge_core.dll")] internal static extern bool _GetVREnabled();
+        [DllImport("sledge_core.dll")] internal static extern Vector3 _GetVRPlayerPosition();
+        [DllImport("sledge_core.dll")] internal static extern void _SetVRPlayerPosition(Vector3 Value);
+        [DllImport("sledge_core.dll")] internal static extern Vector3 _GetVRWorldScale();
+        [DllImport("sledge_core.dll")] internal static extern void _SetVRWorldScale(Vector3 Scale);
         [DllImport("sledge_core.dll")] internal static extern float _GetVRPlayerRotation();
         [DllImport("sledge_core.dll")] internal static extern void _SetVRPlayerRotation(float Value);
 
@@ -43,10 +45,16 @@ namespace SledgeLib
             get { return _GetVREnabled(); }
         }
 
-        public static float PlayerScale
+        public static Vector3 Scale
         {
-            get { return _GetPlayerScale(); }
-            set { _SetPlayerScale(value); }
+            get { return _GetVRWorldScale(); }
+            set { _SetVRWorldScale(value); }
+        }
+
+        public static Vector3 Position
+        {
+            get { return _GetVRPlayerPosition(); }
+            set { _SetVRPlayerPosition(value); }
         }
 
         public static float Rotation
