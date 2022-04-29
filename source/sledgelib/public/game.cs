@@ -12,6 +12,14 @@ namespace SledgeLib
         [DllImport("sledge_core.dll")] private static extern void _GetLevelId(StringBuilder ReturnString, uint ReturnLength);
         [DllImport("sledge_core.dll")] private static extern void _LoadLevel(string LevelPath, string LevelLayers, string LevelId, string LevelModId);
         [DllImport("sledge_core.dll")] private static extern void _DebugPrint(string sMessage);
+        [DllImport("sledge_core.dll")] private static extern EGameState _GetState();
+        [DllImport("sledge_core.dll")] private static extern void _SetState(EGameState State);
+
+        public static EGameState State
+        {
+            get { return _GetState(); }
+            set { _SetState(value); }
+        }
 
         public static string LevelPath
         {
