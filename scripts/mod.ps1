@@ -62,7 +62,7 @@ function CreateProject([string] $ProjectName) {
     # Create sln file for mod
     dotnet new sln --name ${ProjectName} --force;
     dotnet new classlib --output ${ProjectName} --framework net6.0 --no-restore --force;
-    dotnet sln add .\${ProjectName}\${ProjectName}.csproj;
+    dotnet sln .\${ProjectName}.sln add .\${ProjectName}\${ProjectName}.csproj;
 
     # Create mod's csproj file
     New-Item -Path "./${ProjectName}/" -Name "${ProjectName}.csproj" -ItemType "file" -Force -Value ${CSProjTemplate} | Out-Null;
