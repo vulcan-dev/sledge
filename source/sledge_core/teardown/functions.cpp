@@ -102,6 +102,7 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["QueryClosestPoint"], &Teardown::QueryClosestPoint, "QueryClosestPoint" },
 	{ g_Offsets["QueryRaycast"], &Teardown::QueryRaycast, "QueryRaycast" },
 	{ g_Offsets["MakeHole"], &Teardown::MakeHole, "MakeHole" },
+	{ g_Offsets["DrawLine"], &Teardown::DrawLine, "DrawLine" },
 
 	/*
 		misc functions
