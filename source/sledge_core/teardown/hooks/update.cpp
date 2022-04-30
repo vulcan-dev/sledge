@@ -1,6 +1,8 @@
 #include "teardown/hooks.h"
 #include "teardown/offsets.h"
 
+#include "sledge/vr.h"
+
 #include "net/sledgelib.h"
 
 #include "util/log.h"
@@ -15,6 +17,9 @@ typedef void (*tUpdate) (void* pGame, void* pDevice);
 tUpdate _Update;
 
 void hUpdate(void* pGame, void* pDevice) {
+
+	SledgeVR::Update();
+
 	SledgeLib::CallbackInterface->PreUpdate();
 	_Update(pGame, pDevice);
 	SledgeLib::CallbackInterface->PostUpdate();
