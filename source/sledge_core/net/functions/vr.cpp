@@ -11,16 +11,13 @@ enum EAnalogType : unsigned int
     Trigger = 2
 };
 
-/*
-    to-do: optimize or align C# struct with glm::mat4
-*/
 sledgelib_func Matrix4x4 _GetHMDPose() {
     Matrix4x4 mPose;
     memcpy(&mPose, &SledgeVR::mHMDPose, sizeof(Matrix4x4));
     return mPose;
 }
 
-sledgelib_func Matrix4x4 _GetPose(unsigned int iHand) {
+sledgelib_func Matrix4x4 _GetControllerPose(unsigned int iHand) {
     Matrix4x4 mPose;
     memcpy(&mPose, &SledgeVR::aControllers[iHand].m_Pose, sizeof(Matrix4x4));
     return mPose;

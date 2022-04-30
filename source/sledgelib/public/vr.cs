@@ -29,7 +29,7 @@ namespace SledgeLib
     {
         [DllImport("sledge_core.dll")] internal static extern Matrix4x4 _GetHMDPose();
         [DllImport("sledge_core.dll")] internal static extern InputAnalogData _GetAnalogData(EVRHand Hand, EAnalogType Type);
-        [DllImport("sledge_core.dll")] internal static extern Matrix4x4 _GetPose(EVRHand Hand);
+        [DllImport("sledge_core.dll")] internal static extern Matrix4x4 _GetControllerPose(EVRHand Hand);
         [DllImport("sledge_core.dll")] internal static extern bool _GetTopButtonDown(EVRHand Hand);
         [DllImport("sledge_core.dll")] internal static extern bool _GetBottomButtonDown(EVRHand Hand);
         [DllImport("sledge_core.dll")] internal static extern bool _GetVREnabled();
@@ -40,10 +40,7 @@ namespace SledgeLib
         [DllImport("sledge_core.dll")] internal static extern float _GetVRPlayerRotation();
         [DllImport("sledge_core.dll")] internal static extern void _SetVRPlayerRotation(float Value);
 
-        public static bool Enabled
-        {
-            get { return _GetVREnabled(); }
-        }
+        public static bool Enabled { get { return _GetVREnabled(); } }
 
         public static Vector3 Scale
         {
@@ -63,27 +60,15 @@ namespace SledgeLib
             set { _SetVRPlayerRotation(value); }
         }
 
-        public static bool LeftTopButtonDown
-        {
-            get { return _GetTopButtonDown(EVRHand.Left); }
-        }
-        public static bool RightTopButtonDown
-        {
-            get { return _GetTopButtonDown(EVRHand.Right); }
-        }
+        public static bool LeftTopButtonDown{ get { return _GetTopButtonDown(EVRHand.Left); } }
+        public static bool RightTopButtonDown { get { return _GetTopButtonDown(EVRHand.Right); } }
 
-        public static bool LeftBottomButtonDown
-        {
-            get { return _GetBottomButtonDown(EVRHand.Left); }
-        }
-        public static bool RightBottomButtonDown
-        {
-            get { return _GetBottomButtonDown(EVRHand.Right); }
-        }
+        public static bool LeftBottomButtonDown { get { return _GetBottomButtonDown(EVRHand.Left); } }
+        public static bool RightBottomButtonDown { get { return _GetBottomButtonDown(EVRHand.Right); } }
 
         public static Matrix4x4 HMDPose {  get { return _GetHMDPose(); } }
-        public static Matrix4x4 LeftControllerPose { get { return _GetPose(EVRHand.Left); } }
-        public static Matrix4x4 RightControllerPose { get { return _GetPose(EVRHand.Right); } }
+        public static Matrix4x4 LeftControllerPose { get { return _GetControllerPose(EVRHand.Left); } }
+        public static Matrix4x4 RightControllerPose { get { return _GetControllerPose(EVRHand.Right); } }
 
         public static InputAnalogData LeftTrigger { get { return _GetAnalogData(EVRHand.Left, EAnalogType.Trigger); } }
         public static InputAnalogData RightTrigger { get { return _GetAnalogData(EVRHand.Right, EAnalogType.Trigger); } }
