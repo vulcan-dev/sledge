@@ -14,7 +14,7 @@ $CSharpProjPatch1 = " <Platforms>x64</Platforms>
     "
 
 $CSharpProjPatch2 = "  <Target Name=`"PostBuild`" AfterTargets=`"PostBuildEvent`">
-    <Exec Command=`"mkdir `$(ProjectDir)build\`$(Configuration)\bin &gt; nul&#xD;&#xA;copy `$(TargetDir)sledgelib.* `$(ProjectDir)build\`$(Configuration)\bin`" />
+    <Exec Command=`"mkdir &quot;`$(ProjectDir)build\`$(Configuration)\bin&quot; &gt; nul&#xD;&#xA;copy &quot;`$(TargetDir)sledgelib.*&quot; &quot;`$(ProjectDir)build\`$(Configuration)\bin&quot;`" />
   </Target>
 "
 
