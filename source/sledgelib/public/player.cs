@@ -33,6 +33,7 @@ namespace SledgeLib
         [DllImport("sledge_core.dll")] private static extern void Player_Respawn();
         [DllImport("sledge_core.dll")] private static extern bool Player_M1Down();
         [DllImport("sledge_core.dll")] private static extern bool Player_M2Down();
+        [DllImport("sledge_core.dll")] internal static extern Transform Player_GetSpawnTransform();
 
         public static float Health
         {
@@ -67,6 +68,10 @@ namespace SledgeLib
         {
             get { return Player_GetToolTransform(); }
             set { Player_SetToolTransform(value); }
+        }
+        public static Transform SpawnTransform
+        {
+            get { return Player_GetSpawnTransform(); }
         }
         public static Vector2 MovementInput { get { return Player_GetMovementKeys(); } }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "teardown/types/small_string.h"
 #include "teardown/types/small_vector.h"
+#include "teardown/types/math.h"
 
 #pragma pack(push, 1)
 class Scene
@@ -20,7 +21,8 @@ public:
 	void* m_FireSystem; //0x0080
 	small_vector<class Projectile*> m_Projectiles; //0x0088
 	class Environment* m_Environment; //0x0098
-	char pad_00A0[32]; //0x00A0
+	Transform m_SpawnTransform; //0x00A0
+	char pad_00BC[4]; //0x00BC
 	class Light* m_Flashlight; //0x00C0
 	class Script* m_ExplosionScript; //0x00C8
 	char pad_00D0[40]; //0x00D0

@@ -85,3 +85,5 @@ sledgelib_func void Player_Respawn() { g_Game->m_RespawnPlayer = true; }
 
 sledgelib_func bool Player_M1Down() { return g_Game->m_Player->m_M1Down; }
 sledgelib_func bool Player_M2Down() { return g_Game->m_Player->m_M2Down; }
+
+sledgelib_func Transform Player_GetSpawnTransform() { return g_Scene->m_SpawnTransform; }
