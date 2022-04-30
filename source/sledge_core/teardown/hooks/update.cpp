@@ -17,8 +17,8 @@ typedef void (*tUpdate) (void* pGame, void* pDevice);
 tUpdate _Update;
 
 void hUpdate(void* pGame, void* pDevice) {
-
-	SledgeVR::Update();
+	if (g_VR)
+		SledgeVR::Update();
 
 	SledgeLib::CallbackInterface->PreUpdate();
 	_Update(pGame, pDevice);
