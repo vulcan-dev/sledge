@@ -154,11 +154,11 @@ add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"
 
 # move sledge_core to bin dir
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND if $(ConfigurationName) == Debug "(" move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\" ")")
 
 # move dumper to bin dir
 add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
-add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND if exist \"$(OutDir)\\$(TargetName).pdb\" move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\")
+add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND if $(ConfigurationName) == Debug "(" if exist \"$(OutDir)\\$(TargetName).pdb\" move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\" ")")
 
 # move openvr binaries to bin folder
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/submodules/openvr/bin/win64/*\" \"$(OutDir)bin\")
