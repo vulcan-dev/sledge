@@ -24,13 +24,9 @@ vr::IVRCompositor* Compositor;
 vr::TrackedDevicePose_t TrackedDevicePoses[vr::k_unMaxTrackedDeviceCount];
 glm::mat4 TrackedDevicePosesMatrices[vr::k_unMaxTrackedDeviceCount];
 
-//int iRightControllerId = 0;
-//int iLeftControllerId = 0;
-
 /*
 	input
 */
-
 vr::VRActionSetHandle_t MainActionSet = vr::k_ulInvalidActionSetHandle;
 
 bool SledgeVR::Init() {
@@ -68,16 +64,16 @@ bool SledgeVR::Init() {
 		get matrices
 	*/
 	vr::HmdMatrix34_t mEyeToHeadTransform = System->GetEyeToHeadTransform(vr::Hmd_Eye::Eye_Left);
-	mViewLeftEye = glm::inverse(glm::mat4(mEyeToHeadTransform.m[0][0], mEyeToHeadTransform.m[1][0], mEyeToHeadTransform.m[2][0], 0.0f,
-		mEyeToHeadTransform.m[0][1], mEyeToHeadTransform.m[1][1], mEyeToHeadTransform.m[2][1], 0.0f,
-		mEyeToHeadTransform.m[0][2], mEyeToHeadTransform.m[1][2], mEyeToHeadTransform.m[2][2], 0.0f,
-		mEyeToHeadTransform.m[0][3], mEyeToHeadTransform.m[1][3], mEyeToHeadTransform.m[2][3], 1.0f));
+	mViewLeftEye = glm::mat4(	mEyeToHeadTransform.m[0][0], mEyeToHeadTransform.m[1][0], mEyeToHeadTransform.m[2][0], 0.0f,
+								mEyeToHeadTransform.m[0][1], mEyeToHeadTransform.m[1][1], mEyeToHeadTransform.m[2][1], 0.0f,
+								mEyeToHeadTransform.m[0][2], mEyeToHeadTransform.m[1][2], mEyeToHeadTransform.m[2][2], 0.0f,
+								mEyeToHeadTransform.m[0][3], mEyeToHeadTransform.m[1][3], mEyeToHeadTransform.m[2][3], 1.0f);
 
 	mEyeToHeadTransform = System->GetEyeToHeadTransform(vr::Hmd_Eye::Eye_Right);
-	mViewRightEye = glm::inverse(glm::mat4(mEyeToHeadTransform.m[0][0], mEyeToHeadTransform.m[1][0], mEyeToHeadTransform.m[2][0], 0.0f,
-		mEyeToHeadTransform.m[0][1], mEyeToHeadTransform.m[1][1], mEyeToHeadTransform.m[2][1], 0.0f,
-		mEyeToHeadTransform.m[0][2], mEyeToHeadTransform.m[1][2], mEyeToHeadTransform.m[2][2], 0.0f,
-		mEyeToHeadTransform.m[0][3], mEyeToHeadTransform.m[1][3], mEyeToHeadTransform.m[2][3], 1.0f));
+	mViewRightEye = glm::mat4(	mEyeToHeadTransform.m[0][0], mEyeToHeadTransform.m[1][0], mEyeToHeadTransform.m[2][0], 0.0f,
+								mEyeToHeadTransform.m[0][1], mEyeToHeadTransform.m[1][1], mEyeToHeadTransform.m[2][1], 0.0f,
+								mEyeToHeadTransform.m[0][2], mEyeToHeadTransform.m[1][2], mEyeToHeadTransform.m[2][2], 0.0f,
+								mEyeToHeadTransform.m[0][3], mEyeToHeadTransform.m[1][3], mEyeToHeadTransform.m[2][3], 1.0f);
 
 	vr::HmdMatrix44_t mEyeProj = System->GetProjectionMatrix(vr::Eye_Left, 0.1f, 500.f);
 	mProjectionLeftEye = glm::mat4(	mEyeProj.m[0][0], mEyeProj.m[1][0], mEyeProj.m[2][0], mEyeProj.m[3][0],
@@ -87,29 +83,10 @@ bool SledgeVR::Init() {
 
 	mEyeProj = System->GetProjectionMatrix(vr::Eye_Right, 0.1f, 500.f);
 	mProjectionRightEye = glm::mat4(mEyeProj.m[0][0], mEyeProj.m[1][0], mEyeProj.m[2][0], mEyeProj.m[3][0],
-		mEyeProj.m[0][1], mEyeProj.m[1][1], mEyeProj.m[2][1], mEyeProj.m[3][1],
-		mEyeProj.m[0][2], mEyeProj.m[1][2], mEyeProj.m[2][2], mEyeProj.m[3][2],
-		mEyeProj.m[0][3], mEyeProj.m[1][3], mEyeProj.m[2][3], mEyeProj.m[3][3]);
+									mEyeProj.m[0][1], mEyeProj.m[1][1], mEyeProj.m[2][1], mEyeProj.m[3][1],
+									mEyeProj.m[0][2], mEyeProj.m[1][2], mEyeProj.m[2][2], mEyeProj.m[3][2],
+									mEyeProj.m[0][3], mEyeProj.m[1][3], mEyeProj.m[2][3], mEyeProj.m[3][3]);
 
-	/*
-		get controllers
-	*/
-	//for (int iDevice = 0; iDevice < vr::k_unMaxTrackedDeviceCount; iDevice++) {
-	//	vr::ETrackedDeviceClass DevClass = System->GetTrackedDeviceClass(iDevice);
-	//	if (DevClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller) {
-	//		vr::ETrackedControllerRole Role = System->GetControllerRoleForTrackedDeviceIndex(iDevice);
-
-	//		if (Role == vr::TrackedControllerRole_RightHand)
-	//			iRightControllerId = iDevice;
-
-	//		if (Role == vr::TrackedControllerRole_LeftHand)
-	//			iLeftControllerId = iDevice;
-	//	}
-	//}
-
-	/*
-		load action manifest
-	*/
 	std::string sActionManifestPath = fmt::format("{}\\sledge_actionmanifest.json", g_ModulePath);
 
 	LogVerbose("Loading action manifest from: {}", sActionManifestPath);
@@ -208,37 +185,31 @@ void PollControllerInput(int iHand) {
 }
 
 void SledgeVR::Update() {
-	if (System) {
-		vr::VREvent_t VREvent;
-		while (System->PollNextEvent(&VREvent, sizeof(VREvent)))
-			ProcessVREvent(VREvent);
+	//if (System) {
+		//vr::VREvent_t VREvent;
+		//while (System->PollNextEvent(&VREvent, sizeof(VREvent)))
+		//	ProcessVREvent(VREvent);
 
-		Compositor->WaitGetPoses(TrackedDevicePoses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
+	Compositor->WaitGetPoses(TrackedDevicePoses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 
-		for (int iDevice = 0; iDevice < vr::k_unMaxTrackedDeviceCount; iDevice++) {
-			if (TrackedDevicePoses[iDevice].bPoseIsValid) {
-				vr::HmdMatrix34_t Pose = TrackedDevicePoses[iDevice].mDeviceToAbsoluteTracking;
-				TrackedDevicePosesMatrices[iDevice] = glm::mat4(Pose.m[0][0], Pose.m[1][0], Pose.m[2][0], 0.f,
-					Pose.m[0][1], Pose.m[1][1], Pose.m[2][1], 0.f,
-					Pose.m[0][2], Pose.m[1][2], Pose.m[2][2], 0.f,
-					Pose.m[0][3], Pose.m[1][3], Pose.m[2][3], 1.f);
-			}
-		}
-
-		if (TrackedDevicePoses[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid) {
-			mHMDPose = TrackedDevicePosesMatrices[vr::k_unTrackedDeviceIndex_Hmd];
-			mHMDPose = glm::inverse(mHMDPose);
-			mHMDPose = glm::scale(mHMDPose, vWorldScale);
-			mHMDPose = glm::rotate(mHMDPose, fPlayerRotation, glm::vec3(0, 1, 0));
-		}
-
-		vr::VRActiveActionSet_t ActiveActionSet = { 0 };
-		ActiveActionSet.ulActionSet = MainActionSet;
-		vr::VRInput()->UpdateActionState(&ActiveActionSet, sizeof(ActiveActionSet), 1);
-
-		PollControllerInput(LEFT_HAND);
-		PollControllerInput(RIGHT_HAND);
+	if (TrackedDevicePoses[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid) {
+		vr::HmdMatrix34_t Pose = TrackedDevicePoses[vr::k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking;
+		mHMDPose = glm::mat4(	Pose.m[0][0], Pose.m[1][0], Pose.m[2][0], 0.f,
+								Pose.m[0][1], Pose.m[1][1], Pose.m[2][1], 0.f,
+								Pose.m[0][2], Pose.m[1][2], Pose.m[2][2], 0.f,
+								Pose.m[0][3], Pose.m[1][3], Pose.m[2][3], 1.f);
+		//mHMDPose = glm::inverse(mHMDPose);
+		mHMDPose = glm::scale(mHMDPose, vWorldScale);
+		mHMDPose = glm::rotate(mHMDPose, fPlayerRotation, glm::vec3(0, 1, 0));
 	}
+		
+
+	vr::VRActiveActionSet_t ActiveActionSet = { 0 };
+	ActiveActionSet.ulActionSet = MainActionSet;
+	vr::VRInput()->UpdateActionState(&ActiveActionSet, sizeof(ActiveActionSet), 1); // TO-DO: SLOW FUNCTION - Move to another thread
+
+	PollControllerInput(LEFT_HAND);
+	PollControllerInput(RIGHT_HAND);
 }
 
 void SledgeVR::DrawLeftEye() {

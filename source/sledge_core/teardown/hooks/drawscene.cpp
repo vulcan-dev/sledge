@@ -25,12 +25,12 @@ tDrawScene _DrawScene;
 		either rewrite drawscene altogether or detour some of the functions unnecessary to vr (functions in charge of DOF, Motion Blur, Bloom, etc) and stop them from being called
 */
 void hDrawScene(Renderer* pRenderer, unsigned int a2, unsigned int /*iWidth*/, unsigned int /*iHeight*/, glm::mat4* /*mProjection*/, glm::mat4* /*mView*/) {
-	SledgeVR::Update();
-
-	glm::mat4 PositionMatrix = glm::translate(glm::mat4(1.0f), SledgeVR::vPlayerPos);
+	glm::mat4 PositionMatrix = glm::translate(glm::mat4(1.0f), -SledgeVR::vPlayerPos);
 	
-	glm::mat4 LeftViewMatrix = SledgeVR::mHMDPose * PositionMatrix;
-	glm::mat4 RightViewMatrix = SledgeVR::mHMDPose * PositionMatrix;
+	glm::mat4 mHMDInverse = glm::inverse(SledgeVR::mHMDPose);
+
+	glm::mat4 LeftViewMatrix = mHMDInverse * PositionMatrix;
+	glm::mat4 RightViewMatrix = mHMDInverse * PositionMatrix;
 
 	_DrawScene(pRenderer, a2, SledgeVR::iRTHeight, SledgeVR::iRTWidth, &SledgeVR::mProjectionLeftEye, &LeftViewMatrix);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
