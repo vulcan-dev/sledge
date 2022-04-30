@@ -13,7 +13,8 @@ enum EAnalogType : unsigned int
 
 sledgelib_func Matrix4x4 _GetHMDPose() {
     Matrix4x4 mPose;
-    memcpy(&mPose, &SledgeVR::mHMDPose, sizeof(Matrix4x4));
+    glm::mat4 mInvHMD = glm::inverse(SledgeVR::mHMDPose);
+    memcpy(&mPose, &mInvHMD, sizeof(Matrix4x4));
     return mPose;
 }
 

@@ -198,11 +198,10 @@ void SledgeVR::Update() {
 								Pose.m[0][1], Pose.m[1][1], Pose.m[2][1], 0.f,
 								Pose.m[0][2], Pose.m[1][2], Pose.m[2][2], 0.f,
 								Pose.m[0][3], Pose.m[1][3], Pose.m[2][3], 1.f);
-		//mHMDPose = glm::inverse(mHMDPose);
+		mHMDPose = glm::inverse(mHMDPose);
 		mHMDPose = glm::scale(mHMDPose, vWorldScale);
 		mHMDPose = glm::rotate(mHMDPose, fPlayerRotation, glm::vec3(0, 1, 0));
 	}
-		
 
 	vr::VRActiveActionSet_t ActiveActionSet = { 0 };
 	ActiveActionSet.ulActionSet = MainActionSet;
