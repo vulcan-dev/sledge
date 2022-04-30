@@ -12,6 +12,7 @@ struct SQueryInfo {
 	float m_HitDist;
 	Vector3 m_HitNormal;
 	Vector3 m_HitPos;
+	Vector3 m_HitDirection;
 	unsigned int m_HitShape;
 };
 
@@ -19,7 +20,6 @@ struct SQueryInfo {
 	TO-DO:
 		Implement a way to query with filters from C#
 */
-
 sledgelib_func SQueryInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist) {
 	SQueryInfo ReturnInfo;
 	SQueryFilter Filter;
@@ -63,7 +63,7 @@ sledgelib_func SQueryInfo QueryClosestPoint(Vector3 vOrigin, float fMaxDist) {
 	Filter.m_Mask = -1;
 
 	Shape* pHitShape;
-	ReturnInfo.m_Hit = Teardown::QueryClosestPoint(g_Scene, &vOrigin, fMaxDist, &Filter, &ReturnInfo.m_HitPos, &ReturnInfo.m_HitNormal, &pHitShape, 0);
+	ReturnInfo.m_Hit = Teardown::QueryClosestPoint(g_Scene, &vOrigin, fMaxDist, &Filter, &ReturnInfo.m_HitPos, &ReturnInfo.m_HitDirection, &pHitShape, 0);
 
 	if (ReturnInfo.m_Hit && pHitShape)
 		ReturnInfo.m_HitShape = pHitShape->m_Id;
