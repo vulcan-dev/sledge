@@ -14,8 +14,9 @@ namespace SledgeLib
     internal class ModManager
     {
         internal static FileSystemWatcher? Watcher = null;
-        internal static string? AssemblyLocation;
+        internal static string? BinFolderPath;
         internal static string? ModsFolder;
+        internal static string? CurrentLoadingModPath = null;
 
         internal static Dictionary<string, ModContext> ModList = new Dictionary<string, ModContext>();
 
@@ -27,11 +28,11 @@ namespace SledgeLib
             /*
              * get the required paths for loading mods
              */
-            AssemblyLocation = Path.GetDirectoryName(typeof(ModManager).Assembly.Location);
-            if (AssemblyLocation == null)
+            BinFolderPath = Path.GetDirectoryName(typeof(ModManager).Assembly.Location);
+            if (BinFolderPath == null)
                 throw new System.Exception("Unable to get assembly location");
 
-            ModsFolder = AssemblyLocation + "\\..\\mods";
+            ModsFolder = BinFolderPath + "\\..\\mods";
             if (!Directory.Exists(ModsFolder))
                 Directory.CreateDirectory(ModsFolder);
 
@@ -88,127 +89,194 @@ namespace SledgeLib
 
             public ModContext(string AssemblyPath) : base(name: AssemblyPath, isCollectible: true)
             {
-                m_AssemblyPath = AssemblyPath;
-                m_AssemblyName = Path.GetFileNameWithoutExtension(AssemblyPath);
-                m_AssemblyLastWrite = File.GetLastWriteTime(AssemblyPath);
-
-                Resolving += ModDependencyResolver;
-
-                /*
-                 * load DLL from assembly so that the assembly may be deleted or changed after it's loaded
-                 */
-                int LoadAttempts = 0;
-                FileStream AssemblyStream;
-                while (true)
+                lock (ModList)
                 {
+                    if (CurrentLoadingModPath != null)
+                        Log.Warning("CurrentLoadingModPath wasn't null.");
+
+                    CurrentLoadingModPath = AssemblyPath;
+
+                    m_AssemblyPath = AssemblyPath;
+                    m_AssemblyName = Path.GetFileNameWithoutExtension(AssemblyPath);
+                    m_AssemblyLastWrite = File.GetLastWriteTime(AssemblyPath);
+
+                    Resolving += ModDependencyResolver;
+
+                    /*
+                     * check if mod specifies it's own folder (for data, dependencies, etc)
+                     */
+                    if (Directory.Exists(ModsFolder + "\\" + m_AssemblyName))
+                        m_DataFolder = ModsFolder + "\\" + m_AssemblyName;
+
+                    /*
+                     * load all dependencies first
+                     */
+                    if (m_DataFolder != null)
+                    {
+                        string DependenciesFolder = String.Format("{0}\\dependencies", m_DataFolder);
+
+                        if (Directory.Exists(DependenciesFolder)) {
+                            string[] DependenciesFolderContent = Directory.GetFiles(DependenciesFolder);
+                            foreach (string DependencyPath in DependenciesFolderContent)
+                            {
+                                try
+                                {
+                                    FileStream DependencyStream = File.OpenRead(DependencyPath);
+                                    LoadFromStream(DependencyStream);
+                                    Log.Verbose("Loaded dependency: {0}", Path.GetFileNameWithoutExtension(DependencyPath));
+                                } catch (Exception ex)
+                                {
+                                    CurrentLoadingModPath = null;
+                                    throw new Exception(string.Format("Error ocurred while loading dependency: {0} - {1}", DependencyPath, ex));
+                                }
+                            }
+                        }
+                    }
+
+                    /*
+                     * load DLL from assembly so that the assembly may be deleted or changed after it's loaded
+                     */
+                    int LoadAttempts = 0;
+                    FileStream AssemblyStream;
+                    while (true)
+                    {
+                        try
+                        {
+                            AssemblyStream = File.OpenRead(AssemblyPath);
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            LoadAttempts++;
+                            Thread.Sleep(250);
+                            if (LoadAttempts >= 5)
+                            {
+                                CurrentLoadingModPath = null;
+                                throw new Exception("Timed out while attempting to load Assembly");
+                            }
+                        }
+                    }
+
                     try
                     {
-                        AssemblyStream = File.OpenRead(AssemblyPath);
-                        break;
-                    } catch (Exception ex)
+                        m_Assembly = LoadFromStream(AssemblyStream);
+                    } catch(Exception ex)
                     {
-                        LoadAttempts++;
-                        Thread.Sleep(250);
-                        if (LoadAttempts >= 5)
-                            throw new Exception("Timed out while attempting to load Assembly");
+                        CurrentLoadingModPath = null;
+                        throw new Exception(string.Format("Error occurred while loading assembly from stream. Path: {0}", AssemblyPath));
+                      
                     }
-                }
-                m_Assembly = LoadFromStream(AssemblyStream);
-                AssemblyStream.Close();
 
-                /*
-                 * iterate through each type in Assembly to find which class implements the ISledgeMod interface
-                 */
-                Type? InterfaceType = null;
-                foreach (Type ModType in m_Assembly.GetTypes()) {
-                    if (ModType.GetInterface(nameof(ISledgeMod)) != null)
+                    AssemblyStream.Close();
+
+                    /*
+                     * iterate through each type in Assembly to find which class implements the ISledgeMod interface
+                     */
+                    Type? InterfaceType = null;
+                    foreach (Type ModType in m_Assembly.GetTypes())
                     {
-                        InterfaceType = ModType;
-                        break;
+                        if (ModType.GetInterface(nameof(ISledgeMod)) != null)
+                        {
+                            InterfaceType = ModType;
+                            break;
+                        }
                     }
-                }
-                if (InterfaceType == null)
-                {
-                    Unload();
-                    GC.Collect();
-                    throw new Exception("Mod does not implement ISledgeMod interface");
-                }
+                    if (InterfaceType == null)
+                    {
+                        Unload();
+                        GC.Collect();
+                        CurrentLoadingModPath = null;
+                        throw new Exception("Mod does not implement ISledgeMod interface");
+                    }
 
-                /*
-                 * instantiate the class that implements ISledgeMod
-                 */
-                ISledgeMod? InterfaceInstance = (ISledgeMod?)Activator.CreateInstance(InterfaceType);
-                if (InterfaceInstance == null)
-                {
-                    Unload();
-                    GC.Collect();
-                    throw new Exception("Failed to instantiate interface class");
-                }
-                m_Interface = InterfaceInstance;
+                    /*
+                     * instantiate the class that implements ISledgeMod
+                     */
+                    ISledgeMod? InterfaceInstance = null;
+                    try
+                    {
+                        InterfaceInstance = (ISledgeMod?)Activator.CreateInstance(InterfaceType);
+                    } catch(Exception ex)
+                    {
+                        Unload();
+                        GC.Collect();
+                        CurrentLoadingModPath = null;
+                        throw new Exception("Error while creating ISledgeMod interface: {0}", ex);
+                    }
 
-                /*
-                 * check if mod specifies it's own folder (for data, dependencies, etc)
-                 */
-                if (Directory.Exists(ModsFolder + "\\" + m_AssemblyName))
-                {
-                    m_DataFolder = ModsFolder + "\\" + m_AssemblyName;
-                }
+                    if (InterfaceInstance == null)
+                    {
+                        Unload();
+                        GC.Collect();
+                        CurrentLoadingModPath = null;
+                        throw new Exception("Failed to instantiate interface class");
+                    }
+                    m_Interface = InterfaceInstance;
 
-                /*
-                 * register the mod's callbacks
-                 */
-                try
-                {
-                    CallbackManager.RegisterCallbacks(this);
-                }
-                catch (Exception ex)
-                {
-                    CallbackManager.UnregisterCallbacks(this);
-                    Unload();
-                    GC.Collect();
-                    Log.Error("Exception ocurred while registering callbacks: {0}", ex);
-                    throw new Exception("Unable to register callbacks");
-                }
+                    /*
+                     * register the mod's callbacks
+                     */
+                    try
+                    {
+                        CallbackManager.RegisterCallbacks(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        CallbackManager.UnregisterCallbacks(this);
+                        Unload();
+                        GC.Collect();
+                        CurrentLoadingModPath = null;
+                        Log.Error("Exception ocurred while registering callbacks: {0}", ex);
+                        throw new Exception("Unable to register callbacks");
+                    }
 
-                /*
-                 * register the mod's lua functions
-                 */
-                try
-                {
-                    LuaFunctionManager.RegisterLuaFunctions(this);
-                } catch (Exception ex)
-                {
-                    CallbackManager.UnregisterCallbacks(this);
-                    LuaFunctionManager.UnregisterLuaFunctions(this);
-                    Unload();
-                    GC.Collect();
-                    Log.Error("Exception ocurred while registering lua functions: {0}", ex);
-                    throw new Exception("Unable to register lua functions");
+                    /*
+                     * register the mod's lua functions
+                     */
+                    try
+                    {
+                        LuaFunctionManager.RegisterLuaFunctions(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        CallbackManager.UnregisterCallbacks(this);
+                        LuaFunctionManager.UnregisterLuaFunctions(this);
+                        Unload();
+                        GC.Collect();
+                        CurrentLoadingModPath = null;
+                        Log.Error("Exception ocurred while registering lua functions: {0}", ex);
+                        throw new Exception("Unable to register lua functions");
+                    }
+
+                    /*
+                     * add mod to list
+                     */
+                    ModList[m_AssemblyPath] = this;
+
+                    /*
+                     * invoke load function for mod
+                     */
+                    m_Interface.Load();
+
+                    CurrentLoadingModPath = null;
                 }
-
-                /*
-                 * add mod to list
-                 */
-                ModList[m_AssemblyPath] = this;
-
-                /*
-                 * invoke load function for mod
-                 */
-                m_Interface.Load();
             }
 
 
             internal void UnloadMod()
             {
-                /*
-                 * unregister callbacks, remove mod from list, invoke Unload function, unload assembly and collect GC
-                 */
-                CallbackManager.UnregisterCallbacks(this);
-                LuaFunctionManager.UnregisterLuaFunctions(this);
-                ModList.Remove(m_AssemblyPath);
-                m_Interface.Unload();
-                Unload();
-                GC.Collect();
+                lock (ModList)
+                {
+                    /*
+                     * unregister callbacks, remove mod from list, invoke Unload function, unload assembly and collect GC
+                     */
+                    CallbackManager.UnregisterCallbacks(this);
+                    LuaFunctionManager.UnregisterLuaFunctions(this);
+                    ModList.Remove(m_AssemblyPath);
+                    m_Interface.Unload();
+                    Unload();
+                    GC.Collect();
+                }
             }
 
             ~ModContext() { Log.Verbose("ModContext GC called"); }
@@ -221,42 +289,8 @@ namespace SledgeLib
         {
             if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
                 return typeof(ModManager).Assembly;
-
-            var AssemblyEnumerator =  LoadContext.Assemblies.GetEnumerator();
-            AssemblyEnumerator.MoveNext();
-            Assembly ContextAssembly = AssemblyEnumerator.Current;
-
-            ModContext? Ctx = GetContextFromAssembly(ContextAssembly);
-
-            if (Ctx == null)
-            {
-                Log.Error("Unknown mod attempted to resolve dependencies");
-                return null;
-            }
-
-            if (DependencyName.Name == null)
-            {
-                Log.Error("Mod {0} attempted to load a dependency that has no name", Ctx.m_Interface.GetName());
-                return null;
-            }
-
-            if (Ctx.m_DataFolder == null)
-            {
-                Log.Error("Mod {0} attempted to load dependency without a data folder.", Ctx.m_Assembly.GetName());
-                return null;
-            }
-
-            string DependencyPath = String.Format("{0}\\dependencies\\{1}.dll", Ctx.m_DataFolder, DependencyName.Name);
-            if (File.Exists(DependencyPath))
-            {
-                FileStream DependencyStream = File.OpenRead(DependencyPath);
-                return LoadContext.LoadFromStream(DependencyStream);
-            }
-
-            Log.Error("Could not find mod dependency: {0}", DependencyPath);
             return null;
         }
-
 
         internal static ModContext? GetContextFromName(string Name)
         {
