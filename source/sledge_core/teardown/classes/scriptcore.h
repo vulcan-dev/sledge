@@ -2,6 +2,7 @@
 
 #include "teardown/types/small_string.h"
 
+#pragma pack(push, 1)
 class ScriptCore_LuaState
 {
 public:
@@ -38,3 +39,5 @@ public:
 	virtual void Function7(void*) = 0;
 	virtual void Function8(void*) = 0;
 }; //Size: 0x0D00
+
+#pragma pack(pop)

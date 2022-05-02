@@ -4,6 +4,7 @@
 add_subdirectory(fmt)
 add_subdirectory(glew-cmake)
 add_subdirectory(glfw)
+add_subdirectory(glm)
 
 # ---------------------------
 # detours
@@ -82,3 +83,11 @@ target_include_directories(WebCore INTERFACE "${WEBCORE_DIR}include")
 add_library(AppCore SHARED IMPORTED GLOBAL)
 set_property(TARGET AppCore PROPERTY IMPORTED_IMPLIB "${APPCORE_DIR}lib/AppCore.lib")
 target_include_directories(AppCore INTERFACE "${APPCORE_DIR}include")
+
+# ---------------------------
+# openvr
+# ---------------------------
+add_library(openvr INTERFACE)
+target_include_directories(openvr INTERFACE "openvr/headers")
+target_link_directories(openvr INTERFACE "openvr/lib/win64")
+target_link_libraries(openvr INTERFACE "openvr_api")

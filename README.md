@@ -40,7 +40,7 @@ This project is still very early in development, so expect tons of API changes (
 2. Run "Create project.bat"
 3. Open sledge.sln, which will now be located in the "proj" folder.
 4. Click Build.
-5. The built version of the project will now be located on proj/{configuration} (i.e. proj/Debug/)
+5. The built version of the project will now be located on proj/build/{configuration} (i.e. proj/build/Debug/)
 
 ## Creating a mod
 1. Head on over to Sledge's install dir
@@ -62,4 +62,5 @@ Options:
 * [Nitro](https://github.com/BuilderHD)
 * [Daniel](https://github.com/vulcan-dev)
 * [Alexandar](https://github.com/alexandargyurov)
+
 For your help, ideas and support

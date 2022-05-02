@@ -37,7 +37,8 @@ target_link_libraries(sledge_shared_dependencies INTERFACE
 	detours
 	fmt::fmt
 	libglew_static
-	glfw)
+	glfw
+	glm)
 
 # globs for shared files
 file(GLOB_RECURSE shared_sources CONFIGURE_DEPENDS "source/shared/*.cpp")
@@ -57,7 +58,8 @@ target_link_libraries(sledge_core PRIVATE
 	UltralightCore
 	Ultralight
 	AppCore
-	WebCore)
+	WebCore
+	openvr)
 target_include_directories(sledge_core PRIVATE "source/sledge_core" "source/shared")
 set_target_properties(sledge_core PROPERTIES OUTPUT_NAME "sledge_core")
 
@@ -75,34 +77,6 @@ target_precompile_headers(sledge_core PRIVATE
     <regex>
     <string>
     <vector>)
-
-# ------------------------------------------------------
-# extra commands
-# ------------------------------------------------------
-
-# mod project script
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}\\scripts\\mod.ps1\" \"$(OutDir)mod.ps1\")
-
-# runtime config for hostfxr
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}\\scripts\\sledge.runtimeconfig.json\" \"$(OutDir)bin\\sledge.runtimeconfig.json\")
-
-# ultralight dlls
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\UltraLightCore\\bin\\UltraLightCore.dll\" \"$(OutDir)bin\\UltraLightCore.dll\") 
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\UltraLight\\bin\\UltraLight.dll\" \"$(OutDir)bin\\UltraLight.dll\") 
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\AppCore\\bin\\AppCore.dll\" \"$(OutDir)bin\\AppCore.dll\") 
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\WebCore\\bin\\*\" \"$(OutDir)bin\") 
-
-# ultralight resources
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui\" mkdir \"$(OutDir)ui\")
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui\\resources\" mkdir \"$(OutDir)ui\\resources\" )
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\WebCore\\bin\\resources\\*\" \"$(OutDir)ui\\resources\" )
-
-# move sledge_core to bin dir
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\")
-
-# remove copy caused by target dependency
-add_custom_command(TARGET sledge_core POST_BUILD COMMAND del \"$(OutDir)sledgelib.*\" )
 
 # ------------------------------------------------------
 # dumper
@@ -156,6 +130,44 @@ function(group_files sources)
 	endforeach()
 endfunction()
 group_files("${sledgelib_sources};${sledge_sources};${sledge_launcher_sources};${dumper_sources};${shared_sources};${sledge_headers};${sledge_launcher_headers};${dumper_headers};${shared_headers}")
+
+# ------------------------------------------------------
+# extra commands
+# ------------------------------------------------------
+
+# mod project script
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}\\scripts\\mod.ps1\" \"$(OutDir)mod.ps1\")
+
+# runtime config for hostfxr
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}\\scripts\\sledge.runtimeconfig.json\" \"$(OutDir)bin\\sledge.runtimeconfig.json\")
+
+# ultralight dlls
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\UltraLightCore\\bin\\UltraLightCore.dll\" \"$(OutDir)bin\\UltraLightCore.dll\") 
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\UltraLight\\bin\\UltraLight.dll\" \"$(OutDir)bin\\UltraLight.dll\") 
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\AppCore\\bin\\AppCore.dll\" \"$(OutDir)bin\\AppCore.dll\") 
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\WebCore\\bin\\*\" \"$(OutDir)bin\") 
+
+# ultralight resources
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui\" mkdir \"$(OutDir)ui\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND if not exist \"$(OutDir)ui\\resources\" mkdir \"$(OutDir)ui\\resources\" )
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"$(ProjectDir)submodules\\deps\\WebCore\\bin\\resources\\*\" \"$(OutDir)ui\\resources\" )
+
+# move sledge_core to bin dir
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND if $(ConfigurationName) == Debug "(" move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\" ")")
+
+# move dumper to bin dir
+add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND move /Y \"$(OutDir)$(TargetName)$(TargetExt)\" \"$(OutDir)bin\\$(TargetName)$(TargetExt)\")
+add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND if $(ConfigurationName) == Debug "(" if exist \"$(OutDir)\\$(TargetName).pdb\" move /Y \"$(OutDir)$(TargetName).pdb\" \"$(OutDir)bin\\$(TargetName).pdb\" ")")
+
+# move openvr binaries to bin folder
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/submodules/openvr/bin/win64/*\" \"$(OutDir)bin\")
+
+# move vr action manifest to bin folder
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}\\scripts\\sledge_actionmanifest.json\" \"$(OutDir)bin\\sledge_actionmanifest.json\")
+
+# remove copy caused by target dependency
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND del \"$(OutDir)sledgelib.*\" )
 
 # ------------------------------------------------------
 # set output directory

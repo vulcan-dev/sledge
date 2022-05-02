@@ -1,0 +1,119 @@
+{
+	"actions": [
+		{
+			"name": "/actions/main/in/RightHand",
+			"type": "pose"
+		},
+		{
+			"name": "/actions/main/in/LeftHand",
+			"type": "pose"
+		},
+		{
+			"name": "/actions/main/in/RightHand_Anim",
+			"type": "skeleton",
+			"skeleton": "/skeleton/hand/right"
+		},
+		{
+			"name": "/actions/main/in/LeftHand_Anim",
+			"type": "skeleton",
+			"skeleton": "/skeleton/hand/left"
+		},
+
+		{
+			"name": "/actions/main/in/GrabR",
+			"type": "vector1"
+		},
+		{
+			"name": "/actions/main/in/GrabL",
+			"type": "vector1"
+		},
+		{
+			"name": "/actions/main/in/TriggerR",
+			"type": "vector1"
+		},
+		{
+			"name": "/actions/main/in/TriggerL",
+			"type": "vector1"
+		},
+
+		{
+			"name": "/actions/main/in/LeftAnalogClick",
+			"type": "boolean"
+		},
+		{
+			"name": "/actions/main/in/RightAnalogClick",
+			"type": "boolean"
+		},
+
+		{
+			"name": "/actions/main/in/LeftBottomButton",
+			"type": "boolean"
+		},
+		{
+			"name": "/actions/main/in/LeftTopButton",
+			"type": "boolean"
+		},
+		{
+			"name": "/actions/main/in/RightBottomButton",
+			"type": "boolean"
+		},
+		{
+			"name": "/actions/main/in/RightTopButton",
+			"type": "boolean"
+		},
+
+		{
+			"name": "/actions/main/in/VibrationR",
+			"type": "vibration"
+		},
+		{
+			"name": "/actions/main/in/VibrationL",
+			"type": "vibration"
+		},
+
+		{
+			"name": "/actions/main/in/LeftAnalog",
+			"type": "vector2"
+		},
+		{
+			"name": "/actions/main/in/RightAnalog",
+			"type": "vector2"
+		}
+	],
+	"action_sets": [
+    	{
+			"name": "/actions/main",
+			"usage": "leftright"	
+		}
+	],
+
+	"localization" : [
+		{
+			"language_tag": "en_us",
+			"/actions/main/": "Main controls",
+
+			"/actions/main/in/LeftHand": "Left hand",
+			"/actions/main/in/LeftHand_Anim": "Left hand animation",
+			"/actions/main/in/RightHand": "Right hand",
+			"/actions/main/in/RightHand_Anim": "Right hand animation",
+
+			"/actions/main/in/GrabL": "Left grip",
+			"/actions/main/in/GrabR": "Right grip",
+
+			"/actions/main/in/TriggerL:": "Left trigger",
+			"/actions/main/in/TriggerR": "Right trigger",
+
+			"/actions/main/in/LeftAnalogClick": "Left analog click",
+			"/actions/main/in/RightAnalogClick": "Right analog click",
+
+			"/actions/main/in/LeftTopButton": "Left hand top button",
+			"/actions/main/in/RightTopButton": "Right hand top button",
+
+			"/actions/main/in/LeftBottomButton": "Left hand bottom button",
+			"/actions/main/in/RightBottomButton": "Right hand bottom button",
+
+			"/actions/main/in/LeftAnalog": "Left analog",
+			"/actions/main/in/RightAnalog": "Right analog"
+		}
+	]
+}

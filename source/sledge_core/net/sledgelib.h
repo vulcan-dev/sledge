@@ -1,5 +1,6 @@
 #pragma once
 
+#pragma pack(push, 1)
 struct SLCallbackInterface {
 	void (*StateChange) (unsigned int);
 	void (*LevelLoad) (const char*);
@@ -8,6 +9,7 @@ struct SLCallbackInterface {
 	void (*PrePlayerUpdate) (float);
 	void (*PostPlayerUpdate) (float);
 };
+#pragma pack(pop)
 
 struct SLUnmanagedInterface {
 	bool (*Init) ();

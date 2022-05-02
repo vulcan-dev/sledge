@@ -76,6 +76,9 @@ void SledgeLib::Shutdown() {
 	/*
 		invoke Init, catch potential exceptions
 	*/
+	if (!SledgeLib::Interface)
+		return;
+
 	__try {
 		if (!SledgeLib::Interface->Shutdown())
 			LogError("SledgeLib Interface->Shutdown() returned false");

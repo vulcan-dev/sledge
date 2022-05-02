@@ -21,7 +21,7 @@ sledgelib_func void SetString(char* cKeyName, char* cValue) { Teardown::SetStrin
 sledgelib_func void* _GetString(char* cKeyName) {
 	/*
 	TO-DO:	the value returned by GetString doesn't get disposed which results in a memory leak
-			calling the destructor causes a heap corruption,
+			calling the destructor causes a heap corruption
 	*/
 	small_string* ssReturn = new small_string("null");
 	small_string* ssKeyName = new small_string(cKeyName);

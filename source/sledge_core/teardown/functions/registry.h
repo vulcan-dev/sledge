@@ -2,24 +2,14 @@
 
 #include "teardown/types/small_string.h"
 
-typedef void (*tSetBool) (void* pRegistry, small_string* ssKeyName, bool bKeyValue);
-typedef void (*tSetInt) (void* pRegistry, small_string* ssKeyName, int iValue);
-typedef void (*tSetFloat) (void* pRegistry, small_string* ssKeyName, float fValue);
-typedef void (*tSetString) (void* pRegistry, small_string* ssKeyName, small_string* ssKeyValue);
-
-typedef bool (*tGetBool) (void* pRegistry, small_string* ssKeyName);
-typedef int (*tGetInt) (void* pRegistry, small_string* ssKeyName);
-typedef float (*tGetFloat) (void* pRegistry, small_string* ssKeyName);
-typedef small_string* (*tGetString) (void* pRegistry, small_string* ssReturn, small_string* ssKeyName);
-
 namespace Teardown {
-	inline tSetBool SetBool;
-	inline tSetInt SetInt;
-	inline tSetFloat SetFloat;
-	inline tSetString SetString;
+	inline void (*SetBool) (void* pRegistry, small_string* ssKeyName, bool bKeyValue);
+	inline void (*SetInt) (void* pRegistry, small_string* ssKeyName, int iValue);
+	inline void (*SetFloat) (void* pRegistry, small_string* ssKeyName, float fValue);
+	inline void (*SetString) (void* pRegistry, small_string* ssKeyName, small_string* ssKeyValue);
 
-	inline tGetBool GetBool;
-	inline tGetInt GetInt;
-	inline tGetFloat GetFloat;
-	inline tGetString GetString;
+	inline bool (*GetBool) (void* pRegistry, small_string* ssKeyName);
+	inline int (*GetInt) (void* pRegistry, small_string* ssKeyName);
+	inline float (*GetFloat) (void* pRegistry, small_string* ssKeyName);
+	inline small_string* (*GetString) (void* pRegistry, small_string* ssReturn, small_string* ssKeyName);
 }

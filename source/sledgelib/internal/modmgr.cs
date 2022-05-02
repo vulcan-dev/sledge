@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Threading;
+
+/*
+ * TO-DO: Implement exception handler
+ */
 
 namespace SledgeLib
 {
@@ -88,11 +93,26 @@ namespace SledgeLib
                 m_AssemblyLastWrite = File.GetLastWriteTime(AssemblyPath);
 
                 Resolving += ModDependencyResolver;
-                
+
                 /*
                  * load DLL from assembly so that the assembly may be deleted or changed after it's loaded
                  */
-                FileStream AssemblyStream = File.OpenRead(AssemblyPath);
+                int LoadAttempts = 0;
+                FileStream AssemblyStream;
+                while (true)
+                {
+                    try
+                    {
+                        AssemblyStream = File.OpenRead(AssemblyPath);
+                        break;
+                    } catch (Exception ex)
+                    {
+                        LoadAttempts++;
+                        Thread.Sleep(250);
+                        if (LoadAttempts >= 5)
+                            throw new Exception("Timed out while attempting to load Assembly");
+                    }
+                }
                 m_Assembly = LoadFromStream(AssemblyStream);
                 AssemblyStream.Close();
 
@@ -169,7 +189,7 @@ namespace SledgeLib
                 /*
                  * add mod to list
                  */
-                ModList[m_Interface.GetName()] = this;
+                ModList[m_AssemblyPath] = this;
 
                 /*
                  * invoke load function for mod
@@ -185,7 +205,7 @@ namespace SledgeLib
                  */
                 CallbackManager.UnregisterCallbacks(this);
                 LuaFunctionManager.UnregisterLuaFunctions(this);
-                ModList.Remove(m_Interface.GetName());
+                ModList.Remove(m_AssemblyPath);
                 m_Interface.Unload();
                 Unload();
                 GC.Collect();
@@ -193,6 +213,50 @@ namespace SledgeLib
 
             ~ModContext() { Log.Verbose("ModContext GC called"); }
         }
+
+        /*
+         *  dependency resolver for mods
+         */
+        public static Assembly? ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName DependencyName)
+        {
+            if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
+                return typeof(ModManager).Assembly;
+
+            var AssemblyEnumerator =  LoadContext.Assemblies.GetEnumerator();
+            AssemblyEnumerator.MoveNext();
+            Assembly ContextAssembly = AssemblyEnumerator.Current;
+
+            ModContext? Ctx = GetContextFromAssembly(ContextAssembly);
+
+            if (Ctx == null)
+            {
+                Log.Error("Unknown mod attempted to resolve dependencies");
+                return null;
+            }
+
+            if (DependencyName.Name == null)
+            {
+                Log.Error("Mod {0} attempted to load a dependency that has no name", Ctx.m_Interface.GetName());
+                return null;
+            }
+
+            if (Ctx.m_DataFolder == null)
+            {
+                Log.Error("Mod {0} attempted to load dependency without a data folder.", Ctx.m_Assembly.GetName());
+                return null;
+            }
+
+            string DependencyPath = String.Format("{0}\\dependencies\\{1}.dll", Ctx.m_DataFolder, DependencyName.Name);
+            if (File.Exists(DependencyPath))
+            {
+                FileStream DependencyStream = File.OpenRead(DependencyPath);
+                return LoadContext.LoadFromStream(DependencyStream);
+            }
+
+            Log.Error("Could not find mod dependency: {0}", DependencyPath);
+            return null;
+        }
+
 
         internal static ModContext? GetContextFromName(string Name)
         {
@@ -205,6 +269,28 @@ namespace SledgeLib
             return null;
         }
 
+        internal static ModContext? GetContextFromAssembly(Assembly ModAssembly)
+        {
+            lock (ModList)
+            {
+                foreach (ModContext Context in ModList.Values)
+                    if (Context.m_Assembly == ModAssembly)
+                        return Context;
+            }
+            return null;
+        }
+
+        internal static string? GetModFolderFromAssembly(Assembly ModAssembly)
+        {
+            ModContext? Ctx = GetContextFromAssembly(ModAssembly);
+            if (Ctx == null)
+                return null;
+
+            if (Ctx.m_DataFolder == null)
+                return null;
+
+            return Ctx.m_DataFolder;
+        }
 
         internal static ModContext? GetContextFromPath(string Path)
         {
@@ -214,30 +300,6 @@ namespace SledgeLib
                     if (Context.m_AssemblyPath == Path)
                         return Context;
             }
-            return null;
-        }
-
-        /*
-         *  dependency resolver for mods
-         */
-        private static Assembly? ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName DependencyName)
-        {
-            if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
-                return typeof(ModManager).Assembly;
-
-            if (LoadContext.Name == null)
-                return null;
-
-            ModContext? Ctx = GetContextFromName(LoadContext.Name);
-            if (Ctx == null)
-                return null;
-
-            if (Ctx.m_DataFolder == null)
-                return null;
-
-            if (File.Exists(Ctx.m_DataFolder + "\\dependencies\\" + DependencyName.Name + ".dll"))
-                return LoadContext.LoadFromAssemblyPath(Ctx.m_DataFolder + "\\dependencies\\" + DependencyName.Name + ".dll");
-
             return null;
         }
 

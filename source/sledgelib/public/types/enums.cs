@@ -10,4 +10,13 @@ namespace SledgeLib
         Editing,
         Quitting
     }
+
+    public enum EPaintType : uint
+    {
+        Spray = 0,
+        Explosion = 1,
+        Burnt = 2,
+        NoSnow = 3,
+        WeirdMat = 4
+    }
 }

@@ -7,8 +7,6 @@
 
 #include "util/log.h"
 
-#include <minwindef.h>
-
 #include <windef.h>
 #include <processthreadsapi.h>
 #include <detours.h>
@@ -23,7 +21,7 @@ void hChangeLevel(Game* pGame, small_string* ssLevelId, bool bPassThrough) {
 	SledgeLib::CallbackInterface->LevelLoad(pGame->m_LevelPath.c_str());
 }
 
-void Teardown::Hooks::HookChangeLevel() {
+void Teardown::Hooks::LevelChange::Hook() {
 	ChangeLevel = reinterpret_cast<tChangeLevel>(g_BaseAddress + g_Offsets["ChangeLevel"]);
 
 	LogVerbose("ChangeLevel: {}", reinterpret_cast<void*>(ChangeLevel));
@@ -34,7 +32,7 @@ void Teardown::Hooks::HookChangeLevel() {
 	DetourTransactionCommit();
 }
 
-void Teardown::Hooks::UnhookChangeLevel() {
+void Teardown::Hooks::LevelChange::Unhook() {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 	DetourDetach(&ChangeLevel, hChangeLevel);
