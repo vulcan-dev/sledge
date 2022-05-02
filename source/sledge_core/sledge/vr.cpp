@@ -177,10 +177,10 @@ void PollControllerInput(int iHand) {
 		Controller->m_Active = true;
 
 		vr::HmdMatrix34_t Pose = PoseData.pose.mDeviceToAbsoluteTracking;
-		Controller->m_Pose= glm::mat4(Pose.m[0][0], Pose.m[1][0], Pose.m[2][0], 0.f,
-			Pose.m[0][1], Pose.m[1][1], Pose.m[2][1], 0.f,
-			Pose.m[0][2], Pose.m[1][2], Pose.m[2][2], 0.f,
-			Pose.m[0][3], Pose.m[1][3], Pose.m[2][3], 1.f);
+		Controller->m_Pose= glm::mat4(	Pose.m[0][0], Pose.m[1][0], Pose.m[2][0], 0.f,
+										Pose.m[0][1], Pose.m[1][1], Pose.m[2][1], 0.f,
+										Pose.m[0][2], Pose.m[1][2], Pose.m[2][2], 0.f,
+										Pose.m[0][3], Pose.m[1][3], Pose.m[2][3], 1.f);
 	}
 }
 

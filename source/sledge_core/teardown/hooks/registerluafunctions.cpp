@@ -16,7 +16,6 @@
 typedef void (*tRegisterLuaFunctions) (ScriptCore* pSC);
 tRegisterLuaFunctions _RegisterLuaFunctions;
 
-
 void hRegisterLuaFunctions(ScriptCore* pSC) {
 	_RegisterLuaFunctions(pSC);
 	Sledge::LuaHelpers::RegisterLuaFunctions(pSC);
