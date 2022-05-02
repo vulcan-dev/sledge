@@ -20,7 +20,7 @@ struct SQueryInfo {
 	TO-DO:
 		Implement a way to query with filters from C#
 */
-sledgelib_func SQueryInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist) {
+sledgelib_func SQueryInfo _QueryRaycast(Vector3 vOrigin, Vector3 vDirection, float fMaxDist) {
 	SQueryInfo ReturnInfo;
 	SQueryFilter Filter;
 	memset(&ReturnInfo, 0, sizeof(SQueryInfo));
@@ -37,7 +37,7 @@ sledgelib_func SQueryInfo QueryRaycast(Vector3 vOrigin, Vector3 vDirection, floa
 	return ReturnInfo;
 }
 
-sledgelib_func SQueryInfo QuerySpherecast(Vector3 vOrigin, Vector3 vDirection, float fRadius, float fMaxDist) {
+sledgelib_func SQueryInfo _QuerySpherecast(Vector3 vOrigin, Vector3 vDirection, float fRadius, float fMaxDist) {
 	SQueryInfo ReturnInfo;
 	SQueryFilter Filter;
 	memset(&ReturnInfo, 0, sizeof(SQueryInfo));
@@ -54,7 +54,7 @@ sledgelib_func SQueryInfo QuerySpherecast(Vector3 vOrigin, Vector3 vDirection, f
 	return ReturnInfo;
 }
 
-sledgelib_func SQueryInfo QueryClosestPoint(Vector3 vOrigin, float fMaxDist) {
+sledgelib_func SQueryInfo _QueryClosestPoint(Vector3 vOrigin, float fMaxDist) {
 	SQueryFilter Filter;
 	SQueryInfo ReturnInfo;
 	memset(&ReturnInfo, 0, sizeof(SQueryInfo));
@@ -71,13 +71,13 @@ sledgelib_func SQueryInfo QueryClosestPoint(Vector3 vOrigin, float fMaxDist) {
 	return ReturnInfo;
 }
 
-sledgelib_func unsigned int MakeHole(Vector3 vPosition, float fSoftRadius, float fMidRadius, float fHardRadius, bool bSilent) {
+sledgelib_func unsigned int _MakeHole(Vector3 vPosition, float fSoftRadius, float fMidRadius, float fHardRadius, bool bSilent) {
 	unsigned int iVoxCount = g_Scene->m_VoxCount;
 	Teardown::MakeHole(g_Scene->m_Unknown, 0, &vPosition, fSoftRadius, fMidRadius, fHardRadius, bSilent, 0);
 	return iVoxCount - g_Scene->m_VoxCount;
 }
 
-sledgelib_func void DrawLine(Vector3 vOrigin, Vector3 vGoal, Vector4 vColour, bool bUseDepth) { Teardown::DrawLine(g_Game->m_Renderer, &vOrigin, &vGoal, &vColour, &vColour, bUseDepth); }
-sledgelib_func void DrawCross(Vector3 vPosition, Vector4 vColour, float fSize) { Teardown::DrawCross(g_Game->m_Renderer, &vPosition, &vColour, fSize); }
+sledgelib_func void _DrawLine(Vector3 vOrigin, Vector3 vGoal, Vector4 vColour, bool bUseDepth) { Teardown::DrawLine(g_Game->m_Renderer, &vOrigin, &vGoal, &vColour, &vColour, bUseDepth); }
+sledgelib_func void _DrawCross(Vector3 vPosition, Vector4 vColour, float fSize) {Teardown::DrawCross(g_Game->m_Renderer, &vPosition, &vColour, fSize);}
 
-sledgelib_func void Paint(Vector3 vPosition,unsigned int iType, float fRadius, float fProbability) { Teardown::Paint(g_Scene, &vPosition, fRadius, iType, fProbability); }
+sledgelib_func void _Paint(Vector3 vPosition,unsigned int iType, float fRadius, float fProbability) { Teardown::Paint(g_Scene, &vPosition, fRadius, iType, fProbability); }
