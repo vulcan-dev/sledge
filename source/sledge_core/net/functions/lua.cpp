@@ -1,10 +1,26 @@
 #include "sledge/luahelpers.h"
 #include "net/sledgelib.h"
 #include "teardown/functions/lua.h"
+#include "teardown/classes/scriptcore.h"
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
 sledgelib_func void _RegisterLuaFunctionInternal(const char* cFunctionName, void* pFunction) { Sledge::LuaHelpers::AddToRegisteredLuaFunctions(cFunctionName, pFunction); }
+sledgelib_func char* _GetSCPath(ScriptCore* pSC) {
+	if (pSC == 0) {
+		char* pStringBuilder = reinterpret_cast<char*>(SledgeLib::Interface->AllocateString(1));
+		pStringBuilder[1] = '\0';
+		return pStringBuilder;
+	}
+
+	size_t lRetLen = pSC->m_ScriptPath.len();
+
+	char* pStringBuilder = reinterpret_cast<char*>(SledgeLib::Interface->AllocateString(lRetLen + 1));
+	memcpy(pStringBuilder, pSC->m_ScriptPath.c_str(), lRetLen);
+	pStringBuilder[lRetLen] = '\0';
+
+	return pStringBuilder;
+}
 
 sledgelib_func int _lua_tointeger(lua_State* L, int iIndex) { return Teardown::lua_tointeger(L, iIndex); }
 sledgelib_func bool _lua_toboolean(lua_State* L, int iIndex) { return Teardown::lua_toboolean(L, iIndex); }
