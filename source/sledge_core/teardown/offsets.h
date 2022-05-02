@@ -9,8 +9,8 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"realloc", 0x00000000002F75F0 },
 	 {"free", 0x00000000002EDDD4 },
 	 {"lua_setfield", 0x0000000000243A00 },
+	 {"DrawCross", 0x00000000000479E0 },
 	 {"SetInt", 0x000000000013ABC0 },
-	 {"DebugPrint", 0x000000000010F070 },
 	 {"calloc", 0x00000000002F12B4 },
 	 {"malloc", 0x00000000002EDE14 },
 	 {"Screen::Screen", 0x000000000013C850 },
@@ -67,5 +67,6 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"QuerySpherecast", 0x00000000000E8300 },
 	 {"MakeHole", 0x000000000010C1F0 },
 	 {"Log", 0x000000000016F4B0 },
+	 {"DebugPrint", 0x000000000010F070 },
 	 {"ScriptCore::RegisterLuaFunctions", 0x000000000014F000 },
 };
