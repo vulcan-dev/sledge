@@ -105,6 +105,7 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["MakeHole"], &Teardown::MakeHole, "MakeHole" },
 	{ g_Offsets["DrawLine"], &Teardown::DrawLine, "DrawLine" },
 	{ g_Offsets["DrawCross"], &Teardown::DrawCross, "DrawCross" },
+	{ g_Offsets["Paint"], &Teardown::Paint, "Paint" },
 
 	/*
 		misc functions

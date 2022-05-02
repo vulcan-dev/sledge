@@ -4,8 +4,9 @@
 
 inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"SetBool", 0x000000000013AAB0 },
-	 {"lua_topointer", 0x0000000000243F80 },
 	 {"memmove", 0x0000000000290480 },
+	 {"Paint", 0x00000000000DCE40 },
+	 {"lua_topointer", 0x0000000000243F80 },
 	 {"realloc", 0x00000000002F75F0 },
 	 {"free", 0x00000000002EDDD4 },
 	 {"lua_setfield", 0x0000000000243A00 },
