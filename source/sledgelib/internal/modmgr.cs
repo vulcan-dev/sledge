@@ -211,6 +211,36 @@ namespace SledgeLib
                 GC.Collect();
             }
 
+
+           /*
+            *  dependency resolver for mods
+            */
+            private Assembly? ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName DependencyName)
+            {
+                if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
+                    return typeof(ModManager).Assembly;
+
+                if (DependencyName.Name == null)
+                    return null;
+
+                if (m_DataFolder == null)
+                {
+                    Log.Error("Mod {0} attempted to load dependency without a data folder.", m_Interface.GetName());
+                    return null;
+                }
+
+                string DependencyPath = String.Format("{0}\\dependencies\\{1}.dll", m_DataFolder, DependencyName.Name);
+                if (File.Exists(DependencyPath))
+                {
+                    FileStream DependencyStream = File.OpenRead(DependencyPath);
+                    return LoadContext.LoadFromStream(DependencyStream);
+                }
+
+                Log.Error("Could not find mod dependency: {0}", DependencyPath);
+
+                return null;
+            }
+
             ~ModContext() { Log.Verbose("ModContext GC called"); }
         }
 
@@ -256,37 +286,6 @@ namespace SledgeLib
                     if (Context.m_AssemblyPath == Path)
                         return Context;
             }
-            return null;
-        }
-
-        /*
-         *  dependency resolver for mods
-         */
-        private static Assembly? ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName DependencyName)
-        {
-            if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
-                return typeof(ModManager).Assembly;
-
-            if (LoadContext.Name == null || DependencyName.Name == null)
-                return null;
-
-            var AssemblyEnumerator = LoadContext.Assemblies.GetEnumerator();
-            AssemblyEnumerator.MoveNext();
-            Assembly ModAssembly = AssemblyEnumerator.Current;
-
-            string? ModFolder = GetModFolderFromAssembly(ModAssembly);
-            if (ModFolder == null)
-            {
-                Log.Error("Attempted to load dependency without mod folder: {0}", DependencyName.Name);
-                return null;
-            }
-
-            string DependencyPath = String.Format("{0}\\dependencies\\{1}.dll", ModFolder, DependencyName.Name);
-
-            if (File.Exists(DependencyPath))
-                return LoadContext.LoadFromAssemblyPath(DependencyPath);
-
-            Log.Error("Could not find mod dependency: {0}", DependencyPath);
             return null;
         }
 
