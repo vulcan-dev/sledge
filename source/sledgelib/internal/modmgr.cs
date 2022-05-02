@@ -267,19 +267,26 @@ namespace SledgeLib
             if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
                 return typeof(ModManager).Assembly;
 
-            if (LoadContext.Name == null)
+            if (LoadContext.Name == null || DependencyName.Name == null)
                 return null;
 
-            ModContext? Ctx = GetContextFromName(LoadContext.Name);
-            if (Ctx == null)
+            var AssemblyEnumerator = LoadContext.Assemblies.GetEnumerator();
+            AssemblyEnumerator.MoveNext();
+            Assembly ModAssembly = AssemblyEnumerator.Current;
+
+            string? ModFolder = GetModFolderFromAssembly(ModAssembly);
+            if (ModFolder == null)
+            {
+                Log.Error("Attempted to load dependency without mod folder: {0}", DependencyName.Name);
                 return null;
+            }
 
-            if (Ctx.m_DataFolder == null)
-                return null;
+            string DependencyPath = String.Format("{0}\\dependencies\\{1}.dll", ModFolder, DependencyName.Name);
 
-            if (File.Exists(Ctx.m_DataFolder + "\\dependencies\\" + DependencyName.Name + ".dll"))
-                return LoadContext.LoadFromAssemblyPath(Ctx.m_DataFolder + "\\dependencies\\" + DependencyName.Name + ".dll");
+            if (File.Exists(DependencyPath))
+                return LoadContext.LoadFromAssemblyPath(DependencyPath);
 
+            Log.Error("Could not find mod dependency: {0}", DependencyPath);
             return null;
         }
 
