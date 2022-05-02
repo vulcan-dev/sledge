@@ -1,7 +1,7 @@
 #pragma once
 
 class ScriptCore;
-struct lua_State;
+class lua_State;
 
 typedef int (*tLuaFunction)(const ScriptCore* pSC, lua_State* L, const char* cFunctionName);
 
