@@ -189,7 +189,7 @@ namespace SledgeLib
                 /*
                  * add mod to list
                  */
-                ModList[m_Interface.GetName()] = this;
+                ModList[m_AssemblyPath] = this;
 
                 /*
                  * invoke load function for mod
@@ -205,44 +205,58 @@ namespace SledgeLib
                  */
                 CallbackManager.UnregisterCallbacks(this);
                 LuaFunctionManager.UnregisterLuaFunctions(this);
-                ModList.Remove(m_Interface.GetName());
+                ModList.Remove(m_AssemblyPath);
                 m_Interface.Unload();
                 Unload();
                 GC.Collect();
             }
 
+            ~ModContext() { Log.Verbose("ModContext GC called"); }
+        }
 
-           /*
-            *  dependency resolver for mods
-            */
-            private Assembly? ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName DependencyName)
+        /*
+         *  dependency resolver for mods
+         */
+        public static Assembly? ModDependencyResolver(AssemblyLoadContext LoadContext, AssemblyName DependencyName)
+        {
+            if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
+                return typeof(ModManager).Assembly;
+
+            var AssemblyEnumerator =  LoadContext.Assemblies.GetEnumerator();
+            AssemblyEnumerator.MoveNext();
+            Assembly ContextAssembly = AssemblyEnumerator.Current;
+
+            ModContext? Ctx = GetContextFromAssembly(ContextAssembly);
+
+            if (Ctx == null)
             {
-                if (DependencyName.ToString() == typeof(ModManager).Assembly.GetName().ToString())
-                    return typeof(ModManager).Assembly;
-
-                if (DependencyName.Name == null)
-                    return null;
-
-                if (m_DataFolder == null)
-                {
-                    Log.Error("Mod {0} attempted to load dependency without a data folder.", m_Interface.GetName());
-                    return null;
-                }
-
-                string DependencyPath = String.Format("{0}\\dependencies\\{1}.dll", m_DataFolder, DependencyName.Name);
-                if (File.Exists(DependencyPath))
-                {
-                    FileStream DependencyStream = File.OpenRead(DependencyPath);
-                    return LoadContext.LoadFromStream(DependencyStream);
-                }
-
-                Log.Error("Could not find mod dependency: {0}", DependencyPath);
-
+                Log.Error("Unknown mod attempted to resolve dependencies");
                 return null;
             }
 
-            ~ModContext() { Log.Verbose("ModContext GC called"); }
+            if (DependencyName.Name == null)
+            {
+                Log.Error("Mod {0} attempted to load a dependency that has no name", Ctx.m_Interface.GetName());
+                return null;
+            }
+
+            if (Ctx.m_DataFolder == null)
+            {
+                Log.Error("Mod {0} attempted to load dependency without a data folder.", Ctx.m_Assembly.GetName());
+                return null;
+            }
+
+            string DependencyPath = String.Format("{0}\\dependencies\\{1}.dll", Ctx.m_DataFolder, DependencyName.Name);
+            if (File.Exists(DependencyPath))
+            {
+                FileStream DependencyStream = File.OpenRead(DependencyPath);
+                return LoadContext.LoadFromStream(DependencyStream);
+            }
+
+            Log.Error("Could not find mod dependency: {0}", DependencyPath);
+            return null;
         }
+
 
         internal static ModContext? GetContextFromName(string Name)
         {
