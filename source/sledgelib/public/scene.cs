@@ -9,6 +9,6 @@ namespace SledgeLib
         [DllImport("sledge_core.dll")] public static extern QueryInfo QuerySpherecast(Vector3 Origin, Vector3 Direction, float Radius, float MaxDist);
         [DllImport("sledge_core.dll")] public static extern QueryInfo QueryClosestPoint(Vector3 Origin, float MaxDist);
         [DllImport("sledge_core.dll")] public static extern uint MakeHole(Vector3 Position, float SoftRadius, float MidRadius, float HardRadius, bool Silent);
-        [DllImport("sledge_core.dll")] public static extern void DrawLine(Vector3 Origin, Vector3 Goal, Vector4 Colour, bool IgnoreDepth);
+        [DllImport("sledge_core.dll")] public static extern void DrawLine(Vector3 Origin, Vector3 Goal, Vector4 Colour, bool UseDepth);
     }
 }
