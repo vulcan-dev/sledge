@@ -77,6 +77,5 @@ sledgelib_func unsigned int MakeHole(Vector3 vPosition, float fSoftRadius, float
 	return iVoxCount - g_Scene->m_VoxCount;
 }
 
-sledgelib_func void DrawLine(Vector3 vOrigin, Vector3 vGoal, Vector4 vColour, bool bUseDepth) {
-	Teardown::DrawLine(g_Game->m_Renderer, &vOrigin, &vGoal, &vColour, &vColour, bUseDepth);
-}
+sledgelib_func void DrawLine(Vector3 vOrigin, Vector3 vGoal, Vector4 vColour, bool bUseDepth) { Teardown::DrawLine(g_Game->m_Renderer, &vOrigin, &vGoal, &vColour, &vColour, bUseDepth); }
+sledgelib_func void DrawCross(Vector3 vPosition, Vector4 vColour, float fSize) { Teardown::DrawCross(g_Game->m_Renderer, &vPosition, &vColour, fSize); }
