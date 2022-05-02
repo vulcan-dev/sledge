@@ -31,10 +31,12 @@ public:
 class Player
 {
 public:
-	Vector3 m_Position; //0x0000
-	char pad_000C[44]; //0x000C
+	Transform m_Transform;
+	class Transform m_DeltaTransform; //0x001C
 	Vector3 m_Velocity; //0x0038
-	char pad_0044[28]; //0x0044
+	Vector3 N00000390; //0x0044
+	Vector3 m_ProcessedVelocity; //0x0050
+	int m_PhysicInteractions; //0x005C
 	class Transform m_CameraTransform; //0x0060
 	class Transform m_CameraTransform2; //0x007C
 	class Transform m_CameraTransform3; //0x0098
@@ -45,7 +47,7 @@ public:
 	Vector2 m_CameraAngle; //0x00C4
 	Vector2 m_MovementKeys; //0x00CC
 	Vector2 m_MouseDelta; //0x00D4
-	char pad_00DC[1]; //0x00DC
+	bool m_Jump; //0x00DC
 	bool m_Crouching; //0x00DD
 	char pad_00DE[1]; //0x00DE
 	bool m_M2Down; //0x00DF
@@ -66,7 +68,9 @@ public:
 	class Body* m_GrabbedBody; //0x0110
 	char pad_0118[48]; //0x0118
 	class Body* m_GrabBody; //0x0148
-	char pad_0150[8]; //0x0150
+	bool m_Throwing; //0x0150
+	char pad_0151[3]; //0x0151
+	float m_GrabbingTravelDistance; //0x0154
 	float m_Health; //0x0158
 	char pad_015C[68]; //0x015C
 	class Tool m_Sledge; //0x01A0
@@ -90,17 +94,41 @@ public:
 	class Body* m_ToolBody; //0x05F0
 	char pad_05F8[28]; //0x05F8
 	class Transform m_ToolTransform; //0x0614
-	char pad_0630[64]; //0x0630
-	class Body* m_FloorBody; //0x0670
-	char pad_0678[112]; //0x0678
+	char pad_0630[24]; //0x0630
+	float m_IsOnGround; //0x0648 what's the purpose of storing this as a float?
+	float m_AirTime; //0x064C
+	float m_IsOnGround2; //0x0650
+	float m_AirTime2; //0x0654
+	Vector3 m_GroundNormal; //0x0658
+	Vector3 m_GroundCollisionPos; //0x0664
+	class Body* m_CurrentCollidingBody; //0x0670
+	char pad_0678[44]; //0x0678
+	float m_TimeSinceLastJump; //0x06A4
+	float m_FastViewPunch; //0x06A8
+	float m_SlowViewPunch; //0x06AC
+	char pad_06B0[16]; //0x06B0
+	class Shape* m_TargetShape; //0x06C0
+	float m_TargetDist; //0x06C8
+	Vector3 m_TargetPos; //0x06CC
+	char pad_06D8[16]; //0x06D8
 	class Shape* m_GrabbedShape; //0x06E8
 	class Shape* m_InteractableShape; //0x06F0
-	char pad_06F8[12500]; //0x06F8
+	char pad_06F8[112]; //0x06F8
+	float m_JumpHeight; //0x0768
+	float N000012E1; //0x076C
+	char pad_0770[13]; //0x0770
+	bool m_StandingOnSnow; //0x077D
+	char pad_077E[23]; //0x077E
+	bool N000012C1; //0x0795
+	char pad_0796[12342]; //0x0796
 	float N00001549; //0x37CC
 	small_vector<RegisteredTool> m_RegisteredTools; //0x37D0
 	Transform m_CustomToolTransform; //0x37E0
 	float m_ToolSway; //0x37FC Applies to all tools, values higher than 1.428 break it
-	char pad_3800[824]; //0x3800
+	char pad_3800[820]; //0x3800
+	float m_Slipperiness; //0x3B34
+	char pad_3B38[4]; //0x3B38
+
 }; //Size: 0x3B38
 
 #pragma pack(pop)

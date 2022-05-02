@@ -10,8 +10,8 @@
 sledgelib_func float Player_GetHealth() { return g_Player->m_Health; }
 sledgelib_func void Player_SetHealth(float fValue) { g_Player->m_Health = fValue; }
 
-sledgelib_func Vector3 Player_GetPosition() { return g_Player->m_Position; }
-sledgelib_func void Player_SetPosition(Vector3 vValue) { g_Player->m_Position = vValue; }
+sledgelib_func Vector3 Player_GetPosition() { return g_Player->m_Transform.m_Position; }
+sledgelib_func void Player_SetPosition(Vector3 vValue) { g_Player->m_Transform.m_Position = vValue; }
 
 sledgelib_func Vector3 Player_GetVelocity() { return g_Player->m_Velocity; }
 sledgelib_func void Player_SetVelocity(Vector3 vValue) { g_Player->m_Velocity = vValue; }
