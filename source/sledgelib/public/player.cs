@@ -29,6 +29,8 @@ namespace SledgeLib
         [DllImport("sledge_core.dll")] private static extern uint Player_GetToolBody();
         [DllImport("sledge_core.dll")] private static extern uint Player_GetVehicleBody();
         [DllImport("sledge_core.dll")] private static extern int Player_GetLastToolIdx();
+        [DllImport("sledge_core.dll")] private static extern bool Player_GetCrouching();
+        [DllImport("sledge_core.dll")] private static extern bool Player_GetInAir();
         [DllImport("sledge_core.dll")] private static extern void Player_RegisterTool(string Id, string Name, string File, uint Group = 6);
         [DllImport("sledge_core.dll")] private static extern void Player_Respawn();
         [DllImport("sledge_core.dll")] private static extern bool Player_M1Down();
@@ -82,7 +84,8 @@ namespace SledgeLib
         public static Body VehicleBody { get { return new Body(Player_GetVehicleBody()); } }
         public static bool M1Down { get { return Player_M1Down(); } }
         public static bool M2Down { get { return Player_M2Down(); } }
-
+        public static bool InAir { get { return Player_GetInAir(); } }
+        public static bool Crouching { get { return Player_GetCrouching(); } }
         public static dVoid Respawn = Player_Respawn;
         public static void RegisterTool(string Id, string Name, string Model, uint Group = 6, bool Enabled = false)
         {

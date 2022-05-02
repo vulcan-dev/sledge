@@ -26,6 +26,10 @@ sledgelib_func void Player_SetCameraAngles(Vector2 vValue) { g_Player->m_CameraA
 
 sledgelib_func Vector2 Player_GetMovementKeys() { return g_Player->m_MovementKeys; }
 
+sledgelib_func bool Player_GetCrouching() { return g_Player->m_Crouching; }
+
+sledgelib_func bool Player_GetInAir() { return g_Player->m_AirTime > 0 ? true : false; }
+
 sledgelib_func void Player_ReleaseGrab() {
 	if (g_Player->m_GrabBody)
 		g_Player->m_GrabBody->Destroy(true);
