@@ -1,6 +1,10 @@
 #include "teardown/classes/game.h"
 #include "teardown/functions/misc.h"
 
+#include "net/sledgelib.h"
+
+#include <processenv.h>
+
 #define sledgelib_func extern "C" __declspec(dllexport)
 
 sledgelib_func void _GetLevelPath(char* cReturn, unsigned int iReturnBufferSize) {
@@ -68,3 +72,12 @@ sledgelib_func bool _IsPlaying() { return g_Game->m_Playing; }
 
 sledgelib_func void _SetState(EGameState iState) { g_Game->m_NextState = iState; }
 sledgelib_func EGameState _GetState() { return g_Game->m_State; }
+
+sledgelib_func char* _GetCMDLine() {
+	char* cCMDLine = GetCommandLineA();
+	size_t lCMDLineLength = strlen(cCMDLine);
+	char* pStringBuilder = reinterpret_cast<char*>(SledgeLib::Interface->AllocateString(lCMDLineLength + 1));
+	memcpy(pStringBuilder, cCMDLine, lCMDLineLength);
+	pStringBuilder[lCMDLineLength] = '\0';
+	return pStringBuilder;
+}

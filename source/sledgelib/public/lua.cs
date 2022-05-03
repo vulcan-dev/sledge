@@ -25,7 +25,7 @@ namespace SledgeLib
         }
     }
 
-    internal class Lua
+    public class Lua
     {
         [DllImport("sledge_core.dll")]
         internal static extern int _lua_tointeger(IntPtr pLuaState, int Index);
@@ -46,6 +46,16 @@ namespace SledgeLib
         internal static extern void _lua_pushboolean(IntPtr pLuaState, bool Value);
         [DllImport("sledge_core.dll")]
         internal static extern void _lua_pushlstring(IntPtr pLuaState, string Value);
+
+        public static string GetCaller()
+        {
+            if (LuaFunctionManager.CurrentSC == null)
+                return "";
+
+            StringBuilder CallerSB = LuaFunctionManager._GetSCPath((IntPtr)LuaFunctionManager.CurrentSC);
+
+            return CallerSB.ToString();
+        }
     }
 
     internal class LuaFunctionManager
@@ -54,6 +64,12 @@ namespace SledgeLib
 
         [DllImport("sledge_core.dll")]
         internal static extern void _RegisterLuaFunctionInternal(string FunctionName, dLuaFunction Function);
+
+        [DllImport("sledge_core.dll")]
+        internal static extern StringBuilder _GetSCPath(IntPtr pScriptCore);
+
+
+        internal static IntPtr? CurrentSC = null;
 
         internal struct RegisteredLuaFunction
         {
@@ -87,6 +103,8 @@ namespace SledgeLib
         {
             if (!LuaFunctions.ContainsKey(FunctionName))
                 return 0;
+
+            CurrentSC = pSC;
 
             RegisteredLuaFunction LuaFunc = LuaFunctions[FunctionName];
 

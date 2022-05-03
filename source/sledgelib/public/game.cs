@@ -14,6 +14,12 @@ namespace SledgeLib
         [DllImport("sledge_core.dll")] private static extern void _DebugPrint(string sMessage);
         [DllImport("sledge_core.dll")] private static extern EGameState _GetState();
         [DllImport("sledge_core.dll")] private static extern void _SetState(EGameState State);
+        [DllImport("sledge_core.dll")] private static extern StringBuilder _GetCMDLine();
+
+        public static string CommandLine
+        {
+            get { return _GetCMDLine().ToString(); }
+        }
 
         public static EGameState State
         {
