@@ -27,8 +27,16 @@ tDrawScene _DrawScene;
 void hDrawScene(Renderer* pRenderer, unsigned int a2, unsigned int /*iWidth*/, unsigned int /*iHeight*/, glm::mat4* /*mProjection*/, glm::mat4* /*mView*/) {
 	glm::mat4 PositionMatrix = glm::translate(glm::mat4(1.0f), -SledgeVR::vPlayerPos);
 	
-	glm::mat4 LeftViewMatrix = SledgeVR::mHMDPose * PositionMatrix;
-	glm::mat4 RightViewMatrix = SledgeVR::mHMDPose * PositionMatrix;
+	/*
+		FIXME:
+			converting to mat3 then to mat4 is probably way too expensive to be done per frame
+			this needs to be improved
+	*/
+	glm::mat4 mHMDRot = glm::mat4(glm::mat3(SledgeVR::mHMDPose));
+	mHMDRot = glm::rotate(mHMDRot, SledgeVR::fPlayerRotation, glm::vec3(0, 1, 0));
+
+	glm::mat4 LeftViewMatrix = mHMDRot * PositionMatrix;
+	glm::mat4 RightViewMatrix = mHMDRot * PositionMatrix;
 
 	_DrawScene(pRenderer, a2, SledgeVR::iRTHeight, SledgeVR::iRTWidth, &SledgeVR::mProjectionLeftEye, &LeftViewMatrix);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
