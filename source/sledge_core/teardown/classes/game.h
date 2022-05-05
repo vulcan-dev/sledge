@@ -32,50 +32,57 @@ public:
 class Game
 {
 public:
-	unsigned int m_ResX; //0x0000
-	unsigned int m_ResY; //0x0004
+	uint32_t m_ResX; //0x0000
+	uint32_t m_ResY; //0x0004
 	EGameState m_State; //0x0008
 	EGameState m_NextState; //0x000C
-	float m_LoadEffect; //0x0010
-	bool m_Playing; //0x0014
+	float m_LoadingScreen; //0x0010
+	int8_t m_InGame; //0x0014
 	char pad_0015[3]; //0x0015
-	float m_LoadEffect2; //0x0018
+	float m_LoadingScreen2; //0x0018
 	bool m_MapOpen; //0x001C
 	char pad_001D[3]; //0x001D
-	void* N00000053; //0x0020
-	class UnknownRenderRelatedClass* m_UnknownRenderRelatedClass; //0x0028
-	void* m_Input; //0x0030
-	char pad_0038[8]; //0x0038
+	void* N00000074; //0x0020
+	RenderInfo* m_RenderInfo; //0x0028
+	void* N00000054; //0x0030
+	void* N00000055; //0x0038
 	class Renderer* m_Renderer; //0x0040
 	class Scene* m_Scene; //0x0048
-	void* m_SoundSystem; //0x0050
-	void* m_CameraController; //0x0058
+	void* m_Sound; //0x0050
+	void* m_Camera; //0x0058
 	void* m_Editor; //0x0060
-	class HUD* m_SplashHud; //0x0068
-	class HUD* m_LoadingHud; //0x0070
-	class HUD* m_GameHud; //0x0078
-	class HUD* m_MenuHud; //0x0080
-	void* N0000012D; //0x0088
-	void* N0000012E; //0x0090
+	void* m_SplashHud; //0x0068
+	void* m_LoadingHud; //0x0070
+	void* m_GameHud; //0x0078
+	void* m_MenuHud; //0x0080
+	void* N0000007E; //0x0088
+	void* m_Debug; //0x0090
 	void* m_Device; //0x0098
 	class Player* m_Player; //0x00A0
-	class LevelInfo* m_LevelInfo; //0x00A8
-	void* N00000132; //0x00B0
-	void* N00000133; //0x00B8
+	void* m_LevelInfo; //0x00A8
+	void* N00000083; //0x00B0
+	void* N00000084; //0x00B8
 	void* m_Registry; //0x00C0
-	class ModManager* m_ModManager; //0x00C8
-	void* N00000136; //0x00D0
-	void* m_Debug; //0x00D8
-	void* N00000138; //0x00E0
-	void* N00000139; //0x00E8
-	char pad_00F0[124]; //0x00F0
-	glm::mat4x4 m_ProjectionMatrix; //0x016C
-	glm::mat4x4 m_ViewMatrix; //0x01AC
-	glm::mat4x4 m_SomeMatrix; //0x01EC
-	char pad_022C[64]; //0x022C
+	void* m_Mods; //0x00C8
+	void* N00000087; //0x00D0
+	void* N00000088; //0x00D8
+	void* N00000089; //0x00E0
+	void* N0000008A; //0x00E8
+	char pad_00F0[48]; //0x00F0
+	bool m_Pause; //0x0120
+	char pad_0121[3]; //0x0121
+	uint32_t m_UpdateCount; //0x0124
+	uint32_t N00000112; //0x0128
+	char pad_012C[8]; //0x012C
+	float m_TimeStep; //0x0134
+	char pad_0138[52]; //0x0138
+	glm::mat4 m_PerspectiveMatrix; //0x016C
+	glm::mat4 m_UnkMatrix; //0x01AC
+	glm::mat4 m_HUDMVPMatrix; //0x01EC
+	glm::mat4 m_HUDScaleMatrix; //0x022C
 	bool m_QuickLoad; //0x026C
 	bool m_QuickSave; //0x026D
-	char pad_026E[1]; //0x026E
+	bool m_ApplyGraphics; //0x026E
 	bool m_RespawnPlayer; //0x026F
 	char pad_0270[32]; //0x0270
 	class GameSettings m_Settings; //0x0290
@@ -85,16 +92,15 @@ public:
 	class small_string m_LevelLayers; //0x0360
 	class small_string m_LevelModId; //0x0370
 	char pad_0380[104]; //0x0380
-	class FramebufferInfo m_FinalFramebuffer; //0x03E8
-	bool N0000019A; //0x0424
+	FramebufferInfo m_FinalFBO; //0x03E8
+	bool m_Usingindless; //0x0424
 	char pad_0425[11]; //0x0425
-	bool m_UsingPhotoMode; //0x0430
+	bool m_UsingPhotomode; //0x0430
 	char pad_0431[3]; //0x0431
-	class FramebufferInfo m_PhotoModeFramebuffer; //0x0434
-	char pad_0470[112]; //0x0470
-	bool N000001AB; //0x04E0
-	char pad_04E1[7]; //0x04E1
-}; //Size: 0x04E8
+	FramebufferInfo m_PhotoModeFBO; //0x0434
+	bool m_TakeScreenshot; //0x0470
+	char pad_0471[8]; //0x0471
+}; //Size: 0x0479
 #pragma pack(pop)
 
 inline Game* g_Game;
