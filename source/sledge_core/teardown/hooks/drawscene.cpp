@@ -26,7 +26,7 @@ tDrawScene _DrawScene;
 
 #include "teardown/classes/renderer.h"
 #include "teardown/classes/player.h"
-void hDrawScene(Renderer* pRenderer, unsigned int a2, unsigned int iWidth, unsigned int iHeight, glm::mat4* /*mProjection*/, glm::mat4* /*mView*/) {
+void hDrawScene(Renderer* pRenderer, unsigned int a2, unsigned int /*iWidth*/, unsigned int /*iHeight*/, glm::mat4* /*mProjection*/, glm::mat4* /*mView*/) {
 
 	if (g_VR) {
 		glm::mat4 PositionMatrix = glm::translate(glm::mat4(1.0f), -SledgeVR::vPlayerPos);
