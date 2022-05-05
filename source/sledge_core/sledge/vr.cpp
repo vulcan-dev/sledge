@@ -75,13 +75,13 @@ bool SledgeVR::Init() {
 								mEyeToHeadTransform.m[0][2], mEyeToHeadTransform.m[1][2], mEyeToHeadTransform.m[2][2], 0.0f,
 								mEyeToHeadTransform.m[0][3], mEyeToHeadTransform.m[1][3], mEyeToHeadTransform.m[2][3], 1.0f);
 
-	vr::HmdMatrix44_t mEyeProj = System->GetProjectionMatrix(vr::Eye_Left, 0.1f, 500.f);
+	vr::HmdMatrix44_t mEyeProj = System->GetProjectionMatrix(vr::Eye_Left, 0.200f, 499.968f);
 	mProjectionLeftEye = glm::mat4(	mEyeProj.m[0][0], mEyeProj.m[1][0], mEyeProj.m[2][0], mEyeProj.m[3][0],
 									mEyeProj.m[0][1], mEyeProj.m[1][1], mEyeProj.m[2][1], mEyeProj.m[3][1],
 									mEyeProj.m[0][2], mEyeProj.m[1][2], mEyeProj.m[2][2], mEyeProj.m[3][2],
 									mEyeProj.m[0][3], mEyeProj.m[1][3], mEyeProj.m[2][3], mEyeProj.m[3][3]);
 
-	mEyeProj = System->GetProjectionMatrix(vr::Eye_Right, 0.1f, 500.f);
+	mEyeProj = System->GetProjectionMatrix(vr::Eye_Right, 0.200f, 499.968f);
 	mProjectionRightEye = glm::mat4(mEyeProj.m[0][0], mEyeProj.m[1][0], mEyeProj.m[2][0], mEyeProj.m[3][0],
 									mEyeProj.m[0][1], mEyeProj.m[1][1], mEyeProj.m[2][1], mEyeProj.m[3][1],
 									mEyeProj.m[0][2], mEyeProj.m[1][2], mEyeProj.m[2][2], mEyeProj.m[3][2],
