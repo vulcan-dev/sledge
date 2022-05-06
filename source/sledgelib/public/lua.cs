@@ -17,7 +17,7 @@ namespace SledgeLib
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class LuaFunction : Attribute
     {
-        string m_FunctionName;
+        internal string m_FunctionName;
 
         public LuaFunction(string FunctionName)
         {
@@ -58,7 +58,7 @@ namespace SledgeLib
         }
     }
 
-    internal class LuaFunctionManager
+    internal static class LuaFunctionManager
     {
         internal delegate int dLuaFunction(IntPtr pScriptCore, IntPtr pLuaState, string FunctionName);
 
@@ -79,11 +79,11 @@ namespace SledgeLib
             public Type m_ReturnType;
             public List<Type> m_Args;
 
-            public RegisteredLuaFunction(MethodInfo Method, ModManager.ModContext Ctx)
+            public RegisteredLuaFunction(MethodInfo Method, ModManager.ModContext Ctx, LuaFunction Attr)
             {
                 m_Args = new List<Type>();
                 m_ReturnType = Method.ReturnType;
-                m_FunctionName = Method.Name;
+                m_FunctionName = Attr.m_FunctionName;
                 m_Method = Method;
                 m_Context = Ctx;
             }
@@ -195,7 +195,7 @@ namespace SledgeLib
                     if (LuaAttr == null)
                         continue;
 
-                    RegisteredLuaFunction LuaFunc = new RegisteredLuaFunction(ModMethodInfo, Ctx);
+                    RegisteredLuaFunction LuaFunc = new RegisteredLuaFunction(ModMethodInfo, Ctx, LuaAttr);
 
                     if (ModMethodInfo.ReturnType != typeof(void))
                        LuaFunc.m_ReturnType = ModMethodInfo.ReturnType;
@@ -215,7 +215,7 @@ namespace SledgeLib
                     lock(LuaFunctions)
                         LuaFunctions[LuaFunc.m_FunctionName] = LuaFunc;
 
-                    _RegisterLuaFunctionInternal(LuaFunc.m_FunctionName, LuaFunctionWrapper);
+                    _RegisterLuaFunctionInternal(LuaAttr.m_FunctionName, LuaFunctionWrapper);
                 }
             }
         }
@@ -223,7 +223,6 @@ namespace SledgeLib
         /*
          * removes all the functions belonging to a mod
          */
-
         internal static void UnregisterLuaFunctions(ModManager.ModContext Mod)
         {
             lock(LuaFunctions)
