@@ -145,14 +145,14 @@ namespace SledgeLib
                             AssemblyStream = File.OpenRead(AssemblyPath);
                             break;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             LoadAttempts++;
                             Thread.Sleep(250);
                             if (LoadAttempts >= 5)
                             {
                                 CurrentLoadingModPath = null;
-                                throw new Exception("Timed out while attempting to load Assembly");
+                                throw new Exception(String.Format("Timed out while loading file {0} (Not an Assembly or in use?)", AssemblyPath));
                             }
                         }
                     }
@@ -163,7 +163,7 @@ namespace SledgeLib
                     } catch(Exception ex)
                     {
                         CurrentLoadingModPath = null;
-                        throw new Exception(string.Format("Error occurred while loading assembly from stream. Path: {0}", AssemblyPath));
+                        throw new Exception(string.Format("Error occurred while loading assembly from stream. Path: {0} - Exception: {1}", AssemblyPath, ex));
                       
                     }
 
@@ -344,23 +344,14 @@ namespace SledgeLib
         {
             if (Path.GetExtension(Args.FullPath) != ".dll")
                 return;
-
-            // check if dll is an assembly
-            try
-            {
-                AssemblyName.GetAssemblyName(Args.FullPath);
-            } catch (Exception) {
-                Log.Verbose("Added dll which is not an assembly to mods folder ({0})", Path.GetFileName(Args.FullPath));
-                return;
-            }
-
             try
             {
                 new ModContext(Args.FullPath);
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
-                Log.Error("Exception thrown while loading mod: {0} : {1}", Path.GetFileName(Args.FullPath), ex);
+                //Log.Error("Exception thrown while loading mod: {0} : {1}", Path.GetFileName(Args.FullPath), ex);
+                return;
             }
             Log.General("Loaded mod: {0}", Path.GetFileName(Args.FullPath));
         }
@@ -370,7 +361,6 @@ namespace SledgeLib
             ModContext? Ctx = GetContextFromPath(Args.FullPath);
             if (Ctx == null)
                 return;
-
 
             if (Ctx.m_AssemblyLastWrite == File.GetLastWriteTime(Args.FullPath))
                 return;

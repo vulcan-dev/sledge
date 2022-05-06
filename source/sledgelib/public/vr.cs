@@ -19,7 +19,9 @@ namespace SledgeLib
     public struct InputAnalogData
     {
         public bool Active;
+        #pragma warning disable CS0169
         private IntPtr Padding;
+        #pragma warning restore CS0169
         public Vector3 State;
         public Vector3 Delta;
         public float UpdateTime;

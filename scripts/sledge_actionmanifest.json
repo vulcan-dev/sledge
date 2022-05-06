@@ -1,4 +1,10 @@
 {
+	"default_bindings": [
+		{
+			"controller_type": "oculus_touch",
+			"binding_url": "oculus_bindings.json"
+		}
+	],
 	"actions": [
 		{
 			"name": "/actions/main/in/RightHand",

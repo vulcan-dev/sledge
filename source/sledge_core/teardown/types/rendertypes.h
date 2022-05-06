@@ -2,6 +2,8 @@
 
 #include "teardown/types/small_vector.h"
 
+#include <glm/mat4x4.hpp>
+
 class ShaderInfo
 {
 public:
@@ -34,3 +36,10 @@ public:
 	unsigned int m_TextureCount; //0x0034
 	unsigned int N000004E0; //0x0038
 }; //Size: 0x003C
+
+class RenderInfo
+{
+public:
+	glm::mat4 m_CurrentMatrix; //0x0000
+	char pad_0040[241]; //0x0040
+}; //Size: 0x0131

@@ -2,12 +2,13 @@
 
 #include "teardown/types/small_string.h"
 #include "teardown/types/rendertypes.h"
-#include "teardown/types/math.h"
+
+#include <glm/mat4x4.hpp>
 
 class Renderer
 {
 public:
-	class UnknownRenderRelatedClass *m_UnknownRenderRelatedClass; //0x0000
+	RenderInfo* m_RenderInfo; //0x0000
 	char pad_0008[8]; //0x0008
 	class Scene *m_Scene; //0x0010
 	char pad_0018[8]; //0x0018
@@ -24,10 +25,10 @@ public:
 	float m_ZNear; //0x0784 default: 0.200
 	float m_ZFar; //0x0788 default 499.968
 	unsigned int m_RenderedFrames; //0x078C
-	Matrix4x4 m_PerspectiveProjectionMatrix; //0x0790
+	glm::mat4 m_PerspectiveProjectionMatrix; //0x0790
 	char pad_07D0[76]; //0x07D0
-	Matrix4x4 m_VpMatrix; //0x081C
-	Matrix4x4 m_VpInvMatrix; //0x085C
+	glm::mat4 m_VpMatrix; //0x081C
+	glm::mat4 m_VpInvMatrix; //0x085C
 	char pad_089C[1852]; //0x089C
 	ShaderInfo m_Sprites; //0x0FD8
 	ShaderInfo m_Barrel; //0x1240
@@ -97,8 +98,8 @@ public:
 	FramebufferInfo m_NormalBuffer2; //0x836C
 	FramebufferInfo m_UnusedFramebuffer_Maybe; //0x83A8
 	char pad_83E4[612]; //0x83E4
-	Matrix4x4 m_StableVpMatrix; //0x8648
-	Matrix4x4 m_UnstableVpMatrix; //0x8688
+	glm::mat4 m_StableVpMatrix; //0x8648
+	glm::mat4 m_OldStableVpMatrix; //0x8688
 	char pad_86C8[8]; //0x86C8
 	small_string m_RenderBuffer; //0x86D0
 	bool m_DrawBounds; //0x86E0

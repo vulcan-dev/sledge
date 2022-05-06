@@ -163,8 +163,9 @@ add_custom_command(TARGET sledge_dumper POST_BUILD COMMAND if $(ConfigurationNam
 # move openvr binaries to bin folder
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}/submodules/openvr/bin/win64/*\" \"$(OutDir)bin\")
 
-# move vr action manifest to bin folder
+# move vr action manifest and bindings to bin folder
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}\\scripts\\sledge_actionmanifest.json\" \"$(OutDir)bin\\sledge_actionmanifest.json\")
+add_custom_command(TARGET sledge_core POST_BUILD COMMAND echo f | xcopy /y /f \"${CMAKE_CURRENT_LIST_DIR}\\scripts\\oculus_bindings.json\" \"$(OutDir)bin\\oculus_bindings.json\")
 
 # remove copy caused by target dependency
 add_custom_command(TARGET sledge_core POST_BUILD COMMAND del \"$(OutDir)sledgelib.*\" )

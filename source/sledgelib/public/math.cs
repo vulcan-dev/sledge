@@ -66,23 +66,18 @@ namespace SledgeLib
 
         public static Vector3 TransformToParentPoint(Transform T, Vector3 V)
         {
-            Quaternion R = T.Rotation;
-            var v4 = R.Y;
-            var v5 = R.Z;
-            var v6 = R.W;
-            var v7 = v6 + v6;
-            var v8 = ((V.Y * v4) + (V.X * R.X)) + (V.Z * v5);
+            var v7 = T.Rotation.W + T.Rotation.W;
+            var v8 = ((V.Y * T.Rotation.Y) + (V.X * T.Rotation.X)) + (V.Z * T.Rotation.Z);
             var v9 = v8 + v8;
-            var v10 = ((v6 + v6) * v6) - 1.0f;
-            var v11 = (((V.Z * v4) - (V.Y * v5)) * (v6 + v6)) + (V.X * v10);
-            var v12 = (V.X * v5) - (V.Z * R.X);
-            var v13 = V.Y;
-            var v14 = (((v13 * R.X) - (V.X * v4)) * v7) + (V.Z * v10);
+            var v10 = (v7 * T.Rotation.W) - 1.0f;
+            var v11 = (((V.Z * T.Rotation.Y) - (V.Y * T.Rotation.Z)) * v7) + (V.X * v10);
+            var v12 = (V.X * T.Rotation.Z) - (V.Z * T.Rotation.X);
+            var v14 = (((V.Y * T.Rotation.X) - (V.X * T.Rotation.Y)) * v7) + (V.Z * v10);
 
             Vector3 Out;
-            Out.X = v11 + (v9 * R.X);
-            Out.Z = v14 + (v9 * v5);
-            Out.Y = ((v12 * v7) + (v13 * v10)) + (v9 * v4);
+            Out.X = v11 + (v9 * T.Rotation.X);
+            Out.Z = v14 + (v9 * T.Rotation.Z);
+            Out.Y = ((v12 * v7) + (V.Y * v10)) + (v9 * T.Rotation.Y);
             return Out;
         }
 

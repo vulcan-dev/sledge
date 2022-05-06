@@ -11,7 +11,6 @@
 #include <GL/glew.h>
 #include <openvr.h>
 
-
 /*
 	interface pointers
 */
@@ -75,13 +74,13 @@ bool SledgeVR::Init() {
 								mEyeToHeadTransform.m[0][2], mEyeToHeadTransform.m[1][2], mEyeToHeadTransform.m[2][2], 0.0f,
 								mEyeToHeadTransform.m[0][3], mEyeToHeadTransform.m[1][3], mEyeToHeadTransform.m[2][3], 1.0f);
 
-	vr::HmdMatrix44_t mEyeProj = System->GetProjectionMatrix(vr::Eye_Left, 0.1f, 500.f);
+	vr::HmdMatrix44_t mEyeProj = System->GetProjectionMatrix(vr::Eye_Left, 0.200f, 499.968f);
 	mProjectionLeftEye = glm::mat4(	mEyeProj.m[0][0], mEyeProj.m[1][0], mEyeProj.m[2][0], mEyeProj.m[3][0],
 									mEyeProj.m[0][1], mEyeProj.m[1][1], mEyeProj.m[2][1], mEyeProj.m[3][1],
 									mEyeProj.m[0][2], mEyeProj.m[1][2], mEyeProj.m[2][2], mEyeProj.m[3][2],
 									mEyeProj.m[0][3], mEyeProj.m[1][3], mEyeProj.m[2][3], mEyeProj.m[3][3]);
 
-	mEyeProj = System->GetProjectionMatrix(vr::Eye_Right, 0.1f, 500.f);
+	mEyeProj = System->GetProjectionMatrix(vr::Eye_Right, 0.200f, 499.968f);
 	mProjectionRightEye = glm::mat4(mEyeProj.m[0][0], mEyeProj.m[1][0], mEyeProj.m[2][0], mEyeProj.m[3][0],
 									mEyeProj.m[0][1], mEyeProj.m[1][1], mEyeProj.m[2][1], mEyeProj.m[3][1],
 									mEyeProj.m[0][2], mEyeProj.m[1][2], mEyeProj.m[2][2], mEyeProj.m[3][2],
@@ -131,29 +130,6 @@ bool SledgeVR::Init() {
 	return true;
 }
 
-void ProcessVREvent(vr::VREvent_t /*VREvent*/) {
-	//switch (VREvent.eventType) {
-	//case vr::VREvent_TrackedDeviceActivated:
-	//	vr::ETrackedDeviceClass DevClass = System->GetTrackedDeviceClass(VREvent.trackedDeviceIndex);
-	//	if (DevClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller) {
-	//		vr::ETrackedControllerRole Role = System->GetControllerRoleForTrackedDeviceIndex(VREvent.trackedDeviceIndex);
-
-	//		if (Role == vr::TrackedControllerRole_RightHand)
-	//			iRightControllerId = VREvent.trackedDeviceIndex;
-
-	//		if (Role == vr::TrackedControllerRole_LeftHand)
-	//			iLeftControllerId = VREvent.trackedDeviceIndex;
-	//	}
-	//	break;
-	//case vr::VREvent_TrackedDeviceDeactivated:
-	//	if (VREvent.trackedDeviceIndex == iRightControllerId)
-	//		iRightControllerId = 0;
-	//	else if (VREvent.trackedDeviceIndex == iLeftControllerId)
-	//		iLeftControllerId = 0;
-	//	break;
-	//}
-}
-
 void PollControllerInput(int iHand) {
 	SledgeVR::ControllerInfo* Controller = &SledgeVR::aControllers[iHand];
 
@@ -185,11 +161,6 @@ void PollControllerInput(int iHand) {
 }
 
 void SledgeVR::Update() {
-	//if (System) {
-		//vr::VREvent_t VREvent;
-		//while (System->PollNextEvent(&VREvent, sizeof(VREvent)))
-		//	ProcessVREvent(VREvent);
-
 	Compositor->WaitGetPoses(TrackedDevicePoses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 
 	if (TrackedDevicePoses[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid) {
@@ -200,7 +171,6 @@ void SledgeVR::Update() {
 								Pose.m[0][3], Pose.m[1][3], Pose.m[2][3], 1.f);
 		mHMDPose = glm::inverse(mHMDPose);
 		mHMDPose = glm::scale(mHMDPose, vWorldScale);
-		mHMDPose = glm::rotate(mHMDPose, fPlayerRotation, glm::vec3(0, 1, 0));
 	}
 
 	vr::VRActiveActionSet_t ActiveActionSet = { 0 };
