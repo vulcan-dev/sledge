@@ -60,10 +60,11 @@ namespace SledgeLib
 
     internal static class LuaFunctionManager
     {
-        internal delegate int dLuaFunction(IntPtr pScriptCore, IntPtr pLuaState, string FunctionName);
 
         [DllImport("sledge_core.dll")]
-        internal static extern void _RegisterLuaFunctionInternal(string FunctionName, dLuaFunction Function);
+        internal static extern void _RegisterLuaFunctionInternal(string FunctionName);
+        [DllImport("sledge_core.dll")]
+        internal static extern void _UnregisterLuaFunctionInternal(string FunctionName);
 
         [DllImport("sledge_core.dll")]
         internal static extern StringBuilder _GetSCPath(IntPtr pScriptCore);
@@ -99,7 +100,7 @@ namespace SledgeLib
         /*
          * function wrapper in charge of parsing lua arguments, invoking the C# method and returns
          */
-        private static int LuaFunctionWrapper(IntPtr pSC, IntPtr pL, string FunctionName)
+        internal static int FunctionWrapper(IntPtr pSC, IntPtr pL, string FunctionName)
         {
             if (!LuaFunctions.ContainsKey(FunctionName))
                 return 0;
@@ -215,7 +216,7 @@ namespace SledgeLib
                     lock(LuaFunctions)
                         LuaFunctions[LuaFunc.m_FunctionName] = LuaFunc;
 
-                    _RegisterLuaFunctionInternal(LuaAttr.m_FunctionName, LuaFunctionWrapper);
+                    _RegisterLuaFunctionInternal(LuaAttr.m_FunctionName);
                 }
             }
         }
@@ -226,9 +227,16 @@ namespace SledgeLib
         internal static void UnregisterLuaFunctions(ModManager.ModContext Mod)
         {
             lock(LuaFunctions)
+            {
                 foreach (KeyValuePair<string, RegisteredLuaFunction> Pair in LuaFunctions)
+                {
                     if (Pair.Value.m_Context == Mod)
+                    {
                         LuaFunctions.Remove(Pair.Key);
+                        _UnregisterLuaFunctionInternal(Pair.Key);
+                    }
+                }
+            }
         }
     }
 }
