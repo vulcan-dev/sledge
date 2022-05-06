@@ -79,7 +79,7 @@ namespace SledgeLib
             {
                 try
                 {
-                    Context.Unload();
+                    Context.UnloadCtx();
                 } catch (Exception ex)
                 {
                     Log.Error("Error ocurred while loading mod {0}.dll: {1}", Context.m_AssemblyName, ex);
@@ -280,7 +280,7 @@ namespace SledgeLib
             }
 
 
-            internal void Unload()
+            internal void UnloadCtx()
             {
                 lock (ModList)
                 {
@@ -382,7 +382,7 @@ namespace SledgeLib
             if (Ctx.m_AssemblyLastWrite == File.GetLastWriteTime(Args.FullPath))
                 return;
 
-            Ctx.Unload();
+            Ctx.UnloadCtx();
 
             try
             {
@@ -401,7 +401,7 @@ namespace SledgeLib
             if (Ctx == null)
                 return;
 
-            Ctx.Unload();
+            Ctx.UnloadCtx();
             Log.General("Unloaded mod: {0}", Path.GetFileName(Args.FullPath));
         }
     }
