@@ -131,29 +131,6 @@ bool SledgeVR::Init() {
 	return true;
 }
 
-void ProcessVREvent(vr::VREvent_t /*VREvent*/) {
-	//switch (VREvent.eventType) {
-	//case vr::VREvent_TrackedDeviceActivated:
-	//	vr::ETrackedDeviceClass DevClass = System->GetTrackedDeviceClass(VREvent.trackedDeviceIndex);
-	//	if (DevClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller) {
-	//		vr::ETrackedControllerRole Role = System->GetControllerRoleForTrackedDeviceIndex(VREvent.trackedDeviceIndex);
-
-	//		if (Role == vr::TrackedControllerRole_RightHand)
-	//			iRightControllerId = VREvent.trackedDeviceIndex;
-
-	//		if (Role == vr::TrackedControllerRole_LeftHand)
-	//			iLeftControllerId = VREvent.trackedDeviceIndex;
-	//	}
-	//	break;
-	//case vr::VREvent_TrackedDeviceDeactivated:
-	//	if (VREvent.trackedDeviceIndex == iRightControllerId)
-	//		iRightControllerId = 0;
-	//	else if (VREvent.trackedDeviceIndex == iLeftControllerId)
-	//		iLeftControllerId = 0;
-	//	break;
-	//}
-}
-
 void PollControllerInput(int iHand) {
 	SledgeVR::ControllerInfo* Controller = &SledgeVR::aControllers[iHand];
 
@@ -185,11 +162,6 @@ void PollControllerInput(int iHand) {
 }
 
 void SledgeVR::Update() {
-	//if (System) {
-		//vr::VREvent_t VREvent;
-		//while (System->PollNextEvent(&VREvent, sizeof(VREvent)))
-		//	ProcessVREvent(VREvent);
-
 	Compositor->WaitGetPoses(TrackedDevicePoses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 
 	if (TrackedDevicePoses[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid) {
