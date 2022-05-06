@@ -11,6 +11,7 @@ internal class Loader
         Interface.Shutdown = Loader.Shutdown;
         Interface.GetCallbackInterface = CallbackInvokers.GetCallbackInvokers;
         Interface.AllocString = Interop.AllocString;
+        Interface.LuaFunctionWrapper = LuaFunctionManager.FunctionWrapper;
         return Interface;
     }
 
