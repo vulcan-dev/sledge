@@ -82,7 +82,7 @@ namespace SledgeLib
                     Context.UnloadCtx();
                 } catch (Exception ex)
                 {
-                    Log.Error("Error ocurred while loading mod {0}.dll: {1}", Context.m_AssemblyName, ex);
+                    Log.Error("Error ocurred while unloading mod {0}.dll: {1}", Context.m_AssemblyName, ex);
                 }
             }
 
