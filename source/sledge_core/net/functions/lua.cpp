@@ -5,7 +5,9 @@
 
 #define sledgelib_func extern "C" __declspec(dllexport)
 
-sledgelib_func void _RegisterLuaFunctionInternal(const char* cFunctionName, void* pFunction) { Sledge::LuaHelpers::AddToRegisteredLuaFunctions(cFunctionName, pFunction); }
+sledgelib_func void _RegisterLuaFunctionInternal(const char* cFunctionName) { Sledge::LuaHelpers::AddToRegisteredLuaFunctions(cFunctionName, SledgeLib::Interface->LuaFunctionWrapper); }
+sledgelib_func void _UnregisterLuaFunctionInternal(const char* cFunctionName) { Sledge::LuaHelpers::RemoveRegisteredLuaFunction(cFunctionName); }
+
 sledgelib_func char* _GetSCPath(ScriptCore* pSC) {
 	if (pSC == 0) {
 		char* pStringBuilder = reinterpret_cast<char*>(SledgeLib::Interface->AllocateString(1));
