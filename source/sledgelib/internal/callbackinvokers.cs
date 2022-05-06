@@ -20,6 +20,8 @@ namespace SledgeLib
             Interface.PostUpdate = OnPostUpdate;
             Interface.PrePlayerUpdate = OnPrePlayerUpdate;
             Interface.PostPlayerUpdate = OnPostPlayerUpdate;
+            Interface.QuickSave = OnQuickSave;
+            Interface.QuickLoad = OnQuickLoad;
             return Interface;
         }
 
@@ -73,6 +75,18 @@ namespace SledgeLib
         static void OnPostPlayerUpdate(float TimeStep)
         {
             InvokeCallbacks(ref PostPlayerUpdateCallbacks, new object[] { TimeStep });
+        }
+
+        static internal List<MethodInfo> QuickSaveCallbacks = new List<MethodInfo>();
+        static void OnQuickSave()
+        {
+            InvokeCallbacks(ref QuickSaveCallbacks, null);
+        }
+
+        static internal List<MethodInfo> QuickLoadCallbacks = new List<MethodInfo>();
+        static void OnQuickLoad()
+        {
+            InvokeCallbacks(ref QuickLoadCallbacks, null);
         }
     }
 }
