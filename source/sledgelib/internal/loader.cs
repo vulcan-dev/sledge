@@ -26,7 +26,10 @@ internal class Loader
 
     public static bool Shutdown()
     {
+        Log.General("Unloading mods");
         try { ModManager.Shutdown(); } catch (Exception ex) { Log.Error("Error while invoking ModManager.Shutdown: {0}", ex); };
+
+        Log.General("SledgeLib successfully unloaded");
         return true;
     }
 }
