@@ -135,8 +135,6 @@ void Loader::Init(void* hModule) {
 
 	if (!SledgeLib::Load())
 		ReportErrorAndUnload("SledgeLib failed to load");
-
-	atexit(Loader::Shutdown);
 }
 
 /*

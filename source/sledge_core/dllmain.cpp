@@ -9,10 +9,14 @@
 __declspec(dllexport) int __stdcall _(void) { return 0; }
 
 BOOL DllMain(HMODULE hMod, DWORD dwReason, LPVOID) {
-	if (dwReason != DLL_PROCESS_ATTACH)
-		return TRUE;
+	switch (dwReason) {
+	case DLL_PROCESS_ATTACH:
+		Loader::Init(hMod);
+		break;
+	case DLL_PROCESS_DETACH:
+		Loader::Shutdown();
+		break;
+	}
 
-	Loader::Init(hMod);
-	DisableThreadLibraryCalls(hMod);
 	return TRUE;
 }
