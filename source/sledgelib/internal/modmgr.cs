@@ -351,6 +351,7 @@ namespace SledgeLib
             catch (Exception /*ex*/)
             {
                 //Log.Error("Exception thrown while loading mod: {0} : {1}", Path.GetFileName(Args.FullPath), ex);
+                return;
             }
             Log.General("Loaded mod: {0}", Path.GetFileName(Args.FullPath));
         }
