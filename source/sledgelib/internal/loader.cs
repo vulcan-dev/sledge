@@ -1,4 +1,5 @@
 using SledgeLib;
+using System;
 
 internal class Loader
 {
@@ -16,7 +17,7 @@ internal class Loader
     public static bool Init()
     {
         Log.General("Initializing mod manager");
-        try { ModManager.Init(); } catch (System.Exception e) { Log.Error("Error while initializing the mod manager: {0}", e); }
+        try { ModManager.Init(); } catch (Exception e) { Log.Error("Error while initializing the mod manager: {0}", e); }
 
         Log.General("Sledgelib successfully loaded");
         return true;
@@ -24,6 +25,7 @@ internal class Loader
 
     public static bool Shutdown()
     {
+        try { ModManager.Shutdown(); } catch (Exception ex) { Log.Error("Error while invoking ModManager.Shutdown: {0}", ex); };
         return true;
     }
 }

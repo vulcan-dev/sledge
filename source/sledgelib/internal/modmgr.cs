@@ -73,6 +73,23 @@ namespace SledgeLib
             Log.General("Loaded mods and registered watcher functions");
         }
 
+        internal static void Shutdown()
+        {
+            foreach (ModContext Context in ModList.Values)
+            {
+                try
+                {
+                    Context.Unload();
+                } catch (Exception ex)
+                {
+                    Log.Error("Error ocurred while loading mod {0}.dll: {1}", Context.m_AssemblyName, ex);
+                }
+            }
+
+            lock (ModList)
+                ModList.Clear();
+        }
+
         /*
          * class for the mod's information and context
          */
@@ -263,7 +280,7 @@ namespace SledgeLib
             }
 
 
-            internal void UnloadMod()
+            internal void Unload()
             {
                 lock (ModList)
                 {
@@ -365,7 +382,7 @@ namespace SledgeLib
             if (Ctx.m_AssemblyLastWrite == File.GetLastWriteTime(Args.FullPath))
                 return;
 
-            Ctx.UnloadMod();
+            Ctx.Unload();
 
             try
             {
@@ -384,7 +401,7 @@ namespace SledgeLib
             if (Ctx == null)
                 return;
 
-            Ctx.UnloadMod();
+            Ctx.Unload();
             Log.General("Unloaded mod: {0}", Path.GetFileName(Args.FullPath));
         }
     }
