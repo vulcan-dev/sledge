@@ -11,7 +11,6 @@
 #include <GL/glew.h>
 #include <openvr.h>
 
-
 /*
 	interface pointers
 */
