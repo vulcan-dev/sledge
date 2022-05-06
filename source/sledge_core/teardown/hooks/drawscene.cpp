@@ -1,6 +1,7 @@
 #include "teardown/hooks.h"
 #include "teardown/offsets.h"
 #include "teardown/classes/game.h"
+#include "teardown/classes/renderer.h"
 
 #include "sledge/vr.h"
 
@@ -24,8 +25,6 @@ tDrawScene _DrawScene;
 		either rewrite drawscene altogether or detour some of the functions unnecessary to vr (functions in charge of DOF, Motion Blur, Bloom, etc) and stop them from being called
 */
 
-#include "teardown/classes/renderer.h"
-#include "teardown/classes/player.h"
 void hDrawScene(Renderer* pRenderer, unsigned int a2, unsigned int /*iWidth*/, unsigned int /*iHeight*/, glm::mat4* /*mProjection*/, glm::mat4* /*mView*/) {
 	glm::mat4 PositionMatrix = glm::translate(glm::mat4(1.0f), -SledgeVR::vPlayerPos);
 
@@ -42,7 +41,8 @@ void hDrawScene(Renderer* pRenderer, unsigned int a2, unsigned int /*iWidth*/, u
 
 	/*
 		TO-DO:
-			There's ghosting between the two textures, it might be necessary to render to two different buffers to fix it
+			There's ghosting between the two eyes (due to the rt?)
+			it might be necessary to render them to two different buffers to fix it
 	*/
 	_DrawScene(pRenderer, a2, SledgeVR::iRTHeight, SledgeVR::iRTWidth, &SledgeVR::mProjectionLeftEye, &LeftViewMatrix);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -16,6 +16,7 @@ struct SLUnmanagedInterface {
 	bool (*Shutdown) ();
 	SLCallbackInterface (*GetCallbackInterface) ();
 	void* (*AllocateString) (size_t lLength);
+	int (*LuaFunctionWrapper) (class ScriptCore* pSC, class lua_State* L, char* cFunctionName);
 };
 
 namespace SledgeLib {

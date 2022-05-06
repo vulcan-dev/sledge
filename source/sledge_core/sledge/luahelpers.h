@@ -9,5 +9,6 @@ namespace Sledge {
 	namespace LuaHelpers {
 		void RegisterLuaFunctions(ScriptCore* pSC);
 		void AddToRegisteredLuaFunctions(const char* cFunctionName, void* pFunction);
+		void RemoveRegisteredLuaFunction(const char* cFunctionName);
 	}
 }
