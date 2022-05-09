@@ -90,6 +90,7 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 		lua functions
 	*/
 	RawSig("lua_gettop", "\x48\x8B\x41\x10\x48\x2B\x41\x18", "xxxxxxxx")
+	Sig("lua_getfield", "\xE8\x00\x00\x00\x00\x0F\x1F\x40\x00\x66\x0F\x1F\x84\x00\x00\x00\x00\x00", "x????xxxxxxxxx????")
 
 	Sig("lua_setfield", "\xE8\x00\x00\x00\x00\x48\x8B\x43\x38\xFF\xC7", "x????xxxxxx")
 
@@ -107,6 +108,13 @@ inline std::unordered_map<const char*, CSignature*> g_SigMap = {
 	Sig("lua_pushlstring", "\xE8\x00\x00\x00\x00\x8B\x4E\x28", "x????xxx")
 	RawSig("lua_pushboolean", "\x4C\x8B\x41\x10\x33\xC0", "xxxxxx")
 	Sig("lua_createtable", "\xE8\x00\x00\x00\x00\x66\x0F\x6E\x06", "x????xxxx")
+
+	Sig("lua_type", "\xE8\x00\x00\x00\x00\x83\xF8\x05\x75\x74", "x????xxxxx")
+
+	Sig("lua_pcall", "\xE8\x00\x00\x00\x00\x85\xC0\x74\x1D", "x????xxxx")
+	RawSig("lua_call", "\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x8D\x42\x01", "xxxx?xxxxxxxx")
+
+	RawSig("lua_pop", "\x85\xD2\x78\x42", "xxxx")
 
 	/*
 		Scene functions
