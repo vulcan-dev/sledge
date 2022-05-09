@@ -1,7 +1,7 @@
 #include "sledge/luahelpers.h"
 #include "net/sledgelib.h"
 #include "teardown/functions/lua.h"
-#include "teardown/classes/scriptcore.h"
+#include "teardown/classes/script.h"
 #include "teardown/classes/scene.h"
 
 #define sledgelib_func extern "C" __declspec(dllexport)

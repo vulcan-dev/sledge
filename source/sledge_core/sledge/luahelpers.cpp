@@ -1,7 +1,7 @@
 #include "luahelpers.h"
 
 #include "teardown/functions/lua.h"
-#include "teardown/classes/scriptcore.h"
+#include "teardown/classes/script.h"
 
 #include "util/log.h"
 
