@@ -20,6 +20,10 @@ internal class Loader
         Log.General("Initializing mod manager");
         try { ModManager.Init(); } catch (Exception e) { Log.Error("Error while initializing the mod manager: {0}", e); }
 
+        Log.General("Initializing lua");
+        try { Lua.Init(); } catch (Exception e) { Log.Error("Error while initializing Lua: {0}", e); }
+
+
         Log.General("Sledgelib successfully loaded");
         return true;
     }
