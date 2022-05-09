@@ -8,6 +8,8 @@ struct SLCallbackInterface {
 	void (*PostUpdate) ();
 	void (*PrePlayerUpdate) (float);
 	void (*PostPlayerUpdate) (float);
+	void (*QuickSave) ();
+	void (*QuickLoad) ();
 };
 #pragma pack(pop)
 

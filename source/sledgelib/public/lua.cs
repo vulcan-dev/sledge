@@ -7,8 +7,6 @@ using System.Text;
 /*
  * TO-DO: iterate every state and register function from there, also remove from vFunctions @ luahelpers.cpp
  */
-
-
 namespace SledgeLib
 {
     /*
@@ -27,25 +25,75 @@ namespace SledgeLib
 
     public class Lua
     {
-        [DllImport("sledge_core.dll")]
-        internal static extern int _lua_tointeger(IntPtr pLuaState, int Index);
-        [DllImport("sledge_core.dll")]
-        internal static extern bool _lua_toboolean(IntPtr pLuaState, int Index);
-        [DllImport("sledge_core.dll")]
-        internal static extern double _lua_tonumber(IntPtr pLuaState, int Index);
-        [DllImport("sledge_core.dll")]
-        internal static extern StringBuilder _lua_tolstring(IntPtr pLuaState, int Index);
+        public enum VarType
+        {
+            LUA_TNIL,
+            LUA_TBOOLEAN,
+            LUA_TLIGHTUSERDATA,
+            LUA_TNUMBER,
+            LUA_TSTRING,
+            LUA_TTABLE,
+            LUA_TFUNCTION,
+            LUA_TUSERDATA,
+            LUA_TTHREAD
+        }
 
         [DllImport("sledge_core.dll")]
-        internal static extern void _lua_pushnil(IntPtr pLuaState);
+        internal static extern int _lua_tointeger(IntPtr pL, int Index);
         [DllImport("sledge_core.dll")]
-        internal static extern void _lua_pushnumber(IntPtr pLuaState, double Value);
+        internal static extern bool _lua_toboolean(IntPtr pL, int Index);
         [DllImport("sledge_core.dll")]
-        internal static extern void _lua_pushinteger(IntPtr pLuaState, int Value);
+        internal static extern double _lua_tonumber(IntPtr pL, int Index);
         [DllImport("sledge_core.dll")]
-        internal static extern void _lua_pushboolean(IntPtr pLuaState, bool Value);
+        internal static extern StringBuilder _lua_tolstring(IntPtr pL, int Index);
+
         [DllImport("sledge_core.dll")]
-        internal static extern void _lua_pushlstring(IntPtr pLuaState, string Value);
+        internal static extern void _lua_pushnil(IntPtr pL);
+        [DllImport("sledge_core.dll")]
+        internal static extern void _lua_pushnumber(IntPtr pL, double Value);
+        [DllImport("sledge_core.dll")]
+        internal static extern void _lua_pushinteger(IntPtr pL, int Value);
+        [DllImport("sledge_core.dll")]
+        internal static extern void _lua_pushboolean(IntPtr pL, bool Value);
+        [DllImport("sledge_core.dll")]
+        internal static extern void _lua_pushlstring(IntPtr pL, string Value);
+
+        [DllImport("sledge_core.dll")]
+        internal static extern void _lua_getfield(IntPtr pL, int Index, string Key);
+        [DllImport("sledge_core.dll")]
+        internal static extern int _lua_gettop(IntPtr pL);
+
+        [DllImport("sledge_core.dll")]
+        internal static extern int _lua_pcall(IntPtr pL, int Args, int Results, int Err);
+        [DllImport("sledge_core.dll")]
+        internal static extern void _lua_call(IntPtr pL, int Args, int Results);
+
+        [DllImport("sledge_core.dll")]
+        internal static extern Lua.VarType _lua_type(IntPtr pL, int Index);
+
+        [DllImport("sledge_core.dll")]
+        internal static extern void _lua_pop(IntPtr pL, int Elements);
+
+        [DllImport("sledge_core.dll")]
+        internal static extern IntPtr _GetLuaStateFromSC(IntPtr pSC);
+
+        [DllImport("sledge_core.dll")]
+        internal static extern uint _GetScriptCount();
+        [DllImport("sledge_core.dll")]
+        internal static extern void _WriteSCArray([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] pScriptArray);
+
+        internal static int GLOBALSINDEX = -10002;
+
+        internal static List<Type> AllowedLuaTypes = new List<Type>()
+        {
+            typeof(int), typeof(string), typeof(bool), typeof(float), typeof(double)
+        };
+
+        internal struct InvokeInfo
+        {
+            internal string m_FunctionName;
+            internal object[] m_Arguments;
+        }
 
         public static string GetCaller()
         {
@@ -55,6 +103,89 @@ namespace SledgeLib
             StringBuilder CallerSB = LuaFunctionManager._GetSCPath((IntPtr)LuaFunctionManager.CurrentSC);
 
             return CallerSB.ToString();
+        }
+
+        internal static List<InvokeInfo> InvokeQueue = new List<InvokeInfo>();
+        internal static void UpdateInvokeQueue()
+        {
+            lock (InvokeQueue)
+            {
+                if (InvokeQueue.Count == 0)
+                    return;
+
+                IntPtr[] ScriptArray = new IntPtr[_GetScriptCount()];
+                _WriteSCArray(ScriptArray);
+
+                foreach (InvokeInfo Info in InvokeQueue)
+                {
+                    foreach (IntPtr pSC in ScriptArray)
+                    {
+                        IntPtr pL = _GetLuaStateFromSC(pSC);
+
+                        _lua_getfield(pL, GLOBALSINDEX, Info.m_FunctionName);
+
+                        if (_lua_type(pL, -1) != VarType.LUA_TFUNCTION)
+                        {
+                            _lua_pop(pL, 1);
+                            continue;
+                        }
+
+                        foreach (object Arg in Info.m_Arguments)
+                        {
+                            switch (Arg.GetType().Name)
+                            {
+                                case "String":
+                                    Lua._lua_pushlstring(pL, (string)Arg);
+                                    break;
+                                case "Int32":
+                                    Lua._lua_pushinteger(pL, (int)Arg);
+                                    break;
+                                case "Boolean":
+                                    Lua._lua_pushboolean(pL, (bool)Arg);
+                                    break;
+                                case "Single":
+                                    Lua._lua_pushnumber(pL, Convert.ToDouble(Arg));
+                                    break;
+                                case "Double":
+                                    Lua._lua_pushnumber(pL, (double)Arg);
+                                    break;
+                                default:
+                                    Log.Error("Unknown invoke type: {0}", Arg.GetType().Name);
+                                    break;
+                            }
+                        }
+
+                        _lua_pcall(pL, _lua_gettop(pL) - 1, 0, 0);
+                    }
+                }
+
+                InvokeQueue.Clear();
+            }
+        }
+
+        internal static void Init()
+        {
+            MethodInfo? InvokeQueueMethod = typeof(Lua).GetMethod("UpdateInvokeQueue", BindingFlags.NonPublic | BindingFlags.Static );
+            if (InvokeQueueMethod != null)
+                CallbackManager.AddCallbackToInvokerList(ECallbackType.PreUpdate, InvokeQueueMethod);
+            else
+                throw new Exception("Unable to get UpdateInvokeQueue method info");
+        }
+
+        public static void Invoke(string FunctionName, params object[] Args)
+        {
+            InvokeInfo Info;
+            Info.m_FunctionName = FunctionName;
+            Info.m_Arguments = Args;
+
+            foreach(object Arg in Args)
+            {
+                if (!AllowedLuaTypes.Contains(Arg.GetType()))
+                    throw new Exception(String.Format("Invalid arg type passed to Lua.Invoke: {0}", Arg.GetType()));
+            }
+
+            lock(InvokeQueue)
+                InvokeQueue.Add(Info);
         }
     }
 
@@ -68,7 +199,6 @@ namespace SledgeLib
 
         [DllImport("sledge_core.dll")]
         internal static extern StringBuilder _GetSCPath(IntPtr pScriptCore);
-
 
         internal static IntPtr? CurrentSC = null;
 
@@ -89,11 +219,6 @@ namespace SledgeLib
                 m_Context = Ctx;
             }
         }
-
-        internal static List<Type> AllowedLuaTypes = new List<Type>()
-        {
-            typeof(int), typeof(string), typeof(bool), typeof(float), typeof(double)
-        };
 
         internal static Dictionary<string, RegisteredLuaFunction> LuaFunctions = new Dictionary<string, RegisteredLuaFunction>();
 
@@ -207,7 +332,7 @@ namespace SledgeLib
                     {
                         Type ParamType = ParamInfo.ParameterType;
 
-                        if (!AllowedLuaTypes.Contains(ParamType))
+                        if (!Lua.AllowedLuaTypes.Contains(ParamType))
                             throw new Exception(string.Format("Invalid parameter for lua function (name: {0} - type: {1})", ParamInfo.Name, ParamInfo.ParameterType));
 
                         LuaFunc.m_Args.Add(ParamType); 

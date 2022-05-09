@@ -1,6 +1,6 @@
 #include "teardown/hooks.h"
 #include "teardown/offsets.h"
-#include "teardown/classes/scriptcore.h"
+#include "teardown/classes/script.h"
 
 #include "sledge/luahelpers.h"
 #include "sledge/loader.h"

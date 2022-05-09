@@ -25,6 +25,7 @@ namespace Teardown {
 		namespace DrawScene { void Hook(); void Unhook(); }
 		namespace UpdateShadowVolumes { void Hook(); void Unhook(); }
 		namespace UpdateTools { void Hook(); void Unhook(); }
+		namespace Saves { void Hook(); void Unhook(); }
 	}
 
 	inline void ApplyHooks() {
@@ -40,6 +41,7 @@ namespace Teardown {
 		Hooks::IsWindowForegroundWindow::Hook();
 		Hooks::SetCursorCaptured::Hook();
 		Hooks::SwapBuffers::Hook();
+		Hooks::Saves::Hook();
 
 		if (g_VR) {
 			Hooks::DrawScene::Hook();
@@ -61,6 +63,7 @@ namespace Teardown {
 		Hooks::IsWindowForegroundWindow::Unhook();
 		Hooks::SetCursorCaptured::Unhook();
 		Hooks::SwapBuffers::Unhook();
+		Hooks::Saves::Unhook();
 
 		if (g_VR) {
 			Hooks::DrawScene::Unhook();

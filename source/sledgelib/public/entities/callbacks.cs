@@ -12,7 +12,9 @@ namespace SledgeLib
         PreUpdate,
         PostUpdate,
         PrePlayerUpdate,
-        PostPlayerUpdate
+        PostPlayerUpdate,
+        QuickSave,
+        QuickLoad
     }
 
     /*
@@ -52,6 +54,8 @@ namespace SledgeLib
             { ECallbackType.PostUpdate, new MethodRules(typeof(void)) },
             { ECallbackType.PrePlayerUpdate, new MethodRules(typeof(void), typeof(float)) },
             { ECallbackType.PostPlayerUpdate, new MethodRules(typeof(void), typeof(float)) },
+            { ECallbackType.QuickSave, new MethodRules(typeof(void)) },
+            { ECallbackType.QuickLoad, new MethodRules(typeof(void)) },
         };
 
         /*
@@ -109,6 +113,8 @@ namespace SledgeLib
             lock (CallbackInvokers.PostUpdateCallbacks) { CallbackInvokers.PostUpdateCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
             lock (CallbackInvokers.PrePlayerUpdateCallbacks) { CallbackInvokers.PrePlayerUpdateCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
             lock (CallbackInvokers.PostPlayerUpdateCallbacks) { CallbackInvokers.PostPlayerUpdateCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+            lock (CallbackInvokers.QuickSaveCallbacks) { CallbackInvokers.QuickSaveCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
+            lock (CallbackInvokers.QuickLoadCallbacks) { CallbackInvokers.QuickLoadCallbacks.RemoveAll(CallbackMethod => (CallbackMethod.DeclaringType != null) && (CallbackMethod.DeclaringType.Assembly == Mod.m_Assembly)); }
         }
 
         /*
@@ -135,6 +141,12 @@ namespace SledgeLib
                     break;
                 case ECallbackType.PostPlayerUpdate:
                     lock (CallbackInvokers.PostPlayerUpdateCallbacks) { CallbackInvokers.PostPlayerUpdateCallbacks.Add(CallbackMethod); }
+                    break;
+                case ECallbackType.QuickSave:
+                    lock (CallbackInvokers.QuickSaveCallbacks) { CallbackInvokers.QuickSaveCallbacks.Add(CallbackMethod); }
+                    break;
+                case ECallbackType.QuickLoad:
+                    lock (CallbackInvokers.QuickLoadCallbacks) { CallbackInvokers.QuickLoadCallbacks.Add(CallbackMethod); }
                     break;
             }
         }

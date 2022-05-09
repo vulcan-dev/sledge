@@ -55,6 +55,7 @@ static const SFunctionInfo aFunctions[] = {
 		lua functions
 	*/
 	{ g_Offsets["lua_gettop"], &Teardown::lua_gettop, "lua_gettop" },
+	{ g_Offsets["lua_getfield"], &Teardown::lua_getfield, "lua_getfield" },
 
 	{ g_Offsets["lua_pushlightuserdata"], &Teardown::lua_pushlightuserdata, "lua_pushlightuserdata" },
 	{ g_Offsets["lua_pushcclosure"], &Teardown::lua_pushcclosure, "lua_pushcclosure" },
@@ -73,6 +74,13 @@ static const SFunctionInfo aFunctions[] = {
 	{ g_Offsets["lua_tonumber"], &Teardown::lua_tonumber, "lua_tonumber" },
 
 	{ g_Offsets["lua_createtable"], &Teardown::lua_createtable, "lua_createtable" },
+
+	{ g_Offsets["lua_pcall"], &Teardown::lua_pcall, "lua_pcall" },
+	{ g_Offsets["lua_call"], &Teardown::lua_call, "lua_call" },
+
+	{ g_Offsets["lua_type"], &Teardown::lua_type, "lua_type" },
+
+	{ g_Offsets["lua_pop"], &Teardown::lua_pop, "lua_pop" },
 
 	/*
 		constructor functions

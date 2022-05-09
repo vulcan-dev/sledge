@@ -1,6 +1,7 @@
 #pragma once
 
 #include "teardown/types/small_string.h"
+#include "teardown/classes/entity.h"
 
 #pragma pack(push, 1)
 class ScriptCore_LuaState
@@ -29,15 +30,22 @@ public:
 	float m_UpdateRunTime; //0x007C
 	char pad_0080[3200]; //0x0080
 
-	virtual void Destroy(bool bFree) = 0;
-	virtual void RegisterLuaFunctions() = 0;
-	virtual void LoadScript(small_string* ssScriptName) = 0;
-	virtual void Reset() = 0;
-	virtual void Init() = 0;
-	virtual void Tick(float fTimeStep, void* pUnknown) = 0;
-	virtual void Update(float fTimeStep) = 0;
-	virtual void Function7(void*) = 0;
-	virtual void Function8(void*) = 0;
+	virtual void Destroy(bool bFree);
+	virtual void RegisterLuaFunctions();
+	virtual void LoadScript(small_string* ssScriptName);
+	virtual void Reset();
+	virtual void Init();
+	virtual void Tick(float fTimeStep, void* pUnknown);
+	virtual void Update(float fTimeStep);
+	virtual void Function7(void*);
+	virtual void Function8(void*);
 }; //Size: 0x0D00
+
+class Script : public Entity
+{
+public:
+	small_string m_ScriptName;
+	ScriptCore m_SC;
+};
 
 #pragma pack(pop)

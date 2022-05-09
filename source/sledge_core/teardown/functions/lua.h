@@ -12,6 +12,7 @@ namespace Teardown {
 	inline void (*lua_setfield) (lua_State* L, int index, const char* k);
 
 	inline int (*lua_gettop) (lua_State* L);
+	inline void (*lua_getfield) (lua_State* L, int idx, const char* k);
 
 	inline const void* (*lua_topointer) (lua_State* L, int index);
 	inline int (*lua_tointeger) (lua_State* L, int index);
@@ -28,4 +29,11 @@ namespace Teardown {
 	inline void (*lua_pushboolean) (lua_State* L, int b);
 
 	inline void (*lua_createtable) (lua_State* L, int narr, int nrec);
+
+	inline int (*lua_type) (lua_State* L, int idx);
+
+	inline int (*lua_pcall) (lua_State* L, int nargs, int nresults, int errfunc);
+	inline void (*lua_call) (lua_State* L, int nargs, int nresults);
+
+	inline void (*lua_pop) (lua_State* L, int n);
 }
