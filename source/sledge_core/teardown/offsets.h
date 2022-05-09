@@ -76,5 +76,6 @@ inline std::unordered_map<std::string, unsigned __int64> g_Offsets = {
 	 {"Paint", 0x00000000000DCE40 },
 	 {"Log", 0x000000000016F4B0 },
 	 {"DebugPrint", 0x000000000010F070 },
+	 {"Shutdown", 0x0000000000126F00 },
 	 {"ScriptCore::RegisterLuaFunctions", 0x000000000014F000 },
 };
